@@ -44,90 +44,13 @@ const HERO_FEATURES = [
 ];
 
 // ============================================
-// TELEINFORMA DATA (placeholder)
+// TELEINFORMA DATA (archivo editorial real)
 // ============================================
 // Tipos: 'noticia' | 'comunicado' | 'nota'
 const TELEINFORMA_ITEMS = [
-    {
-        id: 1,
-        type: 'noticia',
-        cat: 'TELCON 2026',
-        date: '10 de Febrero, 2026',
-        title: 'Inscripciones abiertas para TELCON 2026',
-        excerpt: 'Convocatorias, categorías, fechas clave y cómo participar.',
-        image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1400',
-        body: 'Convocatorias, categorías, fechas clave y cómo participar. (Contenido placeholder: aquí irá el artículo completo.)'
-    },
-    {
-        id: 2,
-        type: 'comunicado',
-        cat: 'COMUNICADO',
-        date: '08 de Febrero, 2026',
-        title: 'Convenio CCT + Huawei (ICT)',
-        excerpt: 'Nuevas rutas de certificación y actividades conjuntas para 2026.',
-        image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1400',
-        body: 'Nuevas rutas de certificación y actividades conjuntas para 2026. (Contenido placeholder.)'
-    },
-    {
-        id: 3,
-        type: 'nota',
-        cat: 'NOTA RÁPIDA',
-        date: '05 de Febrero, 2026',
-        title: 'Convocatorias internas CCT 2026',
-        excerpt: 'Postula a Difusión, Académica, Eventos y Proyectos. Cupos limitados.',
-        image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1400',
-        body: 'Postula a Difusión, Académica, Eventos y Proyectos. Cupos limitados. (Contenido placeholder.)'
-    },
-    {
-        id: 4,
-        type: 'noticia',
-        cat: 'ACADEMIA CISCO',
-        date: '01 de Febrero, 2026',
-        title: 'Nueva Academia Cisco: 100+ certificados en 2025',
-        excerpt: 'Historias, logros y próximos módulos para el ciclo 2026-1.',
-        image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1400',
-        body: 'Historias, logros y próximos módulos para el ciclo 2026-1. (Contenido placeholder.)'
-    },
-    {
-        id: 5,
-        type: 'nota',
-        cat: 'TALLER',
-        date: '28 de Enero, 2026',
-        title: 'Taller Python para redes: cupos agotados',
-        excerpt: 'Abriremos una nueva edición. Mantente atento a Teleinforma.',
-        image: 'https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=1400',
-        body: 'Abriremos una nueva edición. Mantente atento a Teleinforma. (Contenido placeholder.)'
-    },
-    {
-        id: 6,
-        type: 'comunicado',
-        cat: 'RECURSOS',
-        date: '25 de Enero, 2026',
-        title: 'Nueva plataforma de recursos académicos',
-        excerpt: 'Guías, grabaciones y plantillas en el Drive CCT.',
-        image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=1400',
-        body: 'Guías, grabaciones y plantillas en el Drive CCT. (Contenido placeholder.)'
-    },
-    {
-        id: 7,
-        type: 'noticia',
-        cat: 'COMUNIDAD',
-        date: '18 de Enero, 2026',
-        title: 'Mentorías: nuevo ciclo de acompañamiento',
-        excerpt: 'Sesiones semanales para acelerar tu ruta en redes y proyectos.',
-        image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1400',
-        body: 'Sesiones semanales para acelerar tu ruta en redes y proyectos. (Contenido placeholder.)'
-    },
-    {
-        id: 8,
-        type: 'nota',
-        cat: 'NOTA RÁPIDA',
-        date: '12 de Enero, 2026',
-        title: 'Nueva convocatoria: voluntariado para eventos',
-        excerpt: 'Únete a logística, difusión o soporte audiovisual en actividades CCT.',
-        image: 'https://images.unsplash.com/photo-1544723795-3fb6469f5b39?w=1400',
-        body: 'Únete a logística, difusión o soporte audiovisual en actividades CCT. (Contenido placeholder.)'
-    }
+    { id: 1, type: 'noticia', cat: 'COMUNICACIONES SATELITALES', date: 'Teleinforma', title: 'Amazon LEO: internet desde el espacio', excerpt: 'El gigante tecnológico busca ampliar la conectividad satelital.', image: 'assets/teleinforma-amazon.webp', body: 'Una mirada CCT a las nuevas constelaciones satelitales y su impacto en las telecomunicaciones.' },
+    { id: 2, type: 'comunicado', cat: 'FORMACIÓN', date: '07 de Agosto, 2026', title: 'Nuevos cursos Huawei disponibles', excerpt: 'Formación online y asíncrona para estudiantes UNI.', image: 'assets/flyer-huawei-courses.webp', body: 'Orientación e inscripción en cursos de Huawei ICT Academy.' },
+    { id: 3, type: 'nota', cat: 'COMUNIDAD', date: '28 de Julio, 2026', title: 'El CCT celebra al Perú', excerpt: 'Un saludo a nuestra historia, cultura y esfuerzo compartido.', image: 'assets/flyer-fiestas-patrias.webp', body: 'Publicación institucional por Fiestas Patrias.' }
 ];
 
 function updateHeroFeature(index){
@@ -162,16 +85,14 @@ document.addEventListener('DOMContentLoaded', () => {
     setupWelcomeContent();
     initWelcomeToast();
     initCookieNotice();
-    initEventosBoomerang();
     initAppShell();
     initHeroCarousel();
     initHeroVideo();
-    initCalendar();
-    initTeleinformaFilters();
     initResourcesFilters();
     initBoardMemberPhotos();
     initConvocatoriaForm();
     initAcademyEnrollments();
+    initCctV2Experience();
 });
 
 
@@ -759,138 +680,84 @@ function initResourcesFilters(){
 
     if (!panel) return;
 
-    // Malla (según tu imagen). Links reales se pegan luego.
+    // La propiedad `folder` debe coincidir con el nombre real de la carpeta en SharePoint.
+    // Nunca se usa el Drive general como reemplazo: cada curso genera su propia ruta.
     const CURRICULUM = {
         1: [
-            { code: 'BAE01', name: 'Actividades Extracurriculares' },
-            { code: 'BFI01', name: 'Física I' },
-            { code: 'BIC01', name: 'Introducción a la Computación' },
-            { code: 'BMA01', name: 'Cálculo Diferencial (Cálculo I)' },
-            { code: 'BMA03', name: 'Álgebra Lineal' },
-            { code: 'BRN01', name: 'Realidad Nacional, Constitución y DD.HH.' },
-            { code: 'CBS01', name: 'Fundamentos de Programación' }
+            { code: 'BAE01', name: 'Actividades Extracurriculares', folder: 'BAE01 Actividades Extracurriculares' },
+            { code: 'BFI01', name: 'Física I', folder: 'BFI01 Física 1' },
+            { code: 'BIC01', name: 'Introducción a la Computación', folder: 'BIC01 Introducción a la Computación' },
+            { code: 'BMA01', name: 'Cálculo Diferencial (Cálculo I)', folder: 'BMA01 Cálculo Diferencial' },
+            { code: 'BMA03', name: 'Álgebra Lineal', folder: 'BMA03 Álgebra Lineal' },
+            { code: 'BRN01', name: 'Realidad Nacional, Constitución y DD.HH.', folder: 'BRN01 Realidad Nacional, Constitución y DD.HH.' },
+            { code: 'CBS01', name: 'Fundamentos de Programación', folder: 'CBS01 Fundamentos de Programación' }
         ],
         2: [
-            { code: 'BFI05', name: 'Fundamentos de Ing. Térmica y de Fluidos' },
-            { code: 'BMA02', name: 'Cálculo Integral (Cálculo II)' },
-            { code: 'BMA09', name: 'Algoritmos y Estructuras de Datos I' },
-            { code: 'BQU01', name: 'Química I' },
-            { code: 'BRC01', name: 'Redacción y Comunicación' },
-            { code: 'CBS02', name: 'Sistemas Operativos I' }
+            { code: 'BFI05', name: 'Fundamentos de Ing. Térmica y de Fluidos', folder: 'BFI05 Fundamentos de Ing. Térmica y de Fluidos' },
+            { code: 'BMA02', name: 'Cálculo Integral (Cálculo II)', folder: 'BMA02 Cálculo Integral' },
+            { code: 'BMA09', name: 'Algoritmos y Estructuras de Datos I', folder: 'BMA09 Algoritmos y Estructuras de Datos I' },
+            { code: 'BQU01', name: 'Química I', folder: 'BQU01 Química I' },
+            { code: 'BRC01', name: 'Redacción y Comunicación', folder: 'BRC01 Redacción y Comunicación' },
+            { code: 'CBS02', name: 'Sistemas Operativos I', folder: 'CBS02 Sistemas Operativos I' }
         ],
         3: [
-            { code: 'BEG01', name: 'Economía General' },
-            { code: 'BFI03', name: 'Fundamentos de Electricidad, Magnetismo y Óptica' },
-            { code: 'BMA05', name: 'Ecuaciones Diferenciales' },
-            { code: 'BMA10', name: 'Probabilidades y Estadística' },
-            { code: 'BMA15', name: 'Programación Orientada a Objetos' },
-            { code: 'EE306', name: 'Electrotecnia e Instalación de Redes' }
+            { code: 'BEG01', name: 'Economía General', folder: 'BEG01 Economía General' },
+            { code: 'BFI03', name: 'Fundamentos de Electricidad, Magnetismo y Óptica', folder: 'BFI03 Fundamentos de Electricidad, Magnetismo y Óptica' },
+            { code: 'BMA05', name: 'Ecuaciones Diferenciales', folder: 'BMA05 Ecuaciones Diferenciales' },
+            { code: 'BMA10', name: 'Probabilidades y Estadística', folder: 'BMA10 Probabilidades y Estadística' },
+            { code: 'BMA15', name: 'Programación Orientada a Objetos', folder: 'BMA15 Programación Orientada a Objetos' },
+            { code: 'EE306', name: 'Electrotecnia e Instalación de Redes', folder: 'EE306 Electrotecnia e Instalación de Redes' }
         ],
         4: [
-            { code: 'BEF01', name: 'Ética y Filosofía Política' },
-            { code: 'BIE01', name: 'Idioma Extranjero / Lengua Nativa (Intermedio)' },
-            { code: 'BMA07', name: 'Cálculo Vectorial' },
-            { code: 'BMA18', name: 'Métodos Numéricos' },
-            { code: 'CBN01', name: 'Redes de Datos I' },
-            { code: 'EE320', name: 'Circuitos Eléctricos I' },
-            { code: 'EE410', name: 'Análisis de Señales y Sistemas' }
+            { code: 'BEF01', name: 'Ética y Filosofía Política', folder: 'BEF01 Ética y Filosofía Política' },
+            { code: 'BIE01', name: 'Idioma Extranjero / Lengua Nativa (Intermedio)', folder: 'BIE01 Idioma Extranjero Lengua Nativa (Intermedio)' },
+            { code: 'BMA07', name: 'Cálculo Vectorial', folder: 'BMA07 Cálculo Vectorial' },
+            { code: 'BMA18', name: 'Métodos Numéricos', folder: 'BMA18 Métodos Numéricos' },
+            { code: 'CBN01', name: 'Redes de Datos I', folder: 'CBN01 Redes de Datos I' },
+            { code: 'EE320', name: 'Circuitos Eléctricos I', folder: 'EE320 Circuitos Eléctricos I' },
+            { code: 'EE410', name: 'Análisis de Señales y Sistemas', folder: 'EE410 Análisis de Señales y Sistemas' }
         ],
         5: [
-            { code: 'BMA22', name: 'Procesos Estocásticos y Teoría de la Información' },
-            { code: 'CBS05', name: 'Inteligencia Artificial I' },
-            { code: 'EE428', name: 'Laboratorio de Electrónica I' },
-            { code: 'EE522', name: 'Electromagnetismo I' },
-            { code: 'TLN01', name: 'Enrutamiento y Conmutación de Redes de Datos' },
-            { code: 'TLR01', name: 'Dispositivos de Radiofrecuencia' }
+            { code: 'BMA22', name: 'Procesos Estocásticos y Teoría de la Información', folder: 'BMA22 Procesos Estocásticos y Teoría de la Información' },
+            { code: 'CBS05', name: 'Inteligencia Artificial I', folder: 'CBS05 Inteligencia Artificial I' },
+            { code: 'EE428', name: 'Laboratorio de Electrónica I', folder: 'EE428 Laboratorio de Electrónica I' },
+            { code: 'EE522', name: 'Electromagnetismo I', folder: 'EE522 Electromagnetismo I' },
+            { code: 'TLN01', name: 'Enrutamiento y Conmutación de Redes de Datos', folder: 'TLN01 Enrutamiento y Conmutación de Redes de Datos' },
+            { code: 'TLR01', name: 'Dispositivos de Radiofrecuencia', folder: 'TLR01 Dispositivos de Radiofrecuencia' }
         ],
         6: [
-            { code: 'EE430', name: 'Sistemas de Comunicaciones I' },
-            { code: 'EE458', name: 'Laboratorio de Electrónica II' },
-            { code: 'EE588', name: 'Electromagnetismo II' },
-            { code: 'EE604', name: 'Introducción a Microcontroladores' },
-            { code: 'TLN02', name: 'Seguridad de Redes Empresariales' },
-            { code: 'TLR02', name: 'Circuitos de Radiofrecuencia' }
+            { code: 'EE430', name: 'Sistemas de Comunicaciones I', folder: 'EE430 Sistemas de Comunicaciones I' },
+            { code: 'EE458', name: 'Laboratorio de Electrónica II', folder: 'EE458 Laboratorio de Electrónica II' },
+            { code: 'EE588', name: 'Electromagnetismo II', folder: 'EE588 Electromagnetismo II' },
+            { code: 'EE604', name: 'Introducción a Microcontroladores', folder: 'EE604 Introducción a Microcontroladores' },
+            { code: 'TLN02', name: 'Seguridad de Redes Empresariales', folder: 'TLN02 Seguridad de Redes Empresariales' },
+            { code: 'TLR02', name: 'Circuitos de Radiofrecuencia', folder: 'TLR02 Circuitos de Radiofrecuencia' }
         ]
     };
 
-    // Pega aquí links reales luego
-    const DRIVE_LINKS = {
-        course: {
-            // ejemplo:
-            // 'BMA01': { drive: 'https://...', p1: 'https://...', p2: 'https://...', p3: 'https://...', p4: 'https://...', parcial: 'https://...', final: 'https://...', susti: 'https://...', material: 'https://...' }
-        },
-        general: {
-            // plantillas: 'https://...',
-            // videos: 'https://...',
-            // documentos: 'https://...'
+    const SHAREPOINT = {
+        origin: 'https://unipe-my.sharepoint.com/shared',
+        list: '/personal/junior_veli_m_uni_pe/Documents',
+        root: '/personal/junior_veli_m_uni_pe/Documents/TODOS LOS DRIVES FIEE UNI',
+        viewId: '11c011a6-3222-42ed-be06-dd0779352257',
+        cycleFolders: {
+            1: 'Drive 1er Ciclo',
+            2: 'Drive 2do Ciclo',
+            3: 'Drive 3er Ciclo',
+            4: 'Drive 4to Ciclo',
+            5: 'Drive 5to Ciclo',
+            6: 'Drive 6to Ciclo'
         }
     };
 
-    let mode = 'all';
     let cycle = 1;
-    let type = 'plantillas';
 
-    function safeLink(url){
-        return (typeof url === 'string' && url.trim().length > 0) ? url.trim() : '';
-    }
+    function getCourseDriveUrl(cycleNum, course){
+        const cycleFolder = SHAREPOINT.cycleFolders[cycleNum];
+        if (!cycleFolder || !course.folder) return '';
 
-    function openCourseModal(course){
-        const links = DRIVE_LINKS.course[course.code] || {};
-
-        const buildTile = (label, key) => {
-            const url = safeLink(links[key]);
-            const disabled = !url;
-
-            const tileInner = `
-                <div class="tile-title">${label}</div>
-                <div class="tile-meta">${disabled ? 'Link pendiente' : 'Abrir en Drive'}</div>
-            `;
-
-            if (disabled){
-                return `<div class="res-tile disabled" role="button" aria-disabled="true">${tileInner}</div>`;
-            }
-
-            return `<a class="res-tile" href="${url}" target="_blank" rel="noopener">${tileInner}</a>`;
-        };
-
-        const drive = safeLink(links.drive);
-
-        const body = `
-            <div class="course-modal-head">
-                <div class="course-chip">${course.code}</div>
-                <h3 class="modal-subtitle" style="margin:8px 0 6px;">${course.name}</h3>
-                <p class="muted" style="margin:0;">Selecciona un recurso (cuadrículas). Aquí no se muestra una lista larga.</p>
-            </div>
-
-            <div class="course-res-grid" aria-label="Recursos del curso">
-                ${buildTile('Práctica 1', 'p1')}
-                ${buildTile('Práctica 2', 'p2')}
-                ${buildTile('Práctica 3', 'p3')}
-                ${buildTile('Práctica 4', 'p4')}
-                ${buildTile('Examen Parcial', 'parcial')}
-                ${buildTile('Examen Final', 'final')}
-                ${buildTile('Examen Sustitutorio', 'susti')}
-                ${buildTile('Material / Guías', 'material')}
-            </div>
-
-            <div class="modal-callout" style="margin-top:14px;">
-                <strong>Drive del curso:</strong>
-                ${drive ? `<a href="${drive}" target="_blank" rel="noopener">${drive}</a>` : 'Link pendiente'}
-            </div>
-        `;
-
-        openDynamicModal('courseModal', 'Recursos del curso', body);
-    }
-
-
-    function renderAll(){
-        panel.innerHTML = `
-            <div class="resources-empty">
-                <h3>Selecciona una categoría</h3>
-                <p>Material académico por ciclo (1–6+), o recursos generales (Plantillas, Videos, Documentos).</p>
-                <p class="muted">Los enlaces a Drive se configurarán más adelante.</p>
-            </div>
-        `;
+        const folderPath = `${SHAREPOINT.root}/${cycleFolder}/${course.folder}`;
+        return `${SHAREPOINT.origin}?id=${encodeURIComponent(folderPath)}&listurl=${encodeURIComponent(SHAREPOINT.list)}&viewid=${encodeURIComponent(SHAREPOINT.viewId)}`;
     }
 
     function renderCycle(cycleNum, query=''){
@@ -902,83 +769,26 @@ function initResourcesFilters(){
 
         panel.innerHTML = `
             <div class="resources-headrow">
-                <h3>Ciclo ${cycleNum}${cycleNum === 6 ? ' (6+)' : ''}</h3>
+                <h3>${cycleNum}.º ciclo</h3>
                 <span class="muted">${list.length} curso(s)</span>
             </div>
             <div class="courses-grid">
-                ${list.map(c => `
-                    <button class="course-card" type="button" data-course="${c.code}">
+                ${list.map(c => {
+                    const courseUrl = getCourseDriveUrl(cycleNum, c);
+                    return `
+                    <a class="course-card" href="${courseUrl}" target="_blank" rel="noopener" aria-label="Abrir la carpeta de ${c.name} en Drive">
                         <div class="course-code">${c.code}</div>
                         <div class="course-name">${c.name}</div>
-                        <div class="course-cta">Ver recursos →</div>
-                    </button>
-                `).join('')}
-            </div>
-        `;
-
-        panel.querySelectorAll('.course-card').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const code = btn.getAttribute('data-course');
-                const course = (CURRICULUM[cycleNum] || []).find(x => x.code === code);
-                if (course) openCourseModal(course);
-            });
-        });
-    }
-
-    function renderType(kind, query=''){
-        const q = (query || '').trim().toLowerCase();
-
-        const items = {
-            plantillas: [
-                { name: 'Plantilla de afiche (CCT)', key: 'plantillas' },
-                { name: 'Plantilla de presentación (PPT)', key: 'plantillas' },
-                { name: 'Plantilla de documento', key: 'plantillas' }
-            ],
-            videos: [
-                { name: 'Charlas (grabaciones)', key: 'videos' },
-                { name: 'Talleres (grabaciones)', key: 'videos' },
-                { name: 'Ferias (grabaciones)', key: 'videos' }
-            ],
-            documentos: [
-                { name: 'Guías y documentos', key: 'documentos' },
-                { name: 'Plantillas y formatos', key: 'documentos' },
-                { name: 'Memorias / actas', key: 'documentos' }
-            ]
-        };
-
-        const list = (items[kind] || []).filter(it => !q || it.name.toLowerCase().includes(q));
-
-        panel.innerHTML = `
-            <div class="resources-headrow">
-                <h3>${kind.charAt(0).toUpperCase() + kind.slice(1)}</h3>
-                <span class="muted">${list.length} item(s)</span>
-            </div>
-
-            <div class="resources-links">
-                ${list.map(it => {
-                    const url = safeLink(DRIVE_LINKS.general[it.key]);
-                    const disabled = !url;
-                    return `
-                        <div class="res-link-row">
-                            <div class="res-link-left">
-                                <strong>${it.name}</strong>
-                                <span class="muted">${disabled ? 'Link pendiente' : 'Abrir en Drive'}</span>
-                            </div>
-                            <a class="btn-secondary btn-pill ${disabled ? 'disabled' : ''}" ${disabled ? '' : `href="${url}" target="_blank" rel="noopener"`}>
-                                ${disabled ? 'No disponible' : 'Abrir'}
-                            </a>
-                        </div>
-                    `;
-                }).join('')}
+                        <div class="course-cta">Abrir carpeta del curso ↗</div>
+                    </a>
+                `}).join('')}
             </div>
         `;
     }
 
     function render(){
         const q = searchInput ? searchInput.value : '';
-        if (mode === 'all') return renderAll();
-        if (mode === 'cycle') return renderCycle(cycle, q);
-        if (mode === 'type') return renderType(type, q);
+        renderCycle(cycle, q);
     }
 
     buttons.forEach(btn => {
@@ -986,17 +796,7 @@ function initResourcesFilters(){
             buttons.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
-            const m = btn.getAttribute('data-mode');
-            if (m === 'cycle') {
-                mode = 'cycle';
-                const c = btn.getAttribute('data-cycle');
-                cycle = (c === '6plus') ? 6 : parseInt(c, 10);
-            } else if (m === 'type') {
-                mode = 'type';
-                type = btn.getAttribute('data-type');
-            } else {
-                mode = 'all';
-            }
+            cycle = parseInt(btn.getAttribute('data-cycle'), 10);
 
             render();
         });
@@ -1008,30 +808,6 @@ function initResourcesFilters(){
 
     render();
 }
-
-function openCourseResourcesModal(cycleKey, courseId, resourcesData){
-    const courses = resourcesData?.cycles?.[cycleKey] || [];
-    const course = courses.find(c => c.id === courseId);
-    const courseName = course?.name || 'Curso';
-
-    const list = (title, items) => `
-        <div class="modal-section">
-            <h4>${title}</h4>
-            <ul class="resource-links">
-                ${items.map(x => `<li><a href="#" onclick="return false;">${x} (pendiente)</a></li>`).join('')}
-            </ul>
-        </div>
-    `;
-
-    const body = `
-        <p class="muted">Aquí normalmente se colocan exámenes pasados, prácticas y/o material del curso (Drive).</p>
-        ${list('Exámenes pasados', ['Práctica 1', 'Práctica 2', 'Examen Parcial', 'Práctica 3', 'Práctica 4', 'Examen Final', 'Examen Sustitutorio'])}
-        ${list('Material para el curso', ['Diapositivas', 'Guías', 'Notas', 'Bibliografía'])}
-    `;
-
-    openDynamicModal('courseResourcesModal', courseName, body);
-}
-
 
 // ============================================
 // CALENDAR
@@ -1940,4 +1716,107 @@ function saveEnrollment(record){
   localStorage.setItem(key, JSON.stringify(items));
 }
 
+// ============================================
+// CCT EXPERIENCE 2026 — interacciones editoriales
+// ============================================
+function initCctV2Experience(){
+  initCareerExplorer();
+  initEditorialAgenda();
+  initAcademyOrbit();
+  initRevealMotion();
 
+  document.querySelectorAll('[role="button"][tabindex="0"]').forEach((element) => {
+    element.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        element.click();
+      }
+    });
+  });
+}
+
+function initCareerExplorer(){
+  const output = document.getElementById('careerNodeCopy');
+  const nodes = Array.from(document.querySelectorAll('.career-node'));
+  if (!output || !nodes.length) return;
+
+  nodes.forEach((node) => {
+    const activate = () => {
+      nodes.forEach((item) => item.classList.remove('active'));
+      node.classList.add('active');
+      output.textContent = node.dataset.career || '';
+    };
+    node.addEventListener('mouseenter', activate);
+    node.addEventListener('focus', activate);
+    node.addEventListener('click', activate);
+  });
+}
+
+function initEditorialAgenda(){
+  const buttons = Array.from(document.querySelectorAll('[data-agenda-filter]'));
+  const items = Array.from(document.querySelectorAll('[data-agenda-category]'));
+  if (!buttons.length || !items.length) return;
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const filter = button.dataset.agendaFilter;
+      buttons.forEach((item) => item.classList.toggle('active', item === button));
+      items.forEach((item) => {
+        const visible = filter === 'todo' || item.dataset.agendaCategory === filter;
+        item.hidden = !visible;
+      });
+    });
+  });
+}
+
+function initAcademyOrbit(){
+  const orbit = document.getElementById('academyOrbit');
+  const track = orbit?.querySelector('.academy-orbit-track');
+  const cards = track ? Array.from(track.querySelectorAll('.academy-orbit-card')) : [];
+  if (!orbit || !track || !cards.length) return;
+
+  let paused = false;
+  let activeIndex = 0;
+  const move = (direction = 1) => {
+    activeIndex = (activeIndex + direction + cards.length) % cards.length;
+    cards[activeIndex].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  };
+
+  document.querySelectorAll('[data-orbit-dir]').forEach((button) => {
+    button.addEventListener('click', () => {
+      paused = true;
+      move(Number(button.dataset.orbitDir) || 1);
+      window.setTimeout(() => { paused = false; }, 7000);
+    });
+  });
+
+  orbit.addEventListener('mouseenter', () => { paused = true; });
+  orbit.addEventListener('mouseleave', () => { paused = false; });
+  orbit.addEventListener('focusin', () => { paused = true; });
+  orbit.addEventListener('focusout', () => { paused = false; });
+
+  window.setInterval(() => {
+    const formationView = document.getElementById('view-formacion');
+    if (!paused && !document.hidden && formationView?.classList.contains('active')) move(1);
+  }, 4600);
+}
+
+function initRevealMotion(){
+  const elements = Array.from(document.querySelectorAll('.cct-reveal'));
+  if (!elements.length) return;
+  if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    elements.forEach((element) => element.classList.add('is-visible'));
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  elements.forEach((element) => observer.observe(element));
+}

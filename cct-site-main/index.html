@@ -130,7 +130,7 @@
     </section>
 
     <!-- CONOCE TU CARRERA -->
-    <section class="section-conoce" id="conoce">
+    <section class="section-conoce legacy-section" id="conoce-legacy" aria-hidden="true">
         <div class="container">
             <p class="section-label">¿Por qué Telecomunicaciones?</p>
             <h2>Conoce tu Carrera</h2>
@@ -160,7 +160,7 @@
 
     <!-- LO MÁS DESTACADO -->
 
-    <section class="section-featured">
+    <section class="section-featured legacy-section" aria-hidden="true">
         <div class="container">
             <div class="section-featured-header">
                 <h2>Lo Más Destacado</h2>
@@ -168,7 +168,7 @@
             </div>
             <div class="featured-grid">
                 <div class="featured-card" onclick="navigateTo('#telcon')" style="cursor:pointer">
-                    <div class="featured-card-img" style="background-image:url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800');"></div>
+                    <div class="featured-card-img" style="background-image:url('assets/event-auditorium.webp');"></div>
                     <div class="featured-card-body">
                         <div class="featured-card-tag">TELCON 2026</div>
                         <div class="featured-card-title">Congreso Nacional de Telecomunicaciones · 15-17 Marzo</div>
@@ -176,7 +176,7 @@
                     </div>
                 </div>
                 <div class="featured-card" onclick="navigateTo('#formacion')" style="cursor:pointer">
-                    <div class="featured-card-img" style="background-image:url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800');"></div>
+                    <div class="featured-card-img" style="background-image:url('assets/visit-network-operations.webp');"></div>
                     <div class="featured-card-body">
                         <div class="featured-card-tag">Academia Cisco</div>
                         <div class="featured-card-title">CCNA · CyberOps · Python · IoT — Inscripciones abiertas</div>
@@ -184,7 +184,7 @@
                     </div>
                 </div>
                 <div class="featured-card" onclick="navigateTo('#comunidad')" style="cursor:pointer">
-                    <div class="featured-card-img" style="background-image:url('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800');"></div>
+                    <div class="featured-card-img" style="background-image:url('assets/certificates-cct.webp');"></div>
                     <div class="featured-card-body">
                         <div class="featured-card-tag">Comunidad</div>
                         <div class="featured-card-title">CCT firma convenio con Huawei para certificaciones</div>
@@ -192,7 +192,7 @@
                     </div>
                 </div>
                 <div class="featured-card" onclick="navigateTo('#nosotros')" style="cursor:pointer">
-                    <div class="featured-card-img" style="background-image:url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=800');"></div>
+                    <div class="featured-card-img" style="background-image:url('assets/event-community-group.webp');"></div>
                     <div class="featured-card-body">
                         <div class="featured-card-tag">Convocatoria 2026</div>
                         <div class="featured-card-title">Únete a la Junta Directiva CCT — Postulaciones abiertas</div>
@@ -204,7 +204,7 @@
     </section>
 
     <!-- TELE-CALENDAR -->
-    <section class="section-calendar" id="telecalendar">
+    <section class="section-calendar legacy-section" id="telecalendar-legacy" aria-hidden="true">
         <div class="container">
             <div class="section-header-editorial">
                 <span class="section-tag">AGENDA</span>
@@ -278,13 +278,88 @@
         </div>
     </section>
 
+    <!-- CONOCE TU CARRERA — recorrido visual -->
+    <section class="career-story cct-reveal" id="conoce">
+        <div class="container career-story-grid">
+            <div class="career-copy">
+                <span class="v2-kicker">CONOCE TU CARRERA</span>
+                <h2>Lo invisible que <span>mantiene al mundo conectado.</span></h2>
+                <p>Telecomunicaciones no es solo “internet”. Es diseñar la ruta que permite que una voz, una imagen o un dato viaje desde un teléfono hasta cualquier lugar del planeta.</p>
+                <div class="career-route" aria-label="Recorrido de una comunicación">
+                    <span>SEÑAL</span><i></i><span>RED</span><i></i><span>ENLACE</span><i></i><span>DESTINO</span>
+                </div>
+                <button class="v2-link" type="button" onclick="navigateTo('#formacion')">Descubre cómo empezar <b>↗</b></button>
+            </div>
+            <div class="career-orbit" aria-label="Campos de la Ingeniería de Telecomunicaciones">
+                <div class="career-core"><strong>TELECOM</strong><span>FIEE · UNI</span></div>
+                <button class="career-node node-a" type="button" data-career="Redes que conectan empresas, ciudades y servicios."><b>01</b><span>Redes</span></button>
+                <button class="career-node node-b" type="button" data-career="Comunicaciones móviles, antenas, radio y 5G."><b>02</b><span>Inalámbrico</span></button>
+                <button class="career-node node-c" type="button" data-career="Fibra óptica y transporte de información a gran velocidad."><b>03</b><span>Fibra óptica</span></button>
+                <button class="career-node node-d" type="button" data-career="Enlaces satelitales que superan cualquier frontera."><b>04</b><span>Satélites</span></button>
+                <p class="career-node-copy" id="careerNodeCopy">Selecciona un campo para explorarlo.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- AGENDA EDITORIAL GENERAL -->
+    <section class="home-agenda cct-reveal" id="telecalendar">
+        <div class="container">
+            <div class="v2-heading-row">
+                <div>
+                    <span class="v2-kicker light">AGENDA GENERAL CCT</span>
+                    <h2>Todo lo que está <span>pasando.</span></h2>
+                </div>
+                <p>Noticias, cursos, convocatorias y eventos en un solo recorrido visual.</p>
+            </div>
+
+            <div class="agenda-filter-row" aria-label="Filtrar agenda">
+                <button class="agenda-filter active" data-agenda-filter="todo">Todo</button>
+                <button class="agenda-filter" data-agenda-filter="formacion">Formación</button>
+                <button class="agenda-filter" data-agenda-filter="noticia">Teleinforma</button>
+                <button class="agenda-filter" data-agenda-filter="comunidad">Comunidad</button>
+                <button class="agenda-filter" data-agenda-filter="evento">Eventos</button>
+            </div>
+
+            <div class="agenda-editorial">
+                <div class="agenda-lead-card" data-agenda-category="formacion" onclick="navigateTo('#formacion')" role="button" tabindex="0">
+                    <img src="assets/flyer-huawei-courses.webp" alt="Cursos Huawei disponibles en el CCT" loading="lazy">
+                    <div class="agenda-lead-copy"><span>FORMACIÓN · 07 AGO</span><h3>Nuevos cursos de Huawei disponibles</h3><p>Formación online y asíncrona para seguir impulsando tu perfil tecnológico.</p><b>Ver formación →</b></div>
+                </div>
+                <div class="agenda-feed">
+                    <article class="agenda-feed-item" data-agenda-category="noticia" onclick="navigateTo('#comunidad')">
+                        <time><b>TELE</b><span>INFORMA</span></time><div><span class="feed-tag cyan">NOTICIA</span><h3>Amazon LEO: internet desde el espacio</h3><p>La noticia destacada de nuestra comunidad tecnológica.</p></div><img src="assets/teleinforma-amazon.webp" alt="Teleinforma sobre Amazon LEO" loading="lazy">
+                    </article>
+                    <article class="agenda-feed-item" data-agenda-category="comunidad" onclick="navigateTo('#comunidad')">
+                        <time><b>28</b><span>JUL</span></time><div><span class="feed-tag">COMUNIDAD</span><h3>El CCT celebra al Perú</h3><p>Una fecha para reconocer nuestra historia, cultura y esfuerzo.</p></div><img src="assets/flyer-fiestas-patrias.webp" alt="Saludo del CCT por Fiestas Patrias" loading="lazy">
+                    </article>
+                    <article class="agenda-feed-item agenda-empty" data-agenda-category="evento" onclick="navigateTo('#eventos')">
+                        <time><b>+</b><span>PRÓX.</span></time><div><span class="feed-tag outline">EVENTOS</span><h3>Próxima actividad en preparación</h3><p>Cuando el CCT confirme un evento, aparecerá aquí sin dejar espacios vacíos en la página.</p></div><span class="empty-signal" aria-hidden="true">⌁</span>
+                    </article>
+                </div>
+            </div>
+            <div class="agenda-calendar-note"><span class="live-dot"></span><strong>Preparado para Google Calendar</strong><p>La interfaz ya separa publicaciones y eventos; después solo se añade el calendario público del CCT para actualizar fechas automáticamente.</p></div>
+        </div>
+    </section>
+
 </div><!-- /view-inicio -->
 
 <!-- ════════════════════════════════════════════════ NOSOTROS VIEW -->
 <div class="view" data-view="nosotros" id="view-nosotros">
 
-    <!-- HERO BLANCO BOLD -->
-    <section class="nosotros-hero" id="nosotros">
+    <!-- PORTADA NOSOTROS -->
+    <section class="inner-hero about-hero" id="nosotros">
+        <div class="inner-hero-bg" style="background-image:url('assets/event-community-group.webp')"></div>
+        <div class="inner-hero-shade"></div>
+        <div class="container inner-hero-content">
+            <span class="v2-kicker light">DESDE 2001 · FIEE UNI</span>
+            <h1>Más que una organización.<br><span>Una señal que se multiplica.</span></h1>
+            <p>Estudiantes que aprenden, comparten y abren camino para la siguiente generación de telecomunicaciones.</p>
+            <a class="inner-hero-scroll" href="#nosotros-about" onclick="document.getElementById('nosotros-about').scrollIntoView({behavior:'smooth'});return false;">Conócenos <b>↓</b></a>
+        </div>
+    </section>
+
+    <!-- HERO ANTERIOR -->
+    <section class="nosotros-hero legacy-section" id="nosotros-legacy" aria-hidden="true">
         <div class="container">
             <p class="nosotros-hero-eyebrow">Somos La Comunidad Que Impulsa</p>
             <h1 class="nosotros-hero-title">
@@ -302,7 +377,7 @@
     </section>
 
     <!-- NUESTRA IDENTIDAD -->
-    <section class="section-identity" id="identidad">
+    <section class="section-identity legacy-section" id="identidad" aria-hidden="true">
         <div class="container">
             <div class="section-header-editorial">
                 <span class="section-tag">NUESTRA IDENTIDAD</span>
@@ -349,6 +424,21 @@
                 <h2 class="section-title">Quiénes somos</h2>
             </div>
             <div class="about-content">
+                <div class="about-photo-story">
+                    <div class="about-photo-main"><img src="assets/telecom-day-2023.webp" alt="Comunidad del Centro Cultural de Telecomunicaciones" loading="lazy"><span>Comunidad CCT · FIEE UNI</span></div>
+                    <div class="about-story-copy">
+                        <span class="v2-kicker">NUESTRA HISTORIA</span>
+                        <h3>El lugar donde la carrera se convierte en comunidad.</h3>
+                        <p>El CCT complementa la vida universitaria con formación técnica, eventos, proyectos y espacios de encuentro. Aquí, cada estudiante puede aprender de quienes ya recorrieron el camino y también enseñar a quien viene detrás.</p>
+                        <div class="about-values"><span>Excelencia</span><span>Innovación</span><span>Comunidad</span></div>
+                    </div>
+                </div>
+                <div class="cct-stats" aria-label="Datos del CCT">
+                    <div><strong>2001</strong><span>Año de fundación</span></div>
+                    <div><strong>25</strong><span>Años conectando talento</span></div>
+                    <div><strong>10</strong><span>Miembros de la Junta 2026</span></div>
+                    <div><strong>09</strong><span>Áreas de trabajo</span></div>
+                </div>
                 <p class="lead-text">El Centro Cultural de Telecomunicaciones (CCT) es la organización estudiantil más importante de la Facultad de Ingeniería Eléctrica y Electrónica de la Universidad Nacional de Ingeniería.</p>
                 <p>Desde nuestra fundación, hemos trabajado incansablemente para promover el desarrollo académico, profesional y personal de los estudiantes de telecomunicaciones. A través de cursos, talleres, charlas magistrales, eventos y proyectos, creamos oportunidades que complementan la formación universitaria.</p>
 
@@ -419,7 +509,11 @@
             <div class="convocatorias-panel" id="convocatorias" aria-label="Convocatorias">
                 <div class="subsection-header">
                     <h3>Convocatorias</h3>
-                    <p>Postula al equipo del CCT.</p>
+                    <p>Cuando abrimos una convocatoria, la publicamos aquí y en nuestras redes.</p>
+                </div>
+                <div class="convocatoria-simple">
+                    <div><span class="status-pulse"></span><strong>Convocatoria CCT 2026</strong><p>Conoce las áreas, elige dónde aportar y registra tu interés.</p></div>
+                    <button class="btn-primary" type="button" onclick="openConvocatoriaModal()">Conocer las áreas →</button>
                 </div>
                 <div class="convocatorias-list">
                     <article class="convocatoria-item">
@@ -506,7 +600,7 @@
 
 <!-- ════════════════════════════════════════════════ FORMACIÓN VIEW -->
 <div class="view" data-view="formacion" id="view-formacion">
-    <section class="section-training" id="formacion">
+    <section class="section-training legacy-section" id="formacion-legacy" aria-hidden="true">
         <div class="container">
             <div class="section-header-editorial">
                 <span class="section-tag">FORMACIÓN Y ACADEMIAS</span>
@@ -628,11 +722,59 @@
             </div>
         </div>
     </section>
+
+    <section class="inner-hero formation-hero" id="formacion">
+        <div class="formation-grid-bg" aria-hidden="true"></div>
+        <div class="container formation-hero-content">
+            <div><span class="v2-kicker light">FORMACIÓN Y ACADEMIAS</span><h1>Aprende hoy.<br><span>Conecta tu futuro.</span></h1><p>Rutas técnicas, academias reconocidas y cursos creados por la comunidad CCT.</p></div>
+            <img src="assets/owl-guide.webp" alt="Mascota del CCT orientando sobre los cursos" class="formation-owl">
+        </div>
+    </section>
+
+    <section class="certification-orbit cct-reveal">
+        <div class="container">
+            <div class="enrollment-ribbon"><span class="live-dot"></span><strong>Inscripciones disponibles</strong><p>Selecciona una certificación para revisar la ruta y registrar tu interés.</p></div>
+            <div class="v2-heading-row dark-text">
+                <div><span class="v2-kicker">ACADEMIAS</span><h2>Certificaciones que <span>mueven tu carrera.</span></h2></div>
+                <div class="orbit-controls"><button type="button" data-orbit-dir="-1" aria-label="Anterior">←</button><button type="button" data-orbit-dir="1" aria-label="Siguiente">→</button></div>
+            </div>
+            <div class="academy-orbit" id="academyOrbit">
+                <div class="academy-orbit-track">
+                    <article class="academy-orbit-card" data-program="ccna_itn"><span class="orbit-number">01</span><img src="assets/ccna_itn.png" alt="CCNA Introduction to Networks"><div><span class="orbit-provider">CISCO NETACAD</span><h3>CCNA 1 · ITN</h3><p>Fundamentos de redes, direccionamiento y switching inicial.</p><button class="academy-enroll-btn" type="button">Inscribirme</button></div></article>
+                    <article class="academy-orbit-card" data-program="ccna_srwe"><span class="orbit-number">02</span><img src="assets/ccna_srwe.png" alt="CCNA Switching Routing and Wireless Essentials"><div><span class="orbit-provider">CISCO NETACAD</span><h3>CCNA 2 · SRWE</h3><p>VLAN, routing, wireless y prácticas guiadas de laboratorio.</p><button class="academy-enroll-btn" type="button">Inscribirme</button></div></article>
+                    <article class="academy-orbit-card" data-program="ccna_ensa"><span class="orbit-number">03</span><img src="assets/ccna_ensa.png" alt="CCNA Enterprise Networking Security and Automation"><div><span class="orbit-provider">CISCO NETACAD</span><h3>CCNA 3 · ENSA</h3><p>Redes empresariales, seguridad y automatización.</p><button class="academy-enroll-btn" type="button">Inscribirme</button></div></article>
+                    <article class="academy-orbit-card" data-program="fortinet_fcp"><span class="orbit-number">04</span><img src="assets/fortinet_fcp.png" alt="Fortinet Certified Professional"><div><span class="orbit-provider">FORTINET</span><h3>FCP Secure Networking</h3><p>Operación y defensa de redes con el ecosistema Fortinet.</p><button class="academy-enroll-btn" type="button">Inscribirme</button></div></article>
+                    <article class="academy-orbit-card" data-program="ccnp_security"><span class="orbit-number">05</span><img src="assets/ccnp_security.png" alt="CCNP Security"><div><span class="orbit-provider">CISCO</span><h3>CCNP Security</h3><p>Ruta profesional para infraestructura y operaciones de seguridad.</p><button class="academy-enroll-btn" type="button">Inscribirme</button></div></article>
+                </div>
+            </div>
+            <p class="orbit-helper">Arrastra, usa las flechas o pasa el cursor para detener el recorrido.</p>
+        </div>
+    </section>
+
+    <section class="open-course-section cct-reveal">
+        <div class="container">
+            <div class="v2-heading-row dark-text">
+                <div><span class="v2-kicker">OPEN COURSE CCT</span><h2>Elige una ruta. <span>Aprende por módulos.</span></h2></div>
+                <p>Cada curso abre su aula en una pestaña nueva, con módulos, duración, nivel y recursos organizados.</p>
+            </div>
+            <div class="open-course-grid">
+                <a class="open-course-card" href="course.html?course=cybersecurity" target="_blank" rel="noopener">
+                    <div class="open-course-cover cover-cyber"><span>PRINCIPIANTE</span><b>01</b></div><div class="open-course-body"><small>CCT Learning Lab</small><h3>Analista Junior en Ciberseguridad</h3><p>Reconoce amenazas, protege endpoints y desarrolla una primera ruta profesional en seguridad.</p><div class="course-facts"><span>◷ 120 horas</span><span>8 módulos</span></div><b class="course-open">Abrir aula ↗</b></div>
+                </a>
+                <a class="open-course-card featured" href="course.html?course=defense" target="_blank" rel="noopener">
+                    <div class="open-course-cover cover-defense"><span>INTERMEDIO</span><b>02</b></div><div class="open-course-body"><small>CCT Learning Lab</small><h3>Cybersecurity Defense Analyst</h3><p>Monitorea, analiza y responde a incidentes con una visión aplicada de operaciones SOC.</p><div class="course-facts"><span>◷ 30 horas</span><span>6 módulos</span></div><b class="course-open">Abrir aula ↗</b></div>
+                </a>
+                <a class="open-course-card" href="course.html?course=ethical-hacking" target="_blank" rel="noopener">
+                    <div class="open-course-cover cover-hacking"><span>INTERMEDIO</span><b>03</b></div><div class="open-course-body"><small>CCT Learning Lab</small><h3>Hacker Ético</h3><p>Comprende vulnerabilidades y aprende una metodología responsable de evaluación de seguridad.</p><div class="course-facts"><span>◷ 70 horas</span><span>7 módulos</span></div><b class="course-open">Abrir aula ↗</b></div>
+                </a>
+            </div>
+        </div>
+    </section>
 </div><!-- /view-formacion -->
 
 <!-- ════════════════════════════════════════════════ COMUNIDAD VIEW -->
 <div class="view" data-view="comunidad" id="view-comunidad">
-    <section class="section-community" id="comunidad">
+    <section class="section-community legacy-section" id="comunidad-legacy" aria-hidden="true">
         <div class="container">
             <div class="section-header-editorial">
                 <span class="section-tag">COMUNIDAD Y DIFUSIÓN</span>
@@ -670,7 +812,7 @@
         </div>
     </section>
 
-    <section class="section-interviews" id="historias">
+    <section class="section-interviews legacy-section" id="historias-legacy" aria-hidden="true">
         <div class="container">
             <div class="section-header-editorial">
                 <span class="section-tag">HISTORIAS QUE INSPIRAN</span>
@@ -679,22 +821,22 @@
             </div>
             <div class="interviews-grid">
                 <article class="interview-card" onclick="openInterviewModal(1)" role="button" tabindex="0">
-                    <div class="interview-photo" style="background-image:url('https://images.unsplash.com/photo-1544723795-3fb6469f5b39?w=900');"></div>
+                    <div class="interview-photo" style="background-image:url('assets/certificates-cct.webp');"></div>
                     <div class="interview-body"><span class="kicker">EGRESADO</span><h3>De la UNI a redes core</h3><p>Cómo una ruta CCNA + proyectos me abrió puertas en la industria.</p><span class="linkish">Ver entrevista →</span></div>
                 </article>
                 <article class="interview-card" onclick="openInterviewModal(2)" role="button" tabindex="0">
-                    <div class="interview-photo" style="background-image:url('https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=900');"></div>
+                    <div class="interview-photo" style="background-image:url('assets/telecom-day-2023.webp');"></div>
                     <div class="interview-body"><span class="kicker">ESTUDIANTE</span><h3>Mi primer laboratorio en GNS3</h3><p>Lo que aprendí montando una topología real con MPLS y OSPF.</p><span class="linkish">Ver entrevista →</span></div>
                 </article>
                 <article class="interview-card" onclick="openInterviewModal(3)" role="button" tabindex="0">
-                    <div class="interview-photo" style="background-image:url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=900');"></div>
+                    <div class="interview-photo" style="background-image:url('assets/event-community-group.webp');"></div>
                     <div class="interview-body"><span class="kicker">COMUNIDAD</span><h3>Aprender con equipo</h3><p>Cómo la comunidad te acelera: mentorías, retos y apoyo constante.</p><span class="linkish">Ver entrevista →</span></div>
                 </article>
             </div>
         </div>
     </section>
 
-    <section class="section-projects">
+    <section class="section-projects legacy-section" aria-hidden="true">
         <div class="container">
             <div class="section-header-editorial">
                 <span class="section-tag">PROYECTOS</span>
@@ -702,10 +844,54 @@
                 <p class="section-description">Demos, laboratorios y desarrollos que construimos como comunidad.</p>
             </div>
             <div class="projects-mosaic">
-                <div class="project-tile tile-main" onclick="openProjectModal(1)" style="background-image: linear-gradient(rgba(12,15,26,0.82), rgba(12,15,26,0.82)), url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200');"><div class="tile-content"><span class="tile-category">SDN / CLOUD</span><h3>Laboratorio remoto en Azure</h3><p>VM + GNS3 + VPN + automatización para prácticas 24/7.</p><span class="tile-cta">Ver detalles →</span></div></div>
-                <div class="project-tile" onclick="openProjectModal(2)" style="background-image: linear-gradient(rgba(12,15,26,0.75), rgba(12,15,26,0.75)), url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200');"><div class="tile-content"><span class="tile-category">NETWORKING</span><h3>Topologías CCNA</h3><p>Labs guiados: VLAN, STP, OSPF, NAT.</p></div></div>
-                <div class="project-tile" onclick="openProjectModal(3)" style="background-image: linear-gradient(rgba(12,15,26,0.75), rgba(12,15,26,0.75)), url('https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=1200');"><div class="tile-content"><span class="tile-category">AUTOMATION</span><h3>Scripts para redes</h3><p>Inventario, backups y validaciones.</p></div></div>
+                <div class="project-tile tile-main" onclick="openProjectModal(1)" style="background-image: linear-gradient(rgba(12,15,26,0.82), rgba(12,15,26,0.82)), url('assets/visit-network-operations.webp');"><div class="tile-content"><span class="tile-category">SDN / CLOUD</span><h3>Laboratorio remoto en Azure</h3><p>VM + GNS3 + VPN + automatización para prácticas 24/7.</p><span class="tile-cta">Ver detalles →</span></div></div>
+                <div class="project-tile" onclick="openProjectModal(2)" style="background-image: linear-gradient(rgba(12,15,26,0.75), rgba(12,15,26,0.75)), url('assets/hero_network.png');"><div class="tile-content"><span class="tile-category">NETWORKING</span><h3>Topologías CCNA</h3><p>Labs guiados: VLAN, STP, OSPF, NAT.</p></div></div>
+                <div class="project-tile" onclick="openProjectModal(3)" style="background-image: linear-gradient(rgba(12,15,26,0.75), rgba(12,15,26,0.75)), url('assets/certificates-cct.webp');"><div class="tile-content"><span class="tile-category">AUTOMATION</span><h3>Scripts para redes</h3><p>Inventario, backups y validaciones.</p></div></div>
             </div>
+        </div>
+    </section>
+
+    <section class="community-collage-hero" id="comunidad">
+        <div class="community-collage-grid" aria-hidden="true">
+            <div style="background-image:url('assets/event-community-group.webp')"></div>
+            <div style="background-image:url('assets/visit-network-operations.webp')"></div>
+            <div style="background-image:url('assets/certificates-cct.webp')"></div>
+            <div style="background-image:url('assets/event-auditorium.webp')"></div>
+        </div>
+        <div class="community-collage-shade"></div>
+        <div class="container community-collage-copy"><span>CCT · FIEE UNI</span><h1>COMUNIDAD</h1><p>Una carrera se estudia. Una comunidad se vive.</p></div>
+    </section>
+
+    <section class="teleinforma-curated cct-reveal" id="teleinforma">
+        <div class="container">
+            <div class="v2-heading-row dark-text"><div><span class="v2-kicker">TELEINFORMA</span><h2>Lo importante, <span>bien contado.</span></h2></div><p>Una selección editorial; no un muro infinito de publicaciones.</p></div>
+            <div class="tele-curated-grid">
+                <article class="tele-main-story">
+                    <img src="assets/teleinforma-amazon.webp" alt="Amazon LEO, noticia de Teleinforma" loading="lazy">
+                    <div><span class="feed-tag amber">COMUNICACIONES SATELITALES</span><h3>Amazon LEO quiere llevar internet desde el espacio</h3><p>Teleinforma traduce los cambios tecnológicos que están transformando la industria y nuestra carrera.</p><a href="https://www.instagram.com/cct_uni_fiee/" target="_blank" rel="noopener">Ver publicación en Instagram ↗</a></div>
+                </article>
+                <a class="tele-side-story" href="https://www.instagram.com/cct_uni_fiee/" target="_blank" rel="noopener"><img src="assets/flyer-huawei-courses.webp" alt="Nuevos cursos Huawei"><div><span>FORMACIÓN</span><h3>Nuevos cursos Huawei disponibles</h3><b>Ver publicación ↗</b></div></a>
+                <a class="tele-side-story" href="https://www.instagram.com/cct_uni_fiee/" target="_blank" rel="noopener"><img src="assets/flyer-fiestas-patrias.webp" alt="Saludo CCT por Fiestas Patrias"><div><span>COMUNIDAD</span><h3>El CCT celebra al Perú</h3><b>Ver publicación ↗</b></div></a>
+            </div>
+        </div>
+    </section>
+
+    <section class="cct-family cct-reveal">
+        <div class="container">
+            <div class="v2-heading-row"><div><span class="v2-kicker light">FAMILIA CCT</span><h2>Aprendemos juntos.<br><span>Crecemos juntos.</span></h2></div><p>Visitas técnicas, eventos, certificaciones y momentos que solo existen porque hay personas detrás.</p></div>
+            <div class="family-mosaic">
+                <figure class="family-wide"><img src="assets/telecom-day-2023.webp" alt="Día Mundial de las Telecomunicaciones 2023" loading="lazy"><figcaption><span>COMUNIDAD</span>Día Mundial de las Telecomunicaciones</figcaption></figure>
+                <figure><img src="assets/visit-network-operations.webp" alt="Visita técnica de estudiantes" loading="lazy"><figcaption><span>VISITA TÉCNICA</span>Aprender fuera del aula</figcaption></figure>
+                <figure><img src="assets/certificates-cct.webp" alt="Entrega de certificados CCT" loading="lazy"><figcaption><span>FORMACIÓN</span>Entrega de certificados</figcaption></figure>
+                <figure class="family-tall"><img src="assets/event-auditorium.webp" alt="Auditorio en un evento CCT" loading="lazy"><figcaption><span>EVENTOS</span>Ideas que reúnen</figcaption></figure>
+            </div>
+        </div>
+    </section>
+
+    <section class="voices-cct cct-reveal" id="historias">
+        <div class="container voices-layout">
+            <div class="voices-owl"><img src="assets/owl-front.webp" alt="Mascota CCT"><span>VOCES CCT</span></div>
+            <div class="voices-copy"><span class="v2-kicker">PRÓXIMA SERIE</span><h2>Historias que enseñan lo que no aparece en la malla.</h2><p>Entrevistas breves con egresados, estudiantes destacados y docentes: decisiones, errores, oportunidades y consejos para quienes recién empiezan.</p><div class="voice-topics"><span>01 · Egresados</span><span>02 · Estudiantes</span><span>03 · Docentes</span></div><a href="https://www.instagram.com/cct_uni_fiee/" target="_blank" rel="noopener">Síguenos para la primera entrevista ↗</a></div>
         </div>
     </section>
 </div><!-- /view-comunidad -->
@@ -715,12 +901,12 @@
     <span id="eventos" class="view-anchor" aria-hidden="true"></span>
 
     <!-- HERO FULLSCREEN — VIDEO BOOMERANG -->
-    <section class="eventos-hero eventos-hero--video">
+    <section class="eventos-hero eventos-hero--video legacy-section" aria-hidden="true">
         <div class="eventos-hero-media" aria-hidden="true">
-            <video id="eventosBoomF" class="eventos-hero-video is-active" muted autoplay playsinline preload="auto" disablepictureinpicture>
+            <video id="eventosBoomF" class="eventos-hero-video is-active" muted playsinline preload="none" disablepictureinpicture>
                 <source src="assets/puntosunidos.mp4" type="video/mp4">
             </video>
-            <video id="eventosBoomR" class="eventos-hero-video" muted playsinline preload="auto" disablepictureinpicture>
+            <video id="eventosBoomR" class="eventos-hero-video" muted playsinline preload="none" disablepictureinpicture>
                 <source src="assets/puntosunidos_rev.mp4" type="video/mp4">
             </video>
         </div>
@@ -733,25 +919,25 @@
     </section>
 
     <!-- NUESTRA COMUNIDAD EN ACCIÓN -->
-    <section class="section-comunidad-action">
+    <section class="section-comunidad-action legacy-section" aria-hidden="true">
         <div class="container">
             <h2 class="comunidad-action-title">Nuestra comunidad <span>en acción</span></h2>
             <p style="color:rgba(255,255,255,0.5);font-size:0.85rem;margin-top:0.25rem;">Momentos que definen al CCT-UNI</p>
             <div class="comunidad-action-grid">
                 <div class="comunidad-photo-lg">
-                    <div class="comunidad-photo-inner" style="background-image:url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1200');"></div>
+                    <div class="comunidad-photo-inner" style="background-image:url('assets/event-community-group.webp');"></div>
                 </div>
                 <div class="comunidad-photo-sm">
-                    <div class="comunidad-photo-inner" style="background-image:url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800');"></div>
+                    <div class="comunidad-photo-inner" style="background-image:url('assets/event-auditorium.webp');"></div>
                 </div>
                 <div class="comunidad-photo-sm">
-                    <div class="comunidad-photo-inner" style="background-image:url('https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=800');"></div>
+                    <div class="comunidad-photo-inner" style="background-image:url('assets/telecom-day-2023.webp');"></div>
                 </div>
             </div>
         </div>
     </section>
     <!-- PRÓXIMOS EVENTOS -->
-    <section class="section-agenda-preview" id="agenda">
+    <section class="section-agenda-preview legacy-section" id="agenda-legacy" aria-hidden="true">
         <div class="container">
             <div class="agenda-topbar">
                 <div class="agenda-topbar-left">
@@ -817,7 +1003,7 @@
     </section>
 
     <!-- GALERÍA -->
-    <section class="section-events-gallery">
+    <section class="section-events-gallery legacy-section" aria-hidden="true">
         <div class="container">
             <div class="section-header-editorial">
                 <span class="section-tag">GALERÍA</span>
@@ -827,10 +1013,10 @@
             <div class="gallery-strip" role="list">
                 <button class="gallery-nav prev" onclick="moveGallery(-1)">‹</button>
                 <div class="gallery-track" id="eventsGalleryTrack">
-                    <div class="gallery-card" style="background-image:url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1200');"><div class="gallery-overlay"><span class="gallery-kicker">CHARLAS</span><h3>Invitados y Keynotes</h3></div></div>
-                    <div class="gallery-card" style="background-image:url('https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=1200');"><div class="gallery-overlay"><span class="gallery-kicker">TALLERES</span><h3>Hands-on labs</h3></div></div>
-                    <div class="gallery-card" style="background-image:url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200');"><div class="gallery-overlay"><span class="gallery-kicker">TELCON</span><h3>Congreso nacional</h3></div></div>
-                    <div class="gallery-card" style="background-image:url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=1200');"><div class="gallery-overlay"><span class="gallery-kicker">COMUNIDAD</span><h3>Networking y equipo</h3></div></div>
+                    <div class="gallery-card" style="background-image:url('assets/event-osiptel-stage.webp');"><div class="gallery-overlay"><span class="gallery-kicker">CHARLAS</span><h3>Invitados y Keynotes</h3></div></div>
+                    <div class="gallery-card" style="background-image:url('assets/visit-network-operations.webp');"><div class="gallery-overlay"><span class="gallery-kicker">TALLERES</span><h3>Hands-on labs</h3></div></div>
+                    <div class="gallery-card" style="background-image:url('assets/event-auditorium.webp');"><div class="gallery-overlay"><span class="gallery-kicker">TELCON</span><h3>Congreso nacional</h3></div></div>
+                    <div class="gallery-card" style="background-image:url('assets/event-community-group.webp');"><div class="gallery-overlay"><span class="gallery-kicker">COMUNIDAD</span><h3>Networking y equipo</h3></div></div>
                 </div>
                 <button class="gallery-nav next" onclick="moveGallery(1)">›</button>
             </div>
@@ -838,7 +1024,7 @@
     </section>
 
     <!-- EVENT CARDS -->
-    <section class="section-events-list">
+    <section class="section-events-list legacy-section" aria-hidden="true">
         <div class="container">
             <div class="section-header-editorial">
                 <span class="section-tag">EVENTOS</span>
@@ -853,7 +1039,7 @@
     </section>
 
     <!-- EVENTOS PASADOS -->
-    <section class="section-events-past">
+    <section class="section-events-past legacy-section" aria-hidden="true">
         <div class="container">
             <div class="section-header-editorial">
                 <span class="section-tag">ARCHIVO</span>
@@ -862,6 +1048,49 @@
             <div class="past-grid">
                 <div class="past-item"><h3>Taller GNS3 (Dic 2025)</h3><p>Memoria + fotos + grabación.</p><div class="past-actions"><a class="btn-secondary btn-pill" href="#" onclick="return false;">Memoria (PDF)</a><a class="btn-secondary btn-pill" href="#" onclick="return false;">Fotos</a><a class="btn-secondary btn-pill" href="#" onclick="return false;">Grabación</a></div></div>
                 <div class="past-item"><h3>Charla Huawei ICT (Nov 2025)</h3><p>Materiales y recursos.</p><div class="past-actions"><a class="btn-secondary btn-pill" href="#" onclick="return false;">Slides</a><a class="btn-secondary btn-pill" href="#" onclick="return false;">Grabación</a></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="events-collage-hero">
+        <div class="events-collage-panels" aria-hidden="true">
+            <div style="background-image:url('assets/feria-stem-2023.webp')"></div>
+            <div style="background-image:url('assets/event-osiptel-stage.webp')"></div>
+            <div style="background-image:url('assets/event-community-group.webp')"></div>
+        </div>
+        <div class="events-hero-mask"></div>
+        <div class="container events-collage-copy"><span class="v2-kicker light">EVENTOS CCT</span><h1>Donde las ideas<br><em>encuentran público.</em></h1><p>Charlas, ferias y encuentros que convierten conocimiento en experiencia.</p></div>
+    </section>
+
+    <section class="featured-event-slot cct-reveal" id="agenda">
+        <div class="container">
+            <div class="v2-heading-row dark-text"><div><span class="v2-kicker">PRÓXIMO EVENTO</span><h2>Una sola cita.<br><span>La que no debes perderte.</span></h2></div><p>Este espacio se activa únicamente cuando exista un evento confirmado.</p></div>
+            <div class="featured-event-empty" data-event-state="empty">
+                <div class="event-radar" aria-hidden="true"><i></i><i></i><i></i><span>⌁</span></div>
+                <div><span>AGENDA EN ACTUALIZACIÓN</span><h3>Aún no hay un próximo evento confirmado.</h3><p>Evitar mostrar fechas inventadas o eventos vencidos mantiene esta sección clara y confiable.</p><a href="https://www.instagram.com/cct_uni_fiee/" target="_blank" rel="noopener">Revisar novedades en Instagram ↗</a></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="event-yearline cct-reveal">
+        <div class="container">
+            <div class="v2-heading-row"><div><span class="v2-kicker light">TELE-CALENDAR DE EVENTOS</span><h2>Pocos eventos.<br><span>Grandes momentos.</span></h2></div><p>En lugar de un mes lleno de casillas vacías, la agenda avanza por hitos confirmados.</p></div>
+            <div class="yearline-scroll" aria-label="Archivo de hitos CCT">
+                <article><time>2023</time><img src="assets/feria-stem-2023.webp" alt="Feria STEM UNI CCT 2023" loading="lazy"><div><span>FERIA</span><h3>Feria STEM UNI</h3><p>Una jornada para descubrir tecnología, ciencia y vocación.</p></div></article>
+                <article><time>2023</time><img src="assets/telecom-day-2023.webp" alt="Día Mundial de las Telecomunicaciones 2023" loading="lazy"><div><span>ENCUENTRO</span><h3>Día Mundial de las Telecomunicaciones</h3><p>La comunidad reunida para celebrar la carrera y su impacto.</p></div></article>
+                <article><time>CCT</time><img src="assets/event-osiptel-stage.webp" alt="Presentación en auditorio CCT UNI" loading="lazy"><div><span>CHARLA</span><h3>Industria y universidad</h3><p>Especialistas, instituciones y estudiantes compartiendo un mismo escenario.</p></div></article>
+                <article><time>CCT</time><img src="assets/certificates-cct.webp" alt="Entrega de certificados CCT" loading="lazy"><div><span>FORMACIÓN</span><h3>Entrega de certificados</h3><p>El cierre de una ruta y el inicio de la siguiente.</p></div></article>
+            </div>
+        </div>
+    </section>
+
+    <section class="past-moments cct-reveal">
+        <div class="container">
+            <div class="past-moments-head"><span class="v2-kicker">MEMORIA CCT</span><h2>Lo que vivimos también construye lo que somos.</h2></div>
+            <div class="past-moments-grid">
+                <figure class="moment-main"><img src="assets/event-community-group.webp" alt="Foto grupal de la comunidad CCT" loading="lazy"><figcaption>Comunidad en acción <span>01</span></figcaption></figure>
+                <figure><img src="assets/event-auditorium.webp" alt="Auditorio durante evento CCT" loading="lazy"><figcaption>Auditorios llenos <span>02</span></figcaption></figure>
+                <figure><img src="assets/visit-network-operations.webp" alt="Visita técnica CCT" loading="lazy"><figcaption>Visitas técnicas <span>03</span></figcaption></figure>
             </div>
         </div>
     </section>
@@ -945,42 +1174,41 @@
 
 <!-- ════════════════════════════════════════════════ RECURSOS VIEW -->
 <div class="view" data-view="recursos" id="view-recursos">
-    <section class="section-resources" id="recursos">
+    <section class="resource-hero" id="recursos">
+        <div class="container resource-hero-grid">
+            <div><span class="v2-kicker light">BIBLIOTECA ACADÉMICA CCT</span><h1>Tu carrera,<br><span>mejor organizada.</span></h1><p>Busca por ciclo o por nombre de curso. Cada materia abre directamente su propia carpeta académica en Drive.</p><div class="resource-hero-pills"><span>Organizado por ciclos</span><span>Material FIEE</span><span>Carpetas por curso</span></div></div>
+            <div class="resource-owl-card"><img src="assets/owl-guide.webp" alt="Mascota CCT guiando hacia los recursos"><span>Elige un ciclo para comenzar ↓</span></div>
+        </div>
+    </section>
+    <section class="section-resources resource-browser" id="recursos-browser">
         <div class="container">
             <div class="section-header-editorial">
-                <span class="section-tag">RECURSOS Y DOCUMENTOS</span>
-                <h2 class="section-title">Drive CCT</h2>
-                <p class="section-description">Accede a materiales académicos, grabaciones, plantillas y documentos</p>
+                <span class="section-tag">EXPLORADOR DE RECURSOS</span>
+                <h2 class="section-title">Drive académico CCT</h2>
+                <p class="section-description">Navega por los ciclos dentro de la página. Drive se abre únicamente cuando eliges una materia.</p>
             </div>
             <div class="resources-layout">
                 <aside class="resources-sidebar">
-                    <button class="cat-btn active" data-mode="all">Todos</button>
                     <div class="sidebar-block">
-                        <h3>Material académico</h3>
-                        <button class="cat-btn" data-mode="cycle" data-cycle="1">1er ciclo</button>
+                        <h3>Ciclos académicos</h3>
+                        <button class="cat-btn active" data-mode="cycle" data-cycle="1">1er ciclo</button>
                         <button class="cat-btn" data-mode="cycle" data-cycle="2">2do ciclo</button>
                         <button class="cat-btn" data-mode="cycle" data-cycle="3">3er ciclo</button>
                         <button class="cat-btn" data-mode="cycle" data-cycle="4">4to ciclo</button>
                         <button class="cat-btn" data-mode="cycle" data-cycle="5">5to ciclo</button>
-                        <button class="cat-btn" data-mode="cycle" data-cycle="6plus">6to ciclo a más</button>
-                    </div>
-                    <div class="sidebar-block">
-                        <h3>Recursos</h3>
-                        <button class="cat-btn" data-mode="type" data-type="plantillas">Plantillas</button>
-                        <button class="cat-btn" data-mode="type" data-type="videos">Videos</button>
-                        <button class="cat-btn" data-mode="type" data-type="documentos">Documentos</button>
+                        <button class="cat-btn" data-mode="cycle" data-cycle="6">6to ciclo</button>
                     </div>
                 </aside>
                 <div class="resources-content">
                     <div class="resources-search">
-                        <input type="search" placeholder="Buscar en Drive CCT..." class="search-input" id="resourceSearch">
-                        <p class="resources-hint">Tip: primero elige una categoría, luego busca si lo necesitas.</p>
+                        <input type="search" placeholder="Buscar por nombre o código del curso..." class="search-input" id="resourceSearch">
+                        <p class="resources-hint">Selecciona un ciclo y luego abre la carpeta específica de tu curso.</p>
                     </div>
                     <div class="resources-list" id="resourcesPanel">
                         <div class="resources-empty">
                             <h3>Selecciona una categoría</h3>
                             <p>Elige un ciclo o tipo de recurso para ver el contenido disponible.</p>
-                            <p class="muted">Los enlaces a Drive se configurarán más adelante.</p>
+                            <p class="muted">Selecciona un ciclo para ver las materias disponibles.</p>
                         </div>
                     </div>
                 </div>
@@ -997,7 +1225,7 @@
                 <div class="footer-logo">
                     <img class="footer-logo-img" src="assets/logo_wordmark.png" alt="Centro Cultural de Telecomunicaciones - UNI">
                 </div>
-                <p class="footer-description">Formando líderes en tecnología e innovación desde 1985.</p>
+                <p class="footer-description">Conectando estudiantes, conocimiento e industria desde 2001.</p>
                 <div class="footer-social">
                     <a href="#" class="social-link" aria-label="Facebook"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
                     <a href="#" class="social-link" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
