@@ -8,7 +8,7 @@ import { eventosMarkup } from './pages/eventos';
 import { telconMarkup } from './pages/telcon';
 import { recursosMarkup } from './pages/recursos';
 import { bootLegacyRuntime } from './legacy/runtime';
-import { initOpenCourseFormation } from './features/formation/openCourse';
+import { initOpenCourseFormation, startOpenCourseGuard } from './features/formation/openCourse';
 
 const viewsMarkup = [
   inicioMarkup,
@@ -31,8 +31,12 @@ ${afterMainMarkup}
 
 export default function App() {
   useEffect(() => {
+    startOpenCourseGuard();
+    initOpenCourseFormation();
+
     void bootLegacyRuntime().then(() => {
       initOpenCourseFormation();
+      startOpenCourseGuard();
     });
   }, []);
 
