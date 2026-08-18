@@ -16,6 +16,7 @@ export default defineConfig({
         { src: 'nosotros-v3.js', dest: '' },
         { src: 'formation-v2.js', dest: '' },
         { src: 'formation-v3.js', dest: '' },
+        { src: 'formation-v4.js', dest: '' },
         { src: 'course.html', dest: '' },
         { src: 'course.css', dest: '' },
         { src: 'course.js', dest: '' }
