@@ -2,6 +2,8 @@ const supportImage = new URL('../../../assets/course-support.webp', import.meta.
 const networkLabImage = new URL('../../../assets/course-network-lab.webp', import.meta.url).href;
 const wirelessImage = new URL('../../../assets/course-wireless.webp', import.meta.url).href;
 
+const RAW_ASSET_BASE = 'https://raw.githubusercontent.com/SAEZ1205/CCT-PAGE/main/cct-site-main/assets/';
+
 const COURSES = [
   {
     id: 'cybersecurity',
@@ -10,6 +12,7 @@ const COURSES = [
     description: 'Amenazas, endpoints y fundamentos de seguridad.',
     hours: '120 h',
     image: supportImage,
+    fallback: `${RAW_ASSET_BASE}course-support.webp`,
   },
   {
     id: 'defense',
@@ -18,6 +21,7 @@ const COURSES = [
     description: 'Monitoreo, análisis y respuesta a incidentes SOC.',
     hours: '30 h',
     image: networkLabImage,
+    fallback: `${RAW_ASSET_BASE}course-network-lab.webp`,
   },
   {
     id: 'ethical-hacking',
@@ -26,6 +30,7 @@ const COURSES = [
     description: 'Evaluación responsable de vulnerabilidades.',
     hours: '70 h',
     image: wirelessImage,
+    fallback: `${RAW_ASSET_BASE}course-wireless.webp`,
   },
 ];
 
@@ -41,7 +46,8 @@ const CSS = `
 #view-formacion .open-course-v3-section .open-course-heading h2{
   color:#fff!important;
 }
-#view-formacion .open-course-v3-section .open-course-heading h2 span{
+#view-formacion .open-course-v3-section .open-course-heading h2 span,
+#view-formacion .open-course-v3-section .open-course-heading h2 .oc-blue{
   color:#18b7f1!important;
 }
 #view-formacion .open-course-v3-section .open-course-heading p{
@@ -138,6 +144,10 @@ const CSS = `
 }
 `;
 
+let observer: MutationObserver | null = null;
+let retryTimer: number | null = null;
+let retries = 0;
+
 function installStyles() {
   let style = document.getElementById('openCourseReactStyles') as HTMLStyleElement | null;
   if (!style) {
@@ -148,11 +158,11 @@ function installStyles() {
   style.textContent = CSS;
 }
 
-export function initOpenCourseFormation() {
-  const grid = document.querySelector<HTMLElement>('#view-formacion .open-course-grid');
-  if (!grid) return;
-
+function mountOpenCourse(): boolean {
   installStyles();
+
+  const grid = document.querySelector<HTMLElement>('#view-formacion .open-course-grid');
+  if (!grid) return false;
 
   const section = grid.closest('section');
   section?.classList.add('open-course-v3-section');
@@ -162,12 +172,22 @@ export function initOpenCourseFormation() {
   const title = heading?.querySelector<HTMLElement>('h2');
 
   if (kicker) kicker.textContent = 'OPEN COURSE CCT';
-  if (title) title.innerHTML = 'Elige una ruta. <span>Aprende por módulos.</span>';
+  if (title) title.innerHTML = 'Elige una ruta. <span class="oc-blue" style="color:#18b7f1!important">Aprende por módulos.</span>';
 
+  const alreadyMounted = grid.dataset.openCourseReact === 'ready' && Boolean(grid.querySelector('.oc-react-card'));
+  if (alreadyMounted) return true;
+
+  grid.dataset.openCourseReact = 'ready';
   grid.innerHTML = COURSES.map((course) => `
     <a class="oc-react-card" href="course.html?course=${course.id}" target="_blank" rel="noopener">
       <div class="oc-react-media">
-        <img src="${course.image}" alt="${course.title}" loading="eager" decoding="sync">
+        <img
+          src="${course.image}"
+          data-fallback="${course.fallback}"
+          alt="${course.title}"
+          loading="eager"
+          decoding="async"
+        >
         <span class="oc-react-level">${course.level}</span>
       </div>
       <div class="oc-react-body">
@@ -178,4 +198,57 @@ export function initOpenCourseFormation() {
       </div>
     </a>
   `).join('');
+
+  grid.querySelectorAll<HTMLImageElement>('.oc-react-media img').forEach((img) => {
+    img.addEventListener('error', () => {
+      const fallback = img.dataset.fallback;
+      if (fallback && img.src !== fallback) {
+        console.warn('[CCT] Falló asset Vite; usando fallback GitHub:', img.src);
+        img.src = fallback;
+      }
+    }, { once: true });
+  });
+
+  return true;
+}
+
+export function initOpenCourseFormation() {
+  mountOpenCourse();
+}
+
+export function startOpenCourseGuard() {
+  installStyles();
+
+  const ensure = () => {
+    const grid = document.querySelector<HTMLElement>('#view-formacion .open-course-grid');
+    if (!grid) return;
+    if (!grid.querySelector('.oc-react-card') || grid.dataset.openCourseReact !== 'ready') {
+      grid.dataset.openCourseReact = '';
+      mountOpenCourse();
+    } else {
+      const title = grid.closest('section')?.querySelector<HTMLElement>('.open-course-heading h2');
+      if (title && !title.querySelector('.oc-blue')) {
+        title.innerHTML = 'Elige una ruta. <span class="oc-blue" style="color:#18b7f1!important">Aprende por módulos.</span>';
+      }
+    }
+  };
+
+  if (!observer) {
+    observer = new MutationObserver(() => queueMicrotask(ensure));
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  if (retryTimer !== null) window.clearInterval(retryTimer);
+  retries = 0;
+  retryTimer = window.setInterval(() => {
+    ensure();
+    retries += 1;
+    if (retries >= 30 && retryTimer !== null) {
+      window.clearInterval(retryTimer);
+      retryTimer = null;
+    }
+  }, 250);
+
+  window.addEventListener('hashchange', () => window.setTimeout(ensure, 50));
+  ensure();
 }
