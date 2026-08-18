@@ -33,6 +33,7 @@ export function bootLegacyRuntime(): Promise<void> {
     .then(() => loadScript(`${base}formation-v3.js`))
     .then(() => loadScript(`${base}formation-v4.js`))
     .then(() => loadScript(`${base}formation-v5.js`))
+    .then(() => loadScript(`${base}formation-v6.js`))
     .catch((error) => console.error('[CCT] Error iniciando compatibilidad visual', error));
   return bootPromise;
 }
