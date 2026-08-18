@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { beforeMainMarkup, footerMarkup, afterMainMarkup } from './layout/markup';
+import { headerMarkup, footerMarkup } from './layout/markup';
 import { inicioMarkup } from './pages/inicio';
 import { nosotrosMarkup } from './pages/nosotros';
 import { formacionMarkup } from './pages/formacion';
@@ -7,38 +7,9 @@ import { comunidadMarkup } from './pages/comunidad';
 import { eventosMarkup } from './pages/eventos';
 import { telconMarkup } from './pages/telcon';
 import { recursosMarkup } from './pages/recursos';
-import { bootLegacyRuntime } from './legacy/runtime';
-import { initOpenCourseFormation, startOpenCourseGuard } from './features/formation/openCourse';
+import { initSite } from './features/site/init';
 
-const viewsMarkup = [
-  inicioMarkup,
-  nosotrosMarkup,
-  formacionMarkup,
-  comunidadMarkup,
-  eventosMarkup,
-  telconMarkup,
-  recursosMarkup
-].join('\n');
+const views=[inicioMarkup,nosotrosMarkup,formacionMarkup,comunidadMarkup,eventosMarkup,telconMarkup,recursosMarkup].join('\n');
+const markup=`${headerMarkup}<main id="appMain" class="app-main" role="main">${views}${footerMarkup}</main>`;
 
-const appMarkup = `
-${beforeMainMarkup}
-<main id="appMain" class="app-main" role="main">
-${viewsMarkup}
-${footerMarkup}
-</main>
-${afterMainMarkup}
-`;
-
-export default function App() {
-  useEffect(() => {
-    startOpenCourseGuard();
-    initOpenCourseFormation();
-
-    void bootLegacyRuntime().then(() => {
-      initOpenCourseFormation();
-      startOpenCourseGuard();
-    });
-  }, []);
-
-  return <div className="cct-react-shell" dangerouslySetInnerHTML={{ __html: appMarkup }} />;
-}
+export default function App(){useEffect(()=>{initSite()},[]);return <div className="cct-react-shell tw-min-h-screen" dangerouslySetInnerHTML={{__html:markup}}/>}

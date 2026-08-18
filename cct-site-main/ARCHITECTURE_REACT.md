@@ -1,25 +1,25 @@
-# Arquitectura React del CCT
+# Arquitectura React CCT
 
-La interfaz visual se conserva. La migración separa la aplicación por vistas sin rediseñar el frontend.
+El sitio ya no ejecuta la versión HTML/JS antigua detrás de React.
 
 ## Stack
-- React
+- React 18
 - TypeScript
 - Vite
-- Tailwind CSS (prefijo `tw-` y preflight desactivado para no alterar el diseño existente)
+- Tailwind CSS (prefijo `tw-`, preflight desactivado)
 
 ## Estructura
-
 ```text
 src/
   App.tsx
-  main.tsx
-  layout/
-    markup.ts
-  legacy/
+  content/
+    site-template.html
     extract.ts
-    runtime.ts
-    snapshot.html
+  features/
+    site/
+    inicio/
+    nosotros/
+    formation/
   pages/
     inicio/
     nosotros/
@@ -29,24 +29,10 @@ src/
     telcon/
     recursos/
   styles/
-    tailwind.css
 ```
 
-Cada vista principal vive en su propia carpeta. `snapshot.html` es una capa de compatibilidad temporal que conserva exactamente el DOM previo mientras se migra cada sección a JSX puro de forma gradual, sin cambiar el frontend.
+`site-template.html` conserva únicamente el markup visual base para mantener el frontend mientras se migra cada vista a JSX. No se cargan scripts de esa plantilla: `extract.ts` elimina scripts y handlers inline. Toda la navegación y las ediciones activas se ejecutan desde TypeScript/React en `src/features`.
 
-`script-original.js`, `career-v3.js` y `styles.css` se mantienen como compatibilidad visual durante esta etapa. Vite copia los recursos estáticos necesarios al build.
+Open Course se monta con un root React independiente dentro de Formación, por lo que ningún script antiguo puede volver a reemplazar sus tarjetas.
 
-## Desarrollo
-
-```bash
-npm install
-npm run dev
-```
-
-## Build
-
-```bash
-npm run build
-```
-
-El build queda en `dist/`.
+Los antiguos `script-original.js`, `formation-v*.js`, `career-v3.js`, `calendar-v2.js`, `nosotros-v*.js` y `src/legacy/*` fueron retirados del runtime y del repositorio.
