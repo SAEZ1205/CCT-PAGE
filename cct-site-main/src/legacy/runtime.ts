@@ -31,6 +31,7 @@ export function bootLegacyRuntime(): Promise<void> {
       document.dispatchEvent(new Event('DOMContentLoaded', { bubbles: true }));
       return loadScript(`${base}career-v3.js`);
     })
+    .then(() => loadScript(`${base}calendar-v2.js`))
     .catch((error) => {
       console.error('[CCT] Error iniciando compatibilidad visual', error);
     });

@@ -4,26 +4,18 @@
   const asset = (name) => new URL(`assets/${name}`, SCRIPT_BASE).href;
 
   const EVENTS = [
-    {
-      date: '2026-08-07',
-      type: 'FORMACIÓN',
-      title: 'Nuevos cursos Huawei disponibles',
-      desc: 'Formación online y asíncrona para seguir impulsando tu perfil tecnológico.'
-    },
-    {
-      date: '2026-07-28',
-      type: 'COMUNIDAD',
-      title: 'El CCT celebra al Perú',
-      desc: 'Publicación institucional por Fiestas Patrias.'
-    }
+    { date: '2026-08-07', type: 'FORMACIÓN', title: 'Nuevos cursos Huawei disponibles', desc: 'Formación online y asíncrona para seguir impulsando tu perfil tecnológico.' },
+    { date: '2026-07-28', type: 'COMUNIDAD', title: 'El CCT celebra al Perú', desc: 'Publicación institucional por Fiestas Patrias.' }
   ];
 
   const CSS = `
     #telecalendar.home-agenda{padding:78px 0 82px!important;background:#0b0e17!important;color:#fff!important;display:block!important;opacity:1!important;transform:none!important;visibility:visible!important}
-    #telecalendar .agenda-filter-row,
-    #telecalendar .agenda-editorial,
-    #telecalendar .agenda-calendar-note{display:none!important}
+    #telecalendar .agenda-filter-row,#telecalendar .agenda-editorial,#telecalendar .agenda-calendar-note{display:none!important}
     #telecalendar .v2-heading-row{margin-bottom:26px}
+
+    /* Carrusel de carrera: un pelín más pequeño, como se pidió. */
+    .career-v3-photo{width:clamp(220px,22vw,300px)!important;height:172px!important}
+    .career-v3-track{gap:12px!important}
 
     .cct-monthly-wrap{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px;align-items:start}
     .cct-monthly-card{border:1px solid rgba(255,255,255,.11);border-radius:18px;overflow:hidden;background:#101521;box-shadow:0 16px 40px rgba(0,0,0,.18)}
@@ -67,23 +59,13 @@
     .cct-month-event div strong{display:block;margin-top:3px;color:#fff;font-size:.78rem;line-height:1.35}
     .cct-month-empty{padding:25px 0 5px;color:rgba(255,255,255,.42);font-size:.8rem;line-height:1.6}
 
-    @media(max-width:900px){
-      .cct-monthly-wrap{grid-template-columns:1fr}
-      .cct-monthly-side{min-height:0}
-    }
+    @media(max-width:900px){.cct-monthly-wrap{grid-template-columns:1fr}.cct-monthly-side{min-height:0}}
     @media(max-width:640px){
       #telecalendar.home-agenda{padding:58px 0 62px!important}
-      .cct-monthly-card{border-radius:14px}
-      .cct-monthly-head{padding:15px}
-      .cct-monthly-title strong{font-size:1.18rem}
-      .cct-monthly-nav button{width:34px;height:34px}
-      .cct-weekdays span{font-size:.5rem;padding:9px 2px;letter-spacing:.07em}
-      .cct-day{min-height:70px;padding:7px 5px}
-      .cct-day-number{font-size:.66rem}
-      .cct-date-badge{margin-top:7px;gap:4px;align-items:flex-start}
-      .cct-date-badge-logo{width:23px;height:18px;flex-basis:23px}
-      .cct-date-badge-logo img{width:23px}
-      .cct-date-badge-text{display:none}
+      .career-v3-photo{width:220px!important;height:145px!important}
+      .cct-monthly-card{border-radius:14px}.cct-monthly-head{padding:15px}.cct-monthly-title strong{font-size:1.18rem}.cct-monthly-nav button{width:34px;height:34px}
+      .cct-weekdays span{font-size:.5rem;padding:9px 2px;letter-spacing:.07em}.cct-day{min-height:70px;padding:7px 5px}.cct-day-number{font-size:.66rem}
+      .cct-date-badge{margin-top:7px;gap:4px;align-items:flex-start}.cct-date-badge-logo{width:23px;height:18px;flex-basis:23px}.cct-date-badge-logo img{width:23px}.cct-date-badge-text{display:none}
     }
   `;
 
@@ -91,112 +73,33 @@
   const MONTHS_SHORT = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
   const WEEKDAYS = ['LUN','MAR','MIÉ','JUE','VIE','SÁB','DOM'];
 
-  function injectStyles(){
-    if (document.getElementById('cctMonthlyCalendarStyles')) return;
-    const style = document.createElement('style');
-    style.id = 'cctMonthlyCalendarStyles';
-    style.textContent = CSS;
-    document.head.appendChild(style);
-  }
-
-  const pad = (n) => String(n).padStart(2,'0');
-  const keyFor = (date) => `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`;
-  const monthEvents = (year,month) => EVENTS.filter(event => event.date.startsWith(`${year}-${pad(month+1)}-`));
+  function injectStyles(){if(document.getElementById('cctMonthlyCalendarStyles'))return;const style=document.createElement('style');style.id='cctMonthlyCalendarStyles';style.textContent=CSS;document.head.appendChild(style)}
+  const pad=(n)=>String(n).padStart(2,'0');
+  const keyFor=(date)=>`${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`;
+  const monthEvents=(year,month)=>EVENTS.filter(event=>event.date.startsWith(`${year}-${pad(month+1)}-`));
 
   function renderCalendar(root,state){
-    const year = state.year;
-    const month = state.month;
-    const first = new Date(year,month,1);
-    const firstMondayIndex = (first.getDay()+6)%7;
-    const daysInMonth = new Date(year,month+1,0).getDate();
-    const prevDays = new Date(year,month,0).getDate();
-    const today = new Date();
-
-    const cells = [];
+    const {year,month}=state; const first=new Date(year,month,1); const firstMondayIndex=(first.getDay()+6)%7; const daysInMonth=new Date(year,month+1,0).getDate(); const prevDays=new Date(year,month,0).getDate(); const today=new Date(); const cells=[];
     for(let i=0;i<42;i++){
-      let date;
-      let muted = false;
-      if(i < firstMondayIndex){
-        date = new Date(year,month-1,prevDays-firstMondayIndex+i+1);
-        muted = true;
-      } else if(i >= firstMondayIndex + daysInMonth){
-        date = new Date(year,month+1,i-(firstMondayIndex+daysInMonth)+1);
-        muted = true;
-      } else {
-        date = new Date(year,month,i-firstMondayIndex+1);
-      }
-
-      const dateKey = keyFor(date);
-      const events = EVENTS.filter(event => event.date === dateKey);
-      const isToday = date.getFullYear()===today.getFullYear() && date.getMonth()===today.getMonth() && date.getDate()===today.getDate();
-      const badge = events.length ? `
-        <div class="cct-date-badge" title="${events[0].title}">
-          <span class="cct-date-badge-logo"><img src="${asset('cct-insignia.png')}" alt="CCT"></span>
-          <span class="cct-date-badge-text"><small>${events[0].type}</small><strong>${events[0].title}</strong></span>
-        </div>` : '';
-      cells.push(`<div class="cct-day${muted?' is-muted':''}${isToday?' is-today':''}${events.length?' has-event':''}"><span class="cct-day-number">${date.getDate()}</span>${badge}</div>`);
+      let date,muted=false;
+      if(i<firstMondayIndex){date=new Date(year,month-1,prevDays-firstMondayIndex+i+1);muted=true}else if(i>=firstMondayIndex+daysInMonth){date=new Date(year,month+1,i-(firstMondayIndex+daysInMonth)+1);muted=true}else{date=new Date(year,month,i-firstMondayIndex+1)}
+      const events=EVENTS.filter(event=>event.date===keyFor(date));
+      const isToday=date.getFullYear()===today.getFullYear()&&date.getMonth()===today.getMonth()&&date.getDate()===today.getDate();
+      const badge=events.length?`<div class="cct-date-badge" title="${events[0].title}"><span class="cct-date-badge-logo"><img src="${asset('cct-insignia.png')}" alt="CCT"></span><span class="cct-date-badge-text"><small>${events[0].type}</small><strong>${events[0].title}</strong></span></div>`:'';
+      cells.push(`<div class="cct-day${muted?' is-muted':''}${isToday?' is-today':''}${events.length?' has-event':''}"><span class="cct-day-number">${date.getDate()}</span>${badge}</div>`)
     }
-
-    const currentEvents = monthEvents(year,month);
-    const side = currentEvents.length ? currentEvents.map(event => {
-      const date = new Date(`${event.date}T12:00:00`);
-      return `<article class="cct-month-event"><time><b>${date.getDate()}</b><span>${MONTHS_SHORT[date.getMonth()]}</span></time><div><span>${event.type}</span><strong>${event.title}</strong></div></article>`;
-    }).join('') : '<div class="cct-month-empty">No hay actividades publicadas para este mes. Cuando se confirme una fecha, aparecerá directamente en su casilla.</div>';
-
-    root.innerHTML = `
-      <div class="cct-monthly-wrap">
-        <div class="cct-monthly-card">
-          <div class="cct-monthly-head">
-            <div class="cct-monthly-title"><small>TELE-CALENDAR</small><strong>${MONTHS[month]} ${year}</strong></div>
-            <div class="cct-monthly-nav"><button type="button" data-cal-prev aria-label="Mes anterior">←</button><button type="button" data-cal-next aria-label="Mes siguiente">→</button></div>
-          </div>
-          <div class="cct-weekdays">${WEEKDAYS.map(day => `<span>${day}</span>`).join('')}</div>
-          <div class="cct-month-grid">${cells.join('')}</div>
-        </div>
-        <aside class="cct-monthly-side">
-          <span>AGENDA DEL MES</span>
-          <h3>${MONTHS[month][0]}${MONTHS[month].slice(1).toLowerCase()} ${year}</h3>
-          <p>Las insignias del CCT aparecen únicamente en las fechas con una actividad publicada.</p>
-          ${side}
-        </aside>
-      </div>`;
-
-    root.querySelector('[data-cal-prev]')?.addEventListener('click', () => {
-      state.month -= 1;
-      if(state.month < 0){ state.month = 11; state.year -= 1; }
-      renderCalendar(root,state);
-    });
-    root.querySelector('[data-cal-next]')?.addEventListener('click', () => {
-      state.month += 1;
-      if(state.month > 11){ state.month = 0; state.year += 1; }
-      renderCalendar(root,state);
-    });
+    const currentEvents=monthEvents(year,month);
+    const side=currentEvents.length?currentEvents.map(event=>{const date=new Date(`${event.date}T12:00:00`);return `<article class="cct-month-event"><time><b>${date.getDate()}</b><span>${MONTHS_SHORT[date.getMonth()]}</span></time><div><span>${event.type}</span><strong>${event.title}</strong></div></article>`}).join(''):'<div class="cct-month-empty">No hay actividades publicadas para este mes. Cuando se confirme una fecha, aparecerá directamente en su casilla.</div>';
+    root.innerHTML=`<div class="cct-monthly-wrap"><div class="cct-monthly-card"><div class="cct-monthly-head"><div class="cct-monthly-title"><small>TELE-CALENDAR</small><strong>${MONTHS[month]} ${year}</strong></div><div class="cct-monthly-nav"><button type="button" data-cal-prev aria-label="Mes anterior">←</button><button type="button" data-cal-next aria-label="Mes siguiente">→</button></div></div><div class="cct-weekdays">${WEEKDAYS.map(day=>`<span>${day}</span>`).join('')}</div><div class="cct-month-grid">${cells.join('')}</div></div><aside class="cct-monthly-side"><span>AGENDA DEL MES</span><h3>${MONTHS[month][0]}${MONTHS[month].slice(1).toLowerCase()} ${year}</h3><p>Las insignias del CCT aparecen únicamente en las fechas con una actividad publicada.</p>${side}</aside></div>`;
+    root.querySelector('[data-cal-prev]')?.addEventListener('click',()=>{state.month-=1;if(state.month<0){state.month=11;state.year-=1}renderCalendar(root,state)});
+    root.querySelector('[data-cal-next]')?.addEventListener('click',()=>{state.month+=1;if(state.month>11){state.month=0;state.year+=1}renderCalendar(root,state)});
   }
 
   function initMonthlyCalendar(){
-    injectStyles();
-    const section = document.getElementById('telecalendar');
-    if(!section || section.dataset.monthlyCalendar === 'ready') return;
-    section.dataset.monthlyCalendar = 'ready';
-    section.classList.add('is-visible');
-
-    const heading = section.querySelector('.v2-heading-row');
-    if(heading){
-      heading.innerHTML = `<div><span class="v2-kicker light">AGENDA GENERAL CCT</span><h2>Tu mes,<br><span>de un vistazo.</span></h2></div><p>Un calendario mensual clásico. Las fechas con actividad llevan una insignia del CCT directamente debajo del número.</p>`;
-    }
-
-    let mount = section.querySelector('.cct-monthly-mount');
-    if(!mount){
-      mount = document.createElement('div');
-      mount.className = 'cct-monthly-mount';
-      const container = section.querySelector('.container');
-      if(container) container.appendChild(mount);
-    }
-
-    const now = new Date();
-    renderCalendar(mount,{year:now.getFullYear(),month:now.getMonth()});
+    injectStyles(); const section=document.getElementById('telecalendar'); if(!section||section.dataset.monthlyCalendar==='ready')return; section.dataset.monthlyCalendar='ready'; section.classList.add('is-visible');
+    const heading=section.querySelector('.v2-heading-row'); if(heading)heading.innerHTML=`<div><span class="v2-kicker light">AGENDA GENERAL CCT</span><h2>Tu mes,<br><span>de un vistazo.</span></h2></div><p>Un calendario mensual clásico. Las fechas con actividad llevan una insignia del CCT directamente debajo del número.</p>`;
+    let mount=section.querySelector('.cct-monthly-mount'); if(!mount){mount=document.createElement('div');mount.className='cct-monthly-mount';section.querySelector('.container')?.appendChild(mount)}
+    const now=new Date(); renderCalendar(mount,{year:now.getFullYear(),month:now.getMonth()});
   }
-
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded',initMonthlyCalendar);
-  else initMonthlyCalendar();
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initMonthlyCalendar);else initMonthlyCalendar();
 })();

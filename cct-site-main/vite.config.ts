@@ -11,6 +11,7 @@ export default defineConfig({
         { src: 'assets/**/*', dest: 'assets' },
         { src: 'script-original.js', dest: '' },
         { src: 'career-v3.js', dest: '' },
+        { src: 'calendar-v2.js', dest: '' },
         { src: 'course.html', dest: '' },
         { src: 'course.css', dest: '' },
         { src: 'course.js', dest: '' }
