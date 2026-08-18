@@ -8,15 +8,11 @@ function loadScript(src: string): Promise<void> {
       else existing.addEventListener('load', () => resolve(), { once: true });
       return;
     }
-
     const script = document.createElement('script');
     script.src = src;
     script.async = false;
     script.dataset.cctRuntime = src;
-    script.addEventListener('load', () => {
-      script.dataset.loaded = 'true';
-      resolve();
-    }, { once: true });
+    script.addEventListener('load', () => { script.dataset.loaded = 'true'; resolve(); }, { once: true });
     script.addEventListener('error', () => reject(new Error(`No se pudo cargar ${src}`)), { once: true });
     document.body.appendChild(script);
   });
@@ -24,7 +20,6 @@ function loadScript(src: string): Promise<void> {
 
 export function bootLegacyRuntime(): Promise<void> {
   if (bootPromise) return bootPromise;
-
   const base = import.meta.env.BASE_URL;
   bootPromise = loadScript(`${base}script-original.js`)
     .then(() => {
@@ -32,9 +27,7 @@ export function bootLegacyRuntime(): Promise<void> {
       return loadScript(`${base}career-v3.js`);
     })
     .then(() => loadScript(`${base}calendar-v2.js`))
-    .catch((error) => {
-      console.error('[CCT] Error iniciando compatibilidad visual', error);
-    });
-
+    .then(() => loadScript(`${base}nosotros-v2.js`))
+    .catch((error) => console.error('[CCT] Error iniciando compatibilidad visual', error));
   return bootPromise;
 }

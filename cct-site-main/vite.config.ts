@@ -12,6 +12,7 @@ export default defineConfig({
         { src: 'script-original.js', dest: '' },
         { src: 'career-v3.js', dest: '' },
         { src: 'calendar-v2.js', dest: '' },
+        { src: 'nosotros-v2.js', dest: '' },
         { src: 'course.html', dest: '' },
         { src: 'course.css', dest: '' },
         { src: 'course.js', dest: '' }
