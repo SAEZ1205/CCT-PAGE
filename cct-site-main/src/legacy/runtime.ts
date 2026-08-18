@@ -28,6 +28,7 @@ export function bootLegacyRuntime(): Promise<void> {
     })
     .then(() => loadScript(`${base}calendar-v2.js`))
     .then(() => loadScript(`${base}nosotros-v2.js`))
+    .then(() => loadScript(`${base}formation-v2.js`))
     .catch((error) => console.error('[CCT] Error iniciando compatibilidad visual', error));
   return bootPromise;
 }
