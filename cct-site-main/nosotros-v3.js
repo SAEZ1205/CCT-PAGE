@@ -12,11 +12,14 @@
     }
     #view-nosotros .about-photo-main img{
       width:100%!important;height:100%!important;min-height:360px!important;
-      object-fit:cover!important;object-position:center 45%!important;
+      object-fit:cover!important;object-position:center 44%!important;
       display:block!important;opacity:1!important;visibility:visible!important;
     }
+    #view-nosotros .about-story-copy h3{max-width:650px!important}
     #view-nosotros .about-story-copy h3 .nosotros-red{color:#b82034!important}
-    #view-nosotros .about-story-copy p strong{color:#b82034!important;font-weight:800}
+    #view-nosotros .about-story-copy p strong{color:#b82034!important;font-weight:850}
+    #view-nosotros .about-story-copy .v2-kicker{color:#b82034!important}
+    #view-nosotros .about-story-copy .v2-kicker::before{background:#b82034!important}
     #view-nosotros .about-hero .inner-hero-content h1,
     #view-nosotros .about-hero .inner-hero-content h1 span{color:#b82034!important}
     @media(max-width:720px){
@@ -34,9 +37,11 @@
 
     const photo=view.querySelector('.about-photo-main img');
     if(photo){
-      photo.src=asset('nosotros-equipo-v3.webp');
+      photo.src=asset('nosotros-equipo.webp');
       photo.alt='Equipo del Centro Cultural de Telecomunicaciones CCT UNI';
     }
+    const label=view.querySelector('.about-photo-main span');
+    if(label) label.textContent='Equipo CCT · FIEE UNI';
 
     const story=view.querySelector('.about-story-copy');
     if(story){
@@ -44,8 +49,8 @@
       const title=story.querySelector('h3');
       const text=story.querySelector('p');
       if(kicker) kicker.textContent='NUESTRA HISTORIA';
-      if(title) title.innerHTML='Una comunidad que <span class="nosotros-red">crece compartiendo.</span>';
-      if(text) text.innerHTML='El CCT acompaña la formación universitaria fuera del aula. <strong>Academias, eventos y proyectos</strong> reúnen a estudiantes de distintas generaciones para aprender, asumir retos reales y construir una comunidad que deja camino para quienes vienen después.';
+      if(title) title.innerHTML='La carrera también se construye <span class="nosotros-red">en comunidad.</span>';
+      if(text) text.innerHTML='El CCT conecta a estudiantes de distintas generaciones para que la formación no termine en el aula. <strong>Academias, eventos, proyectos y experiencias compartidas</strong> convierten el conocimiento en algo que circula, crece y queda para quienes vienen después.';
     }
   }
   document.readyState==='loading' ? document.addEventListener('DOMContentLoaded',init) : init();
