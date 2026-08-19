@@ -1,7 +1,7 @@
 (() => {
   const current = document.currentScript;
   const BASE = current?.src ? new URL('.', current.src) : new URL('./', window.location.href);
-  const asset = (name) => new URL(`assets/${name}?v=6`, BASE).href;
+  const asset = (name) => new URL(`assets/${name}?v=7`, BASE).href;
 
   const COURSES = [
     { id:'cybersecurity', level:'PRINCIPIANTE', title:'Analista Junior en Ciberseguridad', desc:'Amenazas, endpoints y fundamentos de seguridad.', hours:'120 h', img:'course-support.webp' },
