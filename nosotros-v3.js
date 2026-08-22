@@ -1,7 +1,7 @@
 (() => {
   const current = document.currentScript;
   const BASE = current?.src ? new URL('.', current.src) : new URL('./', window.location.href);
-  const asset = (name) => new URL(`assets/${name}?v=20260822f`, BASE).href;
+  const asset = (name) => new URL(`assets/${name}?v=20260822g`, BASE).href;
 
   const CSS = `
     #view-nosotros .about-photo-main{
@@ -18,7 +18,17 @@
       object-fit:cover!important;object-position:center 48%!important;
       display:block!important;opacity:1!important;visibility:visible!important;
       image-rendering:auto!important;
+      position:absolute!important;inset:0!important;z-index:0!important;
     }
+    #view-nosotros .about-photo-main::after{
+      content:''!important;
+      position:absolute!important;
+      inset:0!important;
+      z-index:1!important;
+      pointer-events:none!important;
+      background:linear-gradient(0deg,rgba(7,9,14,.52) 0%,rgba(7,9,14,0) 38%)!important;
+    }
+    #view-nosotros .about-photo-main span{z-index:2!important}
 
     #view-nosotros .about-hero .inner-hero-content{
       max-width:1000px!important;
@@ -26,12 +36,12 @@
       padding-bottom:clamp(92px,12vh,145px)!important;
     }
     #view-nosotros .about-hero .inner-hero-content .v2-kicker{
-      color:#18b7f1!important;
+      color:#00caff!important;
       font-size:.72rem!important;
       letter-spacing:.19em!important;
       font-weight:900!important;
     }
-    #view-nosotros .about-hero .inner-hero-content .v2-kicker::before{background:#18b7f1!important}
+    #view-nosotros .about-hero .inner-hero-content .v2-kicker::before{background:#00caff!important}
     html body #view-nosotros section.about-hero .container.inner-hero-content > h1{
       margin:18px 0 20px!important;
       max-width:1000px!important;
@@ -87,7 +97,7 @@
       const desc=hero.querySelector('p');
       if(kicker){
         kicker.textContent='CCT · FIEE UNI';
-        kicker.style.setProperty('color','#18b7f1','important');
+        kicker.style.setProperty('color','#00caff','important');
       }
       if(title){
         title.textContent='NOSOTROS';
@@ -99,7 +109,7 @@
       if(desc) desc.innerHTML='Una comunidad estudiantil que convierte las telecomunicaciones en <strong>aprendizaje, proyectos y oportunidades.</strong>';
     }
 
-    const photoUrl=asset('equipo-cct-2026.jpg');
+    const photoUrl=asset('equipo-cct-2026.webp');
     const photoWrap=view.querySelector('.about-photo-main');
     if(photoWrap){
       photoWrap.style.backgroundImage=`url("${photoUrl}")`;
