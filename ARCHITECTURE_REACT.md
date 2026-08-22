@@ -1,6 +1,7 @@
 # Arquitectura React del CCT
 
-La aplicación conserva el frontend existente y elimina la cadena de archivos versionados que se sobrescribían entre sí.
+## Objetivo
+El proyecto debe tener **un solo dueño por sección**. No se crean archivos `v2`, `v3`, `final`, `final2`, ni scripts que vuelvan a modificar una sección después de que otra capa ya la construyó.
 
 ## Stack
 - React 18
@@ -8,45 +9,66 @@ La aplicación conserva el frontend existente y elimina la cadena de archivos ve
 - Vite
 - Tailwind CSS con prefijo `tw-` y preflight desactivado
 
-## Capas
+## Estructura activa
 
 ### React
-`src/App.tsx` monta las vistas y espera a que el runtime base termine antes de inicializar las funciones React/TypeScript que dependen del DOM.
+`src/App.tsx` monta el DOM base y, cuando termina el runtime global, inicializa las features TypeScript de cada sección.
 
-### Snapshot de compatibilidad
-`src/legacy/snapshot.html` conserva temporalmente el DOM visual ya aprobado. `extract.ts` separa las vistas para que React las monte sin rediseñarlas. No es una segunda aplicación ni una versión activa: es el markup fuente que permite preservar el frontend durante la migración gradual.
+### Snapshot temporal
+`src/legacy/snapshot.html` conserva únicamente el **markup base** del frontend aprobado. `src/legacy/extract.ts` extrae las vistas para montarlas desde React.
 
-### Runtime estable
-Solo existe una fuente activa por área:
+El snapshot **no ejecuta scripts, no cambia imágenes y no vuelve a escribir secciones**. Es un paso temporal hasta migrar el markup completo a JSX.
 
-```text
-site.js        navegación y comportamiento general
-career.js      Conoce tu carrera
-calendar.js    calendario de Inicio
-nosotros.js    Nosotros
-formation.js   Academia CCT y certificaciones
-```
-
-`src/legacy/runtime.ts` las carga en orden y de forma aislada. Si un módulo secundario falla, el resto continúa inicializando.
-
-### Funciones React/TypeScript
-Open Course vive únicamente en:
+### Runtime global legacy
+Solo quedan tres scripts históricos cargados por `src/legacy/runtime.ts`:
 
 ```text
-src/features/formation/openCourse.ts
+site.js        navegación, modales y comportamiento global
+career.js      bloque Conoce tu carrera de Inicio
+calendar.js    calendario general de Inicio
 ```
 
-Ya no existe un segundo script que reconstruya sus tarjetas ni un MutationObserver peleando contra otra capa.
+No se cargan scripts legacy para Nosotros, Formación, Comunidad ni Eventos.
+
+### Secciones TypeScript
+Cada sección tiene una única feature activa:
+
+```text
+src/features/nosotros/nosotros.ts        Nosotros
+src/features/formation/formation.ts      Hero + Academias
+src/features/formation/openCourse.ts     Open Course
+src/features/community/community.ts      Comunidad
+src/features/events/events.ts            Eventos
+```
+
+`formation.ts` no modifica Open Course. `openCourse.ts` es su único dueño.
 
 ### Estilos
-- `styles.css`: diseño base aprobado.
-- `src/styles/tailwind.css`: Tailwind sin reset global.
-- `src/styles/compat-fixes.css`: solo correcciones mínimas de compatibilidad.
 
-## Norma para cambios futuros
-No crear `v2`, `v3`, `final`, `final2`, etc. Un cambio se realiza en el archivo estable de su área o en su feature React/TypeScript correspondiente.
+```text
+styles.css                               base histórica visual
+src/styles/tailwind.css                  solo Tailwind + shell React
+src/styles/sections/nosotros.css         Nosotros
+src/styles/sections/formacion.css        Formación
+src/styles/sections/comunidad.css        Comunidad
+src/styles/sections/eventos.css          Eventos
+```
+
+Ya no existe `compat-fixes.css` ni CSS inyectado por scripts de esas cuatro secciones.
+
+## Assets
+Las imágenes se consumen como archivos normales desde `assets/` mediante Vite. No se usan archivos `.b64` ni `fetch()` para construir imágenes en tiempo de ejecución.
+
+## Regla para cambios futuros
+1. Cambiar la sección en su feature TypeScript.
+2. Cambiar su estilo en su CSS canónico.
+3. Cambiar imágenes reemplazando o apuntando a un asset normal.
+4. No crear una segunda implementación del mismo bloque.
+5. Antes de fusionar a `main`, ejecutar `npm run build`.
 
 ## Build
 ```bash
 npm run build
 ```
+
+La configuración de Vite usa rutas relativas (`base: './'`) para evitar depender de `process.env` y funcionar tanto en local como en despliegues estáticos.
