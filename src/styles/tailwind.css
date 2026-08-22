@@ -5,18 +5,3 @@
 .cct-react-shell {
   display: contents;
 }
-
-/* Recuperación del hero "ACADEMIA CCT".
-   formation-v4.js oculta los hijos directos del hero; esta regla da prioridad
-   al bloque nuevo para mantener visible la animación de Tierra + estrellas. */
-#view-formacion .formation-hero-content > .formation-earth-v4 {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-#view-formacion .formation-hero-content > .formation-earth-v4 img {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
