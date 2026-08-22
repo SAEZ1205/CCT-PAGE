@@ -1,23 +1,17 @@
-/*
- * Ajustes de compatibilidad deliberados.
- * Debe permanecer pequeño: corrige únicamente choques del markup conservado.
- */
-
-/* formation.js oculta los hijos históricos para montar el hero definitivo.
-   Esta regla hace visible únicamente Academia CCT y conserva la altura final
-   que tenía el frontend antes de retirar las capas versionadas. */
+/* Ajustes de compatibilidad mínimos sobre el markup histórico conservado. */
 #view-formacion .formation-hero,
-#view-formacion .formation-hero-content {
-  min-height: 560px !important;
-}
+#view-formacion .formation-hero-content { min-height:560px!important; }
+#view-formacion .formation-hero-content>.formation-earth-v4 { display:flex!important; }
 
-#view-formacion .formation-hero-content > .formation-earth-v4 {
-  display: flex !important;
-}
+/* Formación: movimiento más visible sin cambiar la composición aprobada. */
+#view-formacion .formation-earth-v4 img { animation-duration:8s!important; }
+#view-formacion .formation-earth-v4::after { animation-duration:10s!important; }
+#view-formacion .cert-v4-track { animation-duration:28s!important; }
 
-@media (max-width: 700px) {
-  #view-formacion .formation-hero,
-  #view-formacion .formation-hero-content {
-    min-height: 430px !important;
-  }
+/* Identidad de portada: CCT · FIEE UNI en celeste. */
+#view-formacion .formation-earth-copy small { font-size:0!important;color:#00caff!important; }
+#view-formacion .formation-earth-copy small::after { content:'CCT · FIEE UNI';font-size:.68rem;letter-spacing:.16em;font-weight:900;color:#00caff; }
+
+@media(max-width:700px){
+  #view-formacion .formation-hero,#view-formacion .formation-hero-content{min-height:430px!important}
 }
