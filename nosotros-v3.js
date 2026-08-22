@@ -1,13 +1,16 @@
 (() => {
   const current = document.currentScript;
   const BASE = current?.src ? new URL('.', current.src) : new URL('./', window.location.href);
-  const asset = (name) => new URL(`assets/${name}?v=20260822b`, BASE).href;
+  const asset = (name) => new URL(`assets/${name}?v=20260822c`, BASE).href;
 
   const CSS = `
     #view-nosotros .about-photo-main{
       min-height:360px!important;
       overflow:hidden!important;
-      background:#f3f4f6!important;
+      background-color:#111520!important;
+      background-size:cover!important;
+      background-position:center 48%!important;
+      background-repeat:no-repeat!important;
       border-radius:24px!important;
     }
     #view-nosotros .about-photo-main img{
@@ -16,54 +19,48 @@
       display:block!important;opacity:1!important;visibility:visible!important;
     }
 
+    /* Hero Nosotros: tipografía editorial limpia como Formación/Comunidad */
     #view-nosotros .about-hero .inner-hero-content{
-      max-width:980px!important;
-      padding-top:clamp(96px,12vh,150px)!important;
-      padding-bottom:clamp(90px,12vh,140px)!important;
+      max-width:1000px!important;
+      padding-top:clamp(100px,12vh,155px)!important;
+      padding-bottom:clamp(92px,12vh,145px)!important;
     }
     #view-nosotros .about-hero .inner-hero-content .v2-kicker{
-      color:#00caff!important;
+      color:#18b7f1!important;
       font-size:.72rem!important;
-      letter-spacing:.18em!important;
+      letter-spacing:.19em!important;
       font-weight:900!important;
     }
     #view-nosotros .about-hero .inner-hero-content .v2-kicker::before{
-      background:#00caff!important;
+      background:#18b7f1!important;
     }
     #view-nosotros .about-hero .inner-hero-content h1{
-      margin:18px 0 18px!important;
-      max-width:980px!important;
-      font-size:clamp(5rem,10vw,10rem)!important;
-      line-height:.82!important;
+      margin:18px 0 20px!important;
+      max-width:1000px!important;
+      font-size:clamp(5.2rem,10.5vw,10.4rem)!important;
+      line-height:.84!important;
       letter-spacing:-.065em!important;
       color:#fff!important;
       font-weight:900!important;
       text-transform:uppercase!important;
     }
-    #view-nosotros .about-hero .inner-hero-content h1 span{
-      color:#00caff!important;
-    }
     #view-nosotros .about-hero .inner-hero-content h1::after{
-      content:' · CCT';
-      color:#00caff;
-      font-size:.28em;
-      letter-spacing:.015em;
-      vertical-align:middle;
-      margin-left:10px;
-      white-space:nowrap;
+      content:''!important;
+      display:none!important;
     }
     #view-nosotros .about-hero .inner-hero-content p{
-      max-width:700px!important;
-      color:rgba(255,255,255,.82)!important;
+      max-width:720px!important;
+      color:rgba(255,255,255,.78)!important;
       font-size:clamp(1rem,1.35vw,1.18rem)!important;
       line-height:1.65!important;
     }
     #view-nosotros .about-hero .inner-hero-content p strong{
-      color:#00caff!important;
+      color:#fff!important;
+      font-weight:850!important;
     }
     #view-nosotros .about-hero .inner-hero-scroll{
-      color:#fff!important;
-      border-color:rgba(255,255,255,.35)!important;
+      color:#18b7f1!important;
+      border-color:rgba(24,183,241,.45)!important;
     }
 
     #view-nosotros .about-story-copy h3{max-width:650px!important}
@@ -76,17 +73,18 @@
       #view-nosotros .about-photo-main,#view-nosotros .about-photo-main img{min-height:250px!important}
       #view-nosotros .about-hero .inner-hero-content{padding-top:90px!important;padding-bottom:80px!important}
       #view-nosotros .about-hero .inner-hero-content h1{font-size:clamp(4rem,18vw,6.4rem)!important}
-      #view-nosotros .about-hero .inner-hero-content h1::after{display:block;margin:14px 0 0;font-size:.22em}
     }
   `;
 
   function init(){
-    if(!document.getElementById('nosotrosV4Styles')){
-      const style=document.createElement('style');
+    let style=document.getElementById('nosotrosV4Styles');
+    if(!style){
+      style=document.createElement('style');
       style.id='nosotrosV4Styles';
-      style.textContent=CSS;
       document.head.appendChild(style);
     }
+    style.textContent=CSS;
+
     const view=document.getElementById('view-nosotros');
     if(!view) return;
 
@@ -96,14 +94,27 @@
       const title=hero.querySelector('h1');
       const desc=hero.querySelector('p');
       if(kicker) kicker.textContent='CCT · FIEE UNI';
-      if(title) title.innerHTML='NOSOTROS';
+      if(title) title.textContent='NOSOTROS';
       if(desc) desc.innerHTML='Una comunidad estudiantil que convierte las telecomunicaciones en <strong>aprendizaje, proyectos y oportunidades.</strong>';
+    }
+
+    const photoUrl=asset('equipo-cct-2026.webp');
+    const photoWrap=view.querySelector('.about-photo-main');
+    if(photoWrap){
+      photoWrap.style.backgroundImage=`url("${photoUrl}")`;
+      photoWrap.style.backgroundSize='cover';
+      photoWrap.style.backgroundPosition='center 48%';
     }
 
     const photo=view.querySelector('.about-photo-main img');
     if(photo){
-      photo.src=asset('equipo-cct-2026.webp');
+      photo.removeAttribute('loading');
+      photo.loading='eager';
+      photo.src=photoUrl;
       photo.alt='Equipo del Centro Cultural de Telecomunicaciones CCT UNI';
+      photo.onerror=()=>{
+        photo.style.opacity='0';
+      };
     }
     const label=view.querySelector('.about-photo-main span');
     if(label) label.textContent='Equipo CCT · FIEE UNI';
