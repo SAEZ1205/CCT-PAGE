@@ -1,5 +1,5 @@
-CCT PAGE — REACT + VITE
-=======================
+CCT PAGE — REACT + TYPESCRIPT + VITE
+====================================
 
 ESTA ES LA UNICA CARPETA DEL PROYECTO.
 No vuelvas a ejecutar git clone dentro de CCT-PAGE.
@@ -23,23 +23,31 @@ PRIMERA VEZ EN UNA PC NUEVA
 Tambien puedes hacer doble clic en INICIAR_CCT.bat. Si node_modules no existe,
 el archivo instala las dependencias y luego inicia Vite.
 
-ARCHIVOS PRINCIPALES
---------------------
+FUENTES ACTIVAS DEL FRONTEND
+----------------------------
 - src/: React + TypeScript.
 - styles.css: estilo visual base.
 - site.js: navegacion y comportamiento general.
 - career.js: Conoce tu carrera.
 - calendar.js: calendario de Inicio.
 - nosotros.js: seccion Nosotros.
-- formation.js: hero y academias de Formacion.
-- open-course.js: tarjetas Open Course.
+- formation.js: hero Academia CCT + certificaciones.
+- src/features/formation/openCourse.ts: tarjetas Open Course (React/TypeScript).
 - course.html / course.css / course.js: aula de Open Course.
 - assets/: imagenes, logos y videos.
 
 IMPORTANTE
 ----------
-Los archivos antiguos con nombres v2, v3, v4, v5 y v6 fueron retirados del
-runtime para que una version antigua no vuelva a pisar un cambio nuevo.
+Los antiguos archivos v2, v3, v4, v5 y v6 fueron retirados del runtime para
+que una version antigua no vuelva a pisar un cambio nuevo.
 
-Antes de la limpieza existe el respaldo:
+No crees archivos final.js, final2.js o nuevas variantes numeradas. Modifica la
+fuente estable de la seccion correspondiente.
+
+SEGURIDAD
+---------
+Antes de la limpieza existe el respaldo completo:
 backup-pre-cleanup-2026-08-22
+
+Ademas, cada push a main ejecuta una comprobacion automatica de TypeScript y
+Vite mediante GitHub Actions antes de considerar estable el cambio.
