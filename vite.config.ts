@@ -9,16 +9,12 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         { src: 'assets/**/*', dest: 'assets' },
-        { src: 'script-original.js', dest: '' },
-        { src: 'career-v3.js', dest: '' },
-        { src: 'calendar-v2.js', dest: '' },
-        { src: 'nosotros-v2.js', dest: '' },
-        { src: 'nosotros-v3.js', dest: '' },
-        { src: 'formation-v2.js', dest: '' },
-        { src: 'formation-v3.js', dest: '' },
-        { src: 'formation-v4.js', dest: '' },
-        { src: 'formation-v5.js', dest: '' },
-        { src: 'formation-v6.js', dest: '' },
+        { src: 'site.js', dest: '' },
+        { src: 'career.js', dest: '' },
+        { src: 'calendar.js', dest: '' },
+        { src: 'nosotros.js', dest: '' },
+        { src: 'formation.js', dest: '' },
+        { src: 'open-course.js', dest: '' },
         { src: 'course.html', dest: '' },
         { src: 'course.css', dest: '' },
         { src: 'course.js', dest: '' }

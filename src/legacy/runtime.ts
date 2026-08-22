@@ -1,39 +1,61 @@
 let bootPromise: Promise<void> | null = null;
 
+const RUNTIME_VERSION = '20260822-clean';
+
 function loadScript(src: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const existing = document.querySelector<HTMLScriptElement>(`script[data-cct-runtime="${src}"]`);
     if (existing) {
       if (existing.dataset.loaded === 'true') resolve();
-      else existing.addEventListener('load', () => resolve(), { once: true });
+      else {
+        existing.addEventListener('load', () => resolve(), { once: true });
+        existing.addEventListener('error', () => reject(new Error(`No se pudo cargar ${src}`)), { once: true });
+      }
       return;
     }
+
     const script = document.createElement('script');
     script.src = src;
     script.async = false;
     script.dataset.cctRuntime = src;
-    script.addEventListener('load', () => { script.dataset.loaded = 'true'; resolve(); }, { once: true });
+    script.addEventListener('load', () => {
+      script.dataset.loaded = 'true';
+      resolve();
+    }, { once: true });
     script.addEventListener('error', () => reject(new Error(`No se pudo cargar ${src}`)), { once: true });
     document.body.appendChild(script);
   });
 }
 
+async function loadSafely(src: string): Promise<void> {
+  try {
+    await loadScript(src);
+  } catch (error) {
+    console.error('[CCT] Módulo visual omitido:', src, error);
+  }
+}
+
 export function bootLegacyRuntime(): Promise<void> {
   if (bootPromise) return bootPromise;
+
   const base = import.meta.env.BASE_URL;
-  bootPromise = loadScript(`${base}script-original.js`)
-    .then(() => {
-      document.dispatchEvent(new Event('DOMContentLoaded', { bubbles: true }));
-      return loadScript(`${base}career-v3.js`);
-    })
-    .then(() => loadScript(`${base}calendar-v2.js`))
-    .then(() => loadScript(`${base}nosotros-v2.js`))
-    .then(() => loadScript(`${base}nosotros-v3.js?v=20260822e`))
-    .then(() => loadScript(`${base}formation-v2.js`))
-    .then(() => loadScript(`${base}formation-v3.js`))
-    .then(() => loadScript(`${base}formation-v4.js`))
-    .then(() => loadScript(`${base}formation-v5.js`))
-    .then(() => loadScript(`${base}formation-v6.js`))
-    .catch((error) => console.error('[CCT] Error iniciando compatibilidad visual', error));
+  const runtime = (name: string) => `${base}${name}?v=${RUNTIME_VERSION}`;
+
+  bootPromise = (async () => {
+    // Núcleo: navegación, modales, carruseles y comportamiento general.
+    await loadSafely(runtime('site.js'));
+
+    // site.js conserva inicializadores basados en DOMContentLoaded.
+    // React ya montó el DOM, por eso se dispara una única vez aquí.
+    document.dispatchEvent(new Event('DOMContentLoaded', { bubbles: true }));
+
+    // Un único módulo activo por área. Si uno falla, los demás continúan.
+    await loadSafely(runtime('career.js'));
+    await loadSafely(runtime('calendar.js'));
+    await loadSafely(runtime('nosotros.js'));
+    await loadSafely(runtime('formation.js'));
+    await loadSafely(runtime('open-course.js'));
+  })();
+
   return bootPromise;
 }

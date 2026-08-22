@@ -1,42 +1,45 @@
-CCT PAGE — VERSION COMPLETA
-===========================
+CCT PAGE — REACT + VITE
+=======================
 
-INICIO RAPIDO EN WINDOWS
+ESTA ES LA UNICA CARPETA DEL PROYECTO.
+No vuelvas a ejecutar git clone dentro de CCT-PAGE.
 
-1. Descomprime todo el ZIP en una carpeta.
-2. Haz doble clic en INICIAR_CCT.bat.
-3. La pagina se abrira automaticamente en http://localhost:5500.
-4. No cierres la ventana negra mientras estes revisando la web.
+PARA RETOMAR EL PROYECTO
+------------------------
+1. Abre CMD o PowerShell.
+2. Entra a tu carpeta CCT-PAGE.
+3. Ejecuta:
 
-El iniciador solo necesita Node.js y no instala dependencias. Tambien puedes abrir
-index.html directamente, aunque el servidor local es la opcion recomendada.
+   git pull
+   npm run dev
+
+4. Abre la direccion Local que muestra Vite (normalmente http://localhost:5173/).
+
+PRIMERA VEZ EN UNA PC NUEVA
+---------------------------
+   npm install
+   npm run dev
+
+Tambien puedes hacer doble clic en INICIAR_CCT.bat. Si node_modules no existe,
+el archivo instala las dependencias y luego inicia Vite.
 
 ARCHIVOS PRINCIPALES
+--------------------
+- src/: React + TypeScript.
+- styles.css: estilo visual base.
+- site.js: navegacion y comportamiento general.
+- career.js: Conoce tu carrera.
+- calendar.js: calendario de Inicio.
+- nosotros.js: seccion Nosotros.
+- formation.js: hero y academias de Formacion.
+- open-course.js: tarjetas Open Course.
+- course.html / course.css / course.js: aula de Open Course.
+- assets/: imagenes, logos y videos.
 
-- index.html: sitio completo y todas sus secciones.
-- styles.css: estilos y adaptacion para celular.
-- script.js: navegacion, calendarios, carruseles y recursos.
-- course.html / course.css / course.js: aulas y modulos de Open Course.
-- assets/: imagenes, logotipos, mascota, fotos y videos locales.
+IMPORTANTE
+----------
+Los archivos antiguos con nombres v2, v3, v4, v5 y v6 fueron retirados del
+runtime para que una version antigua no vuelva a pisar un cambio nuevo.
 
-RECURSOS ACADEMICOS
-
-La seccion Recursos se navega dentro de la web. El SharePoint externo solo se
-abre cuando el usuario selecciona un curso. Cada tarjeta construye la ruta de
-su propia carpeta (ciclo + codigo y nombre del curso); nunca reutiliza el enlace
-del Drive general. Si SharePoint cambia el nombre de una carpeta, actualiza la
-propiedad folder de ese curso en script.js.
-
-ANTES DE PUBLICAR
-
-- Reemplaza el numero de WhatsApp de ejemplo por el numero oficial del CCT.
-- Completa las fechas reales cuando se confirme un proximo evento.
-- Actualiza los enlaces sociales oficiales que aun esten pendientes.
-- Puedes publicar directamente el contenido de esta carpeta en GitHub Pages,
-  Vercel, Netlify o cualquier hosting estatico.
-
-GITHUB PAGES
-
-El repositorio incluye un index.html en la raiz. Ese archivo abre esta carpeta
-automaticamente para que https://saez1205.github.io/CCT-PAGE/ funcione aunque
-el proyecto completo permanezca organizado dentro de cct-site-main/.
+Antes de la limpieza existe el respaldo:
+backup-pre-cleanup-2026-08-22

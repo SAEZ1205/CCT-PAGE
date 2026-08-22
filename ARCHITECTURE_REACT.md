@@ -1,52 +1,46 @@
 # Arquitectura React del CCT
 
-La interfaz visual se conserva. La migración separa la aplicación por vistas sin rediseñar el frontend.
+La aplicación conserva el frontend existente, pero elimina la cadena de archivos versionados que se sobrescribían entre sí.
 
 ## Stack
-- React
+- React 18
 - TypeScript
 - Vite
-- Tailwind CSS (prefijo `tw-` y preflight desactivado para no alterar el diseño existente)
+- Tailwind CSS con prefijo `tw-` y preflight desactivado
 
-## Estructura
+## Capas
+
+### 1. React
+`src/App.tsx` compone las vistas y controla el montaje principal.
+
+### 2. Snapshot de compatibilidad
+`src/legacy/snapshot.html` conserva temporalmente el DOM visual ya aprobado. `extract.ts` separa las vistas para que React las monte sin rediseñarlas. Esta capa existe para mantener fidelidad visual mientras cada sección se migra gradualmente a JSX puro.
+
+### 3. Runtime estable
+Ya no se cargan `nosotros-v2/v3` ni `formation-v2/v3/v4/v5/v6` simultáneamente.
+
+Solo existen estas fuentes activas:
 
 ```text
-src/
-  App.tsx
-  main.tsx
-  layout/
-    markup.ts
-  legacy/
-    extract.ts
-    runtime.ts
-    snapshot.html
-  pages/
-    inicio/
-    nosotros/
-    formacion/
-    comunidad/
-    eventos/
-    telcon/
-    recursos/
-  styles/
-    tailwind.css
+site.js          comportamiento general y navegación
+career.js        Conoce tu carrera
+calendar.js      calendario de Inicio
+nosotros.js      Nosotros
+formation.js     hero y academias de Formación
+open-course.js   Open Course
 ```
 
-Cada vista principal vive en su propia carpeta. `snapshot.html` es una capa de compatibilidad temporal que conserva exactamente el DOM previo mientras se migra cada sección a JSX puro de forma gradual, sin cambiar el frontend.
+`src/legacy/runtime.ts` las carga en orden y de forma aislada. Si un módulo secundario falla, el resto de la página sigue inicializando en lugar de quedar completamente en blanco.
 
-`script-original.js`, `career-v3.js` y `styles.css` se mantienen como compatibilidad visual durante esta etapa. Vite copia los recursos estáticos necesarios al build.
+### 4. Estilos
+- `styles.css`: diseño base aprobado.
+- `src/styles/tailwind.css`: Tailwind sin reset global.
+- `src/styles/compat-fixes.css`: solo correcciones puntuales de compatibilidad; no debe convertirse en otra capa de parches.
 
-## Desarrollo
-
-```bash
-npm install
-npm run dev
-```
+## Norma para cambios futuros
+Un cambio de Nosotros se hace en `nosotros.js`; uno de Formación en `formation.js` u `open-course.js`; calendario en `calendar.js`. No se deben crear archivos `v2`, `v3`, `final`, `final2`, etc.
 
 ## Build
-
 ```bash
 npm run build
 ```
-
-El build queda en `dist/`.
