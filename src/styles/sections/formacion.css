@@ -1,0 +1,124 @@
+#view-formacion .formation-hero,
+#view-formacion .formation-hero-content {
+  min-height: 560px !important;
+  background: #070a10 !important;
+  overflow: hidden !important;
+}
+
+#view-formacion .formation-hero-content {
+  display: block !important;
+  position: relative !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: none !important;
+}
+
+#view-formacion .formation-earth-v4 {
+  display: flex !important;
+  position: absolute;
+  inset: 0;
+  align-items: flex-end;
+  overflow: hidden;
+  padding: clamp(38px, 6vw, 78px) clamp(28px, 8vw, 145px);
+  isolation: isolate;
+}
+
+#view-formacion .formation-earth-v4 > img {
+  display: block !important;
+  position: absolute;
+  inset: -7%;
+  width: 114%;
+  height: 114%;
+  object-fit: cover;
+  object-position: center;
+  z-index: -3;
+  filter: brightness(.63) saturate(1.18);
+  animation: earthMoveV4 8s ease-in-out infinite alternate;
+}
+
+#view-formacion .formation-earth-v4::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: linear-gradient(90deg, rgba(4,7,12,.91) 0%, rgba(4,7,12,.62) 37%, rgba(4,7,12,.14) 70%), linear-gradient(0deg, rgba(4,7,12,.7), transparent 58%);
+}
+
+#view-formacion .formation-earth-v4::after {
+  content: '';
+  position: absolute;
+  inset: -12%;
+  z-index: -1;
+  background-image: radial-gradient(circle at 18% 30%, rgba(255,255,255,.85) 0 1px, transparent 1.5px), radial-gradient(circle at 75% 23%, rgba(255,255,255,.55) 0 1px, transparent 1.5px), radial-gradient(circle at 63% 72%, rgba(255,255,255,.6) 0 1px, transparent 1.5px);
+  background-size: 120px 120px, 160px 160px, 210px 210px;
+  opacity: .45;
+  animation: starsV4 10s linear infinite;
+}
+
+#view-formacion .formation-earth-copy { max-width: 720px; }
+#view-formacion .formation-earth-copy small { color: #00caff; font-size: .68rem; font-weight: 900; letter-spacing: .16em; }
+#view-formacion .formation-earth-copy h1 { margin: 8px 0 10px !important; font-size: clamp(4rem, 8vw, 8.3rem) !important; line-height: .87 !important; letter-spacing: -.06em !important; color: #fff !important; }
+#view-formacion .formation-earth-copy h1 span { color: #d52b3d !important; }
+#view-formacion .formation-earth-copy p { max-width: 540px; margin: 0; color: rgba(255,255,255,.72); font-size: .95rem; line-height: 1.6; }
+
+#view-formacion .certification-orbit { background: #fff !important; padding: 58px 0 62px !important; }
+#view-formacion .cert-v4-head { display: flex; justify-content: space-between; gap: 30px; margin-bottom: 20px; }
+#view-formacion .cert-v4-head .v2-kicker { color: #b82034 !important; }
+#view-formacion .cert-v4-head h2 { margin: 8px 0 5px; font-size: clamp(2rem, 4vw, 3.7rem); line-height: .96; letter-spacing: -.045em; }
+#view-formacion .cert-v4-head h2 span { color: #b82034; }
+#view-formacion .cert-v4-head p { color: #7b8492; }
+#view-formacion .cert-v4-window { overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
+#view-formacion .cert-v4-track { display: flex; width: max-content; gap: 14px; animation: certMoveV4 28s linear infinite; }
+#view-formacion .cert-v4-window:hover .cert-v4-track { animation-play-state: paused; }
+#view-formacion .cert-v4-card { width: 190px; height: 240px; flex: 0 0 190px; border: 1px solid #e1e5ea; border-radius: 16px; background: #fff; padding: 13px; display: flex; flex-direction: column; position: relative; cursor: pointer; transition: .2s; }
+#view-formacion .cert-v4-card:hover { transform: translateY(-3px); border-color: #b82034; box-shadow: 0 10px 24px rgba(18,26,38,.09); }
+#view-formacion .cert-v4-num { position: absolute; right: 11px; top: 8px; color: #eef1f4; font-size: 1.25rem; font-weight: 900; }
+#view-formacion .cert-v4-img { height: 76px; display: flex; align-items: center; justify-content: center; padding: 5px 12px; }
+#view-formacion .cert-v4-img img { max-width: 100%; max-height: 70px; object-fit: contain; }
+#view-formacion .cert-v4-provider { margin-top: 4px; color: #b82034; font-size: .48rem; font-weight: 900; letter-spacing: .09em; }
+#view-formacion .cert-v4-card h3 { font-size: .82rem; line-height: 1.16; margin: 5px 0 4px; }
+#view-formacion .cert-v4-card p { font-size: .6rem; line-height: 1.35; color: #707988; margin: 0; flex: 1; }
+#view-formacion .cert-v4-foot { display: flex; align-items: center; justify-content: space-between; gap: 5px; margin-top: 8px; }
+#view-formacion .cert-v4-status { display: flex; align-items: center; gap: 4px; font-size: .49rem; font-weight: 800; white-space: nowrap; }
+#view-formacion .cert-v4-status i { width: 7px; height: 7px; border-radius: 50%; }
+#view-formacion .cert-v4-status.open i { background: #20b76a; }
+#view-formacion .cert-v4-status.closed i { background: #dd3e4f; }
+#view-formacion .cert-v4-btn { border: 0; border-radius: 999px; background: #b82034; color: #fff; padding: 6px 8px; font-size: .48rem; font-weight: 900; }
+#view-formacion .cert-v4-btn.closed { background: #edf0f4; color: #707988; }
+#view-formacion .cert-v4-note { font-size: .61rem; color: #969da8; margin: 9px 0 0; }
+
+#view-formacion .academy-v4-modal { position: fixed; inset: 0; z-index: 10090; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(4,7,12,.76); backdrop-filter: blur(7px); }
+#view-formacion .academy-v4-modal.open, .academy-v4-modal.open { display: flex; }
+.academy-v4-box { width: min(500px,100%); background: #fff; color: #101725; border-radius: 20px; padding: 24px; position: relative; }
+.academy-v4-close { position: absolute; right: 14px; top: 14px; width: 34px; height: 34px; border: 0; border-radius: 50%; background: #f0f2f5; cursor: pointer; }
+.academy-v4-box small { color: #b82034; font-size: .55rem; font-weight: 900; letter-spacing: .1em; }
+.academy-v4-box h3 { font-size: 1.4rem; margin: 6px 40px 5px 0; }
+.academy-v4-box p { font-size: .75rem; color: #727b88; }
+.academy-v4-form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.academy-v4-field { display: flex; flex-direction: column; gap: 5px; }
+.academy-v4-field.full { grid-column: 1 / -1; }
+.academy-v4-field label { font-size: .62rem; font-weight: 800; }
+.academy-v4-field input { height: 40px; border: 1px solid #dce1e8; border-radius: 9px; padding: 0 10px; font: inherit; }
+.academy-v4-submit { grid-column: 1 / -1; height: 42px; border: 0; border-radius: 10px; background: #b82034; color: #fff; font-weight: 900; }
+.academy-v4-ok { grid-column: 1 / -1; display: none; padding: 10px; border-radius: 9px; background: #eaf9f1; color: #167447; font-size: .7rem; font-weight: 800; }
+.academy-v4-ok.show { display: block; }
+
+@keyframes earthMoveV4 { from { transform: scale(1.02) translate3d(-.6%,0,0); } to { transform: scale(1.06) translate3d(.8%,-.5%,0); } }
+@keyframes starsV4 { from { transform: translate3d(0,0,0); } to { transform: translate3d(4%,2%,0); } }
+@keyframes certMoveV4 { from { transform: translateX(0); } to { transform: translateX(calc(-50% - 7px)); } }
+
+@media (max-width: 700px) {
+  #view-formacion .formation-hero,
+  #view-formacion .formation-hero-content { min-height: 430px !important; }
+  #view-formacion .formation-earth-v4 { padding: 34px 20px; }
+  #view-formacion .formation-earth-copy h1 { font-size: clamp(3.4rem, 18vw, 5.1rem) !important; }
+  #view-formacion .cert-v4-card { width: 176px; flex-basis: 176px; height: 232px; }
+  .academy-v4-form { grid-template-columns: 1fr; }
+  .academy-v4-field.full, .academy-v4-submit, .academy-v4-ok { grid-column: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #view-formacion .formation-earth-v4 > img,
+  #view-formacion .formation-earth-v4::after,
+  #view-formacion .cert-v4-track { animation: none !important; }
+}
