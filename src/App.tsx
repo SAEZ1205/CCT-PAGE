@@ -8,7 +8,11 @@ import { eventosMarkup } from './pages/eventos';
 import { telconMarkup } from './pages/telcon';
 import { recursosMarkup } from './pages/recursos';
 import { bootLegacyRuntime } from './legacy/runtime';
+import { initNosotros } from './features/nosotros/nosotros';
+import { initFormation } from './features/formation/formation';
 import { initOpenCourseFormation } from './features/formation/openCourse';
+import { initCommunity } from './features/community/community';
+import { initEvents } from './features/events/events';
 
 const viewsMarkup = [
   inicioMarkup,
@@ -17,7 +21,7 @@ const viewsMarkup = [
   comunidadMarkup,
   eventosMarkup,
   telconMarkup,
-  recursosMarkup
+  recursosMarkup,
 ].join('\n');
 
 const appMarkup = `
@@ -31,10 +35,13 @@ ${afterMainMarkup}
 
 export default function App() {
   useEffect(() => {
-    // Primero se estabiliza el DOM histórico; después React/TS monta Open Course.
-    // Así ninguna capa posterior vuelve a sobrescribir las tarjetas.
     void bootLegacyRuntime().then(() => {
+      // Cada sección moderna tiene un solo dueño. El runtime legacy ya no las reconstruye.
+      initNosotros();
+      initFormation();
       initOpenCourseFormation();
+      initCommunity();
+      initEvents();
     });
   }, []);
 
