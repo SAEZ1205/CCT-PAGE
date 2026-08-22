@@ -1,7 +1,7 @@
 (() => {
   const current = document.currentScript;
   const BASE = current?.src ? new URL('.', current.src) : new URL('./', window.location.href);
-  const asset = (name) => new URL(`assets/${name}?v=20260822c`, BASE).href;
+  const asset = (name) => new URL(`assets/${name}?v=20260822d`, BASE).href;
 
   const CSS = `
     #view-nosotros .about-photo-main{
@@ -19,20 +19,19 @@
       display:block!important;opacity:1!important;visibility:visible!important;
     }
 
-    /* Hero Nosotros: tipografía editorial limpia como Formación/Comunidad */
     #view-nosotros .about-hero .inner-hero-content{
       max-width:1000px!important;
       padding-top:clamp(100px,12vh,155px)!important;
       padding-bottom:clamp(92px,12vh,145px)!important;
     }
     #view-nosotros .about-hero .inner-hero-content .v2-kicker{
-      color:#18b7f1!important;
+      color:#fff!important;
       font-size:.72rem!important;
       letter-spacing:.19em!important;
       font-weight:900!important;
     }
     #view-nosotros .about-hero .inner-hero-content .v2-kicker::before{
-      background:#18b7f1!important;
+      background:#fff!important;
     }
     #view-nosotros .about-hero .inner-hero-content h1{
       margin:18px 0 20px!important;
@@ -44,23 +43,20 @@
       font-weight:900!important;
       text-transform:uppercase!important;
     }
-    #view-nosotros .about-hero .inner-hero-content h1::after{
-      content:''!important;
-      display:none!important;
-    }
+    #view-nosotros .about-hero .inner-hero-content h1::after{content:''!important;display:none!important}
     #view-nosotros .about-hero .inner-hero-content p{
       max-width:720px!important;
-      color:rgba(255,255,255,.78)!important;
+      color:rgba(255,255,255,.82)!important;
       font-size:clamp(1rem,1.35vw,1.18rem)!important;
       line-height:1.65!important;
     }
     #view-nosotros .about-hero .inner-hero-content p strong{
-      color:#fff!important;
-      font-weight:850!important;
+      color:#d52b3d!important;
+      font-weight:900!important;
     }
     #view-nosotros .about-hero .inner-hero-scroll{
-      color:#18b7f1!important;
-      border-color:rgba(24,183,241,.45)!important;
+      color:#fff!important;
+      border-color:rgba(255,255,255,.38)!important;
     }
 
     #view-nosotros .about-story-copy h3{max-width:650px!important}
@@ -98,7 +94,7 @@
       if(desc) desc.innerHTML='Una comunidad estudiantil que convierte las telecomunicaciones en <strong>aprendizaje, proyectos y oportunidades.</strong>';
     }
 
-    const photoUrl=asset('equipo-cct-2026.webp');
+    const photoUrl=asset('equipo-cct-2026.jpg');
     const photoWrap=view.querySelector('.about-photo-main');
     if(photoWrap){
       photoWrap.style.backgroundImage=`url("${photoUrl}")`;
@@ -112,9 +108,7 @@
       photo.loading='eager';
       photo.src=photoUrl;
       photo.alt='Equipo del Centro Cultural de Telecomunicaciones CCT UNI';
-      photo.onerror=()=>{
-        photo.style.opacity='0';
-      };
+      photo.style.opacity='1';
     }
     const label=view.querySelector('.about-photo-main span');
     if(label) label.textContent='Equipo CCT · FIEE UNI';
