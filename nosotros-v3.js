@@ -1,7 +1,7 @@
 (() => {
   const current = document.currentScript;
   const BASE = current?.src ? new URL('.', current.src) : new URL('./', window.location.href);
-  const asset = (name) => new URL(`assets/${name}`, BASE).href;
+  const asset = (name) => new URL(`assets/${name}?v=20260822b`, BASE).href;
 
   const CSS = `
     #view-nosotros .about-photo-main{
@@ -81,9 +81,11 @@
   `;
 
   function init(){
-    if(!document.getElementById('nosotrosV3Styles')){
+    if(!document.getElementById('nosotrosV4Styles')){
       const style=document.createElement('style');
-      style.id='nosotrosV3Styles'; style.textContent=CSS; document.head.appendChild(style);
+      style.id='nosotrosV4Styles';
+      style.textContent=CSS;
+      document.head.appendChild(style);
     }
     const view=document.getElementById('view-nosotros');
     if(!view) return;
@@ -116,5 +118,6 @@
       if(text) text.innerHTML='El CCT conecta a estudiantes de distintas generaciones para que la formación no termine en el aula. <strong>Academias, eventos, proyectos y experiencias compartidas</strong> convierten el conocimiento en algo que circula, crece y queda para quienes vienen después.';
     }
   }
+
   document.readyState==='loading' ? document.addEventListener('DOMContentLoaded',init) : init();
 })();
