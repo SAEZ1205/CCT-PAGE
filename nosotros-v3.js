@@ -1,7 +1,7 @@
 (() => {
   const current = document.currentScript;
   const BASE = current?.src ? new URL('.', current.src) : new URL('./', window.location.href);
-  const asset = (name) => new URL(`assets/${name}?v=20260822e`, BASE).href;
+  const asset = (name) => new URL(`assets/${name}?v=20260822f`, BASE).href;
 
   const CSS = `
     #view-nosotros .about-photo-main{
@@ -26,12 +26,12 @@
       padding-bottom:clamp(92px,12vh,145px)!important;
     }
     #view-nosotros .about-hero .inner-hero-content .v2-kicker{
-      color:#fff!important;
+      color:#18b7f1!important;
       font-size:.72rem!important;
       letter-spacing:.19em!important;
       font-weight:900!important;
     }
-    #view-nosotros .about-hero .inner-hero-content .v2-kicker::before{background:#fff!important}
+    #view-nosotros .about-hero .inner-hero-content .v2-kicker::before{background:#18b7f1!important}
     html body #view-nosotros section.about-hero .container.inner-hero-content > h1{
       margin:18px 0 20px!important;
       max-width:1000px!important;
@@ -85,7 +85,10 @@
       const kicker=hero.querySelector('.v2-kicker');
       const title=hero.querySelector('h1');
       const desc=hero.querySelector('p');
-      if(kicker) kicker.textContent='CCT · FIEE UNI';
+      if(kicker){
+        kicker.textContent='CCT · FIEE UNI';
+        kicker.style.setProperty('color','#18b7f1','important');
+      }
       if(title){
         title.textContent='NOSOTROS';
         title.style.setProperty('color','#fff','important');
@@ -96,7 +99,7 @@
       if(desc) desc.innerHTML='Una comunidad estudiantil que convierte las telecomunicaciones en <strong>aprendizaje, proyectos y oportunidades.</strong>';
     }
 
-    const photoUrl=asset('equipo-cct-2026.webp');
+    const photoUrl=asset('equipo-cct-2026.jpg');
     const photoWrap=view.querySelector('.about-photo-main');
     if(photoWrap){
       photoWrap.style.backgroundImage=`url("${photoUrl}")`;
