@@ -1,7 +1,7 @@
 (() => {
   const current = document.currentScript;
   const BASE = current?.src ? new URL('.', current.src) : new URL('./', window.location.href);
-  const asset = (name) => new URL(`assets/${name}?v=20260822-board-slider`, BASE).href;
+  const asset = (name) => new URL(`assets/${name}?v=20260822-board-slider-final`, BASE).href;
 
   const CSS = `
     #view-nosotros .about-photo-main{
@@ -45,7 +45,7 @@
       inset:0;
       z-index:1;
       pointer-events:none;
-      background:linear-gradient(0deg,rgba(6,9,15,.35),transparent 34%)!important;
+      background:linear-gradient(0deg,rgba(6,9,15,.24),transparent 30%)!important;
     }
     #view-nosotros .about-photo-main span{
       position:absolute!important;
