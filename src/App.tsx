@@ -9,6 +9,7 @@ import { telconMarkup } from './pages/telcon';
 import { recursosMarkup } from './pages/recursos';
 import { bootLegacyRuntime } from './legacy/runtime';
 import { initOpenCourseFormation } from './features/formation/openCourse';
+import { initBoardSlider } from './features/nosotros/boardSlider';
 
 const viewsMarkup = [
   inicioMarkup,
@@ -31,10 +32,11 @@ ${afterMainMarkup}
 
 export default function App() {
   useEffect(() => {
-    // Primero se estabiliza el DOM histórico; después React/TS monta Open Course.
-    // Así ninguna capa posterior vuelve a sobrescribir las tarjetas.
-    void bootLegacyRuntime().then(() => {
+    // El runtime estabiliza el DOM histórico. Después React/TS monta
+    // los componentes interactivos que deben tener un único dueño.
+    void bootLegacyRuntime().then(async () => {
       initOpenCourseFormation();
+      await initBoardSlider();
     });
   }, []);
 
