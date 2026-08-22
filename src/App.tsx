@@ -8,7 +8,7 @@ import { eventosMarkup } from './pages/eventos';
 import { telconMarkup } from './pages/telcon';
 import { recursosMarkup } from './pages/recursos';
 import { bootLegacyRuntime } from './legacy/runtime';
-import { initOpenCourseFormation, startOpenCourseGuard } from './features/formation/openCourse';
+import { initOpenCourseFormation } from './features/formation/openCourse';
 
 const viewsMarkup = [
   inicioMarkup,
@@ -31,12 +31,10 @@ ${afterMainMarkup}
 
 export default function App() {
   useEffect(() => {
-    startOpenCourseGuard();
-    initOpenCourseFormation();
-
+    // Primero se estabiliza el DOM histórico; después React/TS monta Open Course.
+    // Así ninguna capa posterior vuelve a sobrescribir las tarjetas.
     void bootLegacyRuntime().then(() => {
       initOpenCourseFormation();
-      startOpenCourseGuard();
     });
   }, []);
 

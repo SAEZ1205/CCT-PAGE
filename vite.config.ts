@@ -14,7 +14,6 @@ export default defineConfig({
         { src: 'calendar.js', dest: '' },
         { src: 'nosotros.js', dest: '' },
         { src: 'formation.js', dest: '' },
-        { src: 'open-course.js', dest: '' },
         { src: 'course.html', dest: '' },
         { src: 'course.css', dest: '' },
         { src: 'course.js', dest: '' }

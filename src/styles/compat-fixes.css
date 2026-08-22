@@ -1,11 +1,23 @@
 /*
  * Ajustes de compatibilidad deliberados.
- * Este archivo debe permanecer pequeño: corrige únicamente choques heredados
- * mientras el markup visual se conserva dentro del shell React.
+ * Debe permanecer pequeño: corrige únicamente choques del markup conservado.
  */
 
-/* formation.js oculta el contenido antiguo del hero. Esta regla hace visible
-   únicamente el hero definitivo de Academia CCT y evita la pantalla negra. */
+/* formation.js oculta los hijos históricos para montar el hero definitivo.
+   Esta regla hace visible únicamente Academia CCT y conserva la altura final
+   que tenía el frontend antes de retirar las capas versionadas. */
+#view-formacion .formation-hero,
+#view-formacion .formation-hero-content {
+  min-height: 560px !important;
+}
+
 #view-formacion .formation-hero-content > .formation-earth-v4 {
   display: flex !important;
+}
+
+@media (max-width: 700px) {
+  #view-formacion .formation-hero,
+  #view-formacion .formation-hero-content {
+    min-height: 430px !important;
+  }
 }

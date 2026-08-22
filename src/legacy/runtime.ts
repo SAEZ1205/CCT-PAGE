@@ -1,6 +1,6 @@
 let bootPromise: Promise<void> | null = null;
 
-const RUNTIME_VERSION = '20260822-clean';
+const RUNTIME_VERSION = '20260822-clean2';
 
 function loadScript(src: string): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -42,19 +42,17 @@ export function bootLegacyRuntime(): Promise<void> {
   const runtime = (name: string) => `${base}${name}?v=${RUNTIME_VERSION}`;
 
   bootPromise = (async () => {
-    // Núcleo: navegación, modales, carruseles y comportamiento general.
     await loadSafely(runtime('site.js'));
 
-    // site.js conserva inicializadores basados en DOMContentLoaded.
-    // React ya montó el DOM, por eso se dispara una única vez aquí.
+    // site.js conserva inicializadores históricos basados en DOMContentLoaded.
+    // React ya montó el DOM cuando llega aquí.
     document.dispatchEvent(new Event('DOMContentLoaded', { bubbles: true }));
 
-    // Un único módulo activo por área. Si uno falla, los demás continúan.
+    // Un único módulo activo por área; ninguno modifica otra sección.
     await loadSafely(runtime('career.js'));
     await loadSafely(runtime('calendar.js'));
     await loadSafely(runtime('nosotros.js'));
     await loadSafely(runtime('formation.js'));
-    await loadSafely(runtime('open-course.js'));
   })();
 
   return bootPromise;
