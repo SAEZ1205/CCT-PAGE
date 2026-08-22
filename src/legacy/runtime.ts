@@ -1,5 +1,5 @@
 let bootPromise: Promise<void> | null = null;
-const RUNTIME_VERSION = '20260822-nosotros-slider-final';
+const RUNTIME_VERSION = '20260822-nosotros-single-owner';
 function loadScript(src: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const existing = document.querySelector<HTMLScriptElement>(`script[data-cct-runtime="${src}"]`);
