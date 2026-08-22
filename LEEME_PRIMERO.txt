@@ -20,34 +20,47 @@ PRIMERA VEZ EN UNA PC NUEVA
    npm install
    npm run dev
 
-Tambien puedes hacer doble clic en INICIAR_CCT.bat. Si node_modules no existe,
-el archivo instala las dependencias y luego inicia Vite.
+Tambien puedes hacer doble clic en INICIAR_CCT.bat.
 
 FUENTES ACTIVAS DEL FRONTEND
 ----------------------------
 - src/: React + TypeScript.
-- styles.css: estilo visual base.
-- site.js: navegacion y comportamiento general.
-- career.js: Conoce tu carrera.
-- calendar.js: calendario de Inicio.
-- nosotros.js: seccion Nosotros.
-- formation.js: hero Academia CCT + certificaciones.
-- src/features/formation/openCourse.ts: tarjetas Open Course (React/TypeScript).
+- styles.css: estilo visual base historico.
+- site.js: navegacion y comportamiento global.
+- career.js: Conoce tu carrera de Inicio.
+- calendar.js: calendario general de Inicio.
+- src/features/nosotros/nosotros.ts: Nosotros.
+- src/features/formation/formation.ts: Formacion + Academias.
+- src/features/formation/openCourse.ts: Open Course.
+- src/features/community/community.ts: Comunidad.
+- src/features/events/events.ts: Eventos.
+- src/styles/sections/: CSS canonico de cada seccion moderna.
 - course.html / course.css / course.js: aula de Open Course.
 - assets/: imagenes, logos y videos.
 
-IMPORTANTE
-----------
-Los antiguos archivos v2, v3, v4, v5 y v6 fueron retirados del runtime para
-que una version antigua no vuelva a pisar un cambio nuevo.
+YA NO SE USAN
+-------------
+- nosotros.js
+- formation.js
+- community.js
+- events.js
+- compat-fixes.css
+- archivos de imagen .b64
+- archivos v2, v3, v4, v5, v6, final, final2, etc.
 
-No crees archivos final.js, final2.js o nuevas variantes numeradas. Modifica la
-fuente estable de la seccion correspondiente.
+REGLA
+-----
+Una seccion tiene un solo dueño. Para editar una imagen, texto o animacion se
+modifica la feature TypeScript y/o el CSS de esa seccion; no se crea otro script
+que vuelva a modificar el mismo bloque despues.
 
-SEGURIDAD
----------
-Antes de la limpieza existe el respaldo completo:
-backup-pre-cleanup-2026-08-22
+El snapshot de src/legacy/snapshot.html permanece temporalmente como markup base
+para conservar el frontend aprobado. No ejecuta logica ni pisa las features.
 
-Ademas, cada push a main ejecuta una comprobacion automatica de TypeScript y
-Vite mediante GitHub Actions antes de considerar estable el cambio.
+VERIFICACION
+------------
+Antes de considerar estable un cambio grande:
+
+   npm run build
+
+GitHub Actions ejecuta esta misma comprobacion en los pull requests y en main.
