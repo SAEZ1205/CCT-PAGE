@@ -11,6 +11,7 @@
     "audit:deep": "node scripts/deep-audit.mjs",
     "check:architecture": "node scripts/check-architecture.mjs",
     "check:dist": "node scripts/check-dist.mjs",
+    "check:browser": "node scripts/check-browser.mjs",
     "build": "npm run check:architecture && tsc --noEmit && vite build && npm run check:dist",
     "preview": "vite preview"
   },
