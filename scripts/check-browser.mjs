@@ -45,9 +45,14 @@ function assertRendered(html, route) {
   if (failures.length) throw new Error(`${route}: ${failures.join('; ')}`);
 }
 
-const preview = spawn('npm', ['run', 'preview', '--', '--host', HOST, '--port', String(PORT), '--strictPort'], {
+const preview = spawn(process.execPath, [
+  'node_modules/vite/bin/vite.js',
+  'preview',
+  '--host', HOST,
+  '--port', String(PORT),
+  '--strictPort',
+], {
   stdio: ['ignore', 'pipe', 'pipe'],
-  shell: process.platform === 'win32',
 });
 
 let previewLog = '';
@@ -65,10 +70,10 @@ try {
       '--no-sandbox',
       '--disable-gpu',
       '--disable-dev-shm-usage',
-      '--virtual-time-budget=4500',
+      '--virtual-time-budget=2500',
       '--dump-dom',
       `${BASE_URL}/#${route}`,
-    ], { encoding: 'utf8', maxBuffer: 12 * 1024 * 1024, timeout: 20000 });
+    ], { encoding: 'utf8', maxBuffer: 12 * 1024 * 1024, timeout: 12000 });
 
     if (run.error) throw run.error;
     if (run.status !== 0) {
@@ -87,6 +92,9 @@ try {
   process.exitCode = 1;
 } finally {
   preview.kill('SIGTERM');
-  await delay(200);
-  if (!preview.killed) preview.kill('SIGKILL');
+  await Promise.race([
+    new Promise((resolve) => preview.once('exit', resolve)),
+    delay(1500),
+  ]);
+  if (preview.exitCode === null) preview.kill('SIGKILL');
 }
