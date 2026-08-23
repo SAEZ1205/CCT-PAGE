@@ -7,9 +7,14 @@ import './styles/sections/formacion.css';
 import './styles/sections/comunidad.css';
 import './styles/sections/eventos.css';
 import './styles/sections/inicio.css';
+import { AppErrorBoundary } from './components/AppErrorBoundary';
 import App from './App';
 
 const root = document.getElementById('root');
 if (!root) throw new Error('No se encontró #root');
 
-createRoot(root).render(<App />);
+createRoot(root).render(
+  <AppErrorBoundary>
+    <App />
+  </AppErrorBoundary>,
+);

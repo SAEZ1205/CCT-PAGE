@@ -1,28 +1,33 @@
-# Arquitectura React del CCT
+# Arquitectura frontend del CCT
 
 ## Objetivo
 
-El proyecto debe tener **un solo dueño por bloque visible**. Una corrección simple —por ejemplo reemplazar una imagen— no debe crear una segunda versión de una sección, un script auxiliar, CSS inyectado ni un snapshot paralelo.
+El proyecto debe permitir cambios de frontend simples y predecibles sin reactivar capas antiguas, duplicar implementaciones ni provocar pantallas en blanco. Cada bloque visible tiene un solo dueño y las reglas importantes están automatizadas en CI.
 
 ## Stack
 
 - React 18
-- TypeScript
+- TypeScript `strict`
 - Vite
 - Tailwind CSS con prefijo `tw-` y preflight desactivado
-- Node 24 LTS
-- dependencias bloqueadas por `package-lock.json`
+- Node 24 LTS (`package.json` + `.nvmrc`)
+- dependencias reproducibles mediante `package-lock.json` + `npm ci`
+
+## Estrategia de migración
+
+La interfaz aprobada nació como HTML/CSS/JavaScript y se está migrando a React de forma incremental. **No se hará una reescritura masiva de toda la interfaz a JSX solo por purismo**, porque eso aumenta el riesgo visual sin aportar valor inmediato.
+
+La regla actual es:
+
+1. el markup estático aprobado puede permanecer temporalmente en plantillas por vista;
+2. React lo monta a través de un único límite controlado;
+3. toda interacción o componente NUEVO debe escribirse en React/TypeScript;
+4. el legacy existente queda congelado y solo puede reducirse, nunca crecer;
+5. cada sección se puede migrar a JSX de forma aislada cuando sea conveniente.
 
 ## Fuente de verdad del markup
 
-El snapshot monolítico fue retirado. Ya no existen:
-
-```text
-src/legacy/snapshot.html
-src/legacy/extract.ts
-```
-
-Cada vista conserva su HTML aprobado en un archivo independiente:
+No existe snapshot monolítico. Cada vista tiene su propio archivo:
 
 ```text
 src/pages/inicio/markup.html
@@ -34,28 +39,48 @@ src/pages/telcon/markup.html
 src/pages/recursos/markup.html
 ```
 
-Cada `src/pages/<pagina>/index.ts` importa únicamente su `markup.html?raw`. De esta forma editar una vista no obliga a tocar un documento gigante que contiene toda la aplicación.
-
-El layout también está separado:
+El layout global está separado en:
 
 ```text
-src/layout/before-main.html   header + elementos previos al main
-src/layout/footer.html        footer
-src/layout/after-main.html    modales y elementos posteriores al main
-src/layout/markup.ts          importa esos tres fragmentos
+src/layout/before-main.html
+src/layout/footer.html
+src/layout/after-main.html
+src/layout/markup.ts
 ```
 
-Ningún fragmento canónico puede contener `<script>`.
+Los fragmentos canónicos no pueden contener `<script>` ni `<style>`.
 
-## React y features
+## Límite React → HTML estático
 
-`src/App.tsx` ensambla los fragmentos y después inicializa cada feature de forma aislada. Si una feature falla, las demás siguen intentando arrancar.
+El único archivo autorizado para usar `dangerouslySetInnerHTML` es:
 
-Dueños activos:
+```text
+src/components/TrustedStaticShell.tsx
+```
+
+El componente solo recibe strings importados desde archivos versionados dentro del repositorio. Nunca debe recibir contenido de usuario, URL, API, formulario o almacenamiento local.
+
+`src/App.tsx` ensambla el markup y lo entrega a `TrustedStaticShell`; no puede inyectar HTML directamente.
+
+Esta frontera única permite mantener la apariencia aprobada mientras las páginas se migran gradualmente a componentes JSX.
+
+## Protección contra pantalla blanca
+
+`src/main.tsx` monta la aplicación dentro de:
+
+```text
+src/components/AppErrorBoundary.tsx
+```
+
+Si React falla durante render, se muestra una interfaz de recuperación con botón de recarga en lugar de dejar una página vacía.
+
+`index.html` conserva además un fallback previo al arranque de React para errores que ocurran antes del primer render.
+
+## Owners interactivos actuales
 
 ```text
 src/features/home/career.ts                 Inicio · Conoce tu carrera
-src/features/home/calendar.ts               Inicio · calendario general
+src/features/home/calendar.ts               Inicio · calendario
 src/features/nosotros/nosotros.ts           Nosotros
 src/features/formation/formation.ts         Formación · hero + academias
 src/features/formation/openCourse.ts        Formación · Open Course
@@ -64,133 +89,182 @@ src/features/events/events.ts               Eventos
 src/features/shared/ui.ts                    motion + accesibilidad común
 ```
 
-Las features deben ser idempotentes cuando reconstruyen un bloque: una segunda llamada no puede duplicar el contenido ni agregar listeners repetidos.
+Estos archivos son una zona de transición: algunos todavía reconstruyen bloques con APIs DOM/`innerHTML`. `check:frontend` permite ese patrón solamente en esta lista histórica y prohíbe crear nuevos owners imperativos. Las nuevas funcionalidades deben preferir React/JSX.
 
-## Runtime de compatibilidad
+## Runtime legacy congelado
 
-Queda un solo script histórico global:
+Queda un solo núcleo global:
 
 ```text
 site.js
 ```
 
-Su función es mantener navegación, modales y acciones que todavía están conectadas mediante handlers HTML existentes. `site.js` **no se autoejecuta** con `DOMContentLoaded`.
+Su función es mantener navegación, modales y acciones conectadas a handlers HTML existentes. No se autoejecuta con `DOMContentLoaded`.
 
-`src/legacy/runtime.ts` espera al DOM nativo, carga `site.js` y ejecuta únicamente una lista blanca reducida de inicializadores globales. El build bloquea la reaparición de inicializadores retirados de Formación, Eventos, Comunidad o Inicio.
+`src/legacy/runtime.ts` espera el DOM nativo, carga `site.js` y ejecuta solamente una lista blanca de inicializadores.
 
-Ya no existen ni se distribuyen:
+`site.js` está congelado en un presupuesto máximo de **52,736 bytes**. El build falla si crece. La dirección permitida es reducirlo conforme las interacciones se migren a React. La auditoría profunda actual no detecta funciones top-level sin referencias dentro de este núcleo.
+
+No existen ni deben reaparecer:
 
 ```text
+src/legacy/snapshot.html
+src/legacy/extract.ts
 career.js
 calendar.js
+nosotros.js
+formation.js
+community.js
+events.js
+src/styles/compat-fixes.css
 ```
 
-Sus comportamientos pasaron a TypeScript y sus estilos a CSS canónico.
+## Handlers inline
+
+Existen 106 atributos de evento inline heredados en el markup aprobado. Están congelados como deuda transicional: CI falla si el número aumenta.
+
+Las funciones invocadas por estos handlers se verifican contra el runtime para evitar botones apuntando a funciones inexistentes.
+
+Las interacciones nuevas deben usar React/TypeScript, no nuevos `onclick="..."`.
 
 ## Estilos
 
 ```text
-styles.css                               base histórica visual global
-src/styles/tailwind.css                  Tailwind + shell React
-src/styles/sections/inicio.css           Inicio dinámico migrado
+styles.css                               base visual histórica global
+src/styles/tailwind.css                  Tailwind + shell/error recovery
+src/styles/sections/inicio.css           Inicio
 src/styles/sections/nosotros.css         Nosotros
 src/styles/sections/formacion.css        Formación + Open Course
 src/styles/sections/comunidad.css        Comunidad
 src/styles/sections/eventos.css          Eventos
-course.css                               página autónoma de Open Course
+course.css                               aula Open Course autónoma
 ```
 
-`styles.css` sigue siendo la base visual histórica. No ejecuta lógica ni modifica el DOM. Se mantiene porque su cascada forma parte de la apariencia aprobada; las nuevas correcciones específicas deben ir al CSS canónico de la sección correspondiente, no agregar más parches al archivo global.
+`styles.css` está congelado en 125,128 bytes. No debe recibir features nuevas; las modificaciones modernas pertenecen al CSS canónico de su sección.
 
-Las features TypeScript **no pueden crear `<style>` dinámicamente**. `check:architecture` falla si vuelve a aparecer ese patrón.
+El proyecto mantiene temporalmente 445 declaraciones `!important`; CI impide que esa cantidad aumente. La dirección futura es reducirlas durante refactors controlados.
 
-## Assets e imágenes
+Las features no pueden crear `<style>` dinámico.
 
-Los recursos visibles viven en `assets/`. Para un reemplazo visual simple:
+## Assets
 
-1. identificar el asset en `IMAGE_MAP.md`;
-2. reemplazar el archivo conservando el mismo nombre y extensión;
-3. ejecutar `npm run build`;
-4. no tocar TS/JS/CSS si no es necesario.
+Los recursos visibles viven en `assets/` y [`IMAGE_MAP.md`](./IMAGE_MAP.md) documenta los principales.
 
-No se permiten `.b64`, archivos `-v2`, `-final`, `-copy`, etc. Tampoco deben coexistir dos formatos del mismo asset solo para conservar una versión vieja.
+Para reemplazar una imagen:
 
-## Página autónoma Open Course
+```text
+localizar asset → sustituir mismo nombre/extensión → npm run check:all
+```
 
-`course.html`, `course.css` y `course.js` forman una página estática independiente que se abre desde las tarjetas de Open Course. No intervienen en el arranque del SPA principal.
+No crear `imagen-v2`, `imagen-final`, copias `.b64` ni formatos paralelos para conservar versiones viejas.
+
+Guardas actuales:
+
+- asset individual > 6 MiB: error;
+- imagen > 2 MiB: advertencia de rendimiento;
+- nombres de implementación versionados/copia: error;
+- referencias a assets inexistentes: error.
+
+## Navegación interna
+
+Los destinos hash literales usados por `href="#..."` y `navigateTo('#...')` se comparan con los IDs reales del markup canónico. Un cambio que deja un botón apuntando a una sección inexistente falla en CI.
+
+## Open Course
+
+`course.html`, `course.css` y `course.js` forman el aula autónoma de Open Course. No participan en el montaje React principal, pero sí forman parte del producto publicado.
+
+El smoke test de Chrome abre `course.html` y verifica que `course.js` renderice módulos y lección.
+
+## Seguridad y publicación
+
+`index.html` contiene metadata básica para buscadores/social y favicon.
+
+Vercel añade headers básicos:
+
+- `X-Content-Type-Options: nosniff`
+- `Referrer-Policy: strict-origin-when-cross-origin`
+- `Permissions-Policy`
+- `X-Frame-Options: SAMEORIGIN`
+
+Los enlaces con `target="_blank"` deben usar `rel="noopener"`; CI lo valida.
+
+El CI ejecuta `npm audit --omit=dev --audit-level=high` para dependencias de producción.
 
 ## Guardas automáticas
 
-### `npm run check:architecture`
+### `npm run check:frontend`
 
 Comprueba, entre otros puntos:
 
-- que existan las siete fuentes de markup canónicas;
-- que cada vista tenga exactamente un `data-view` y un `#view-*`;
-- que no reaparezcan `snapshot.html`, `extract.ts`, `career.js` o `calendar.js`;
-- que no haya scripts embebidos en los fragmentos;
-- que `site.js` no tenga autoarranque `DOMContentLoaded` ni funciones retiradas;
-- que runtime cargue únicamente el núcleo permitido;
-- que `App.tsx` inicialice los owners TypeScript actuales;
-- que `main.tsx` cargue todos los CSS canónicos;
-- que ninguna feature inyecte CSS dinámico;
-- que Vite mantenga `base: './'`;
-- que los assets referenciados existan;
-- que no aparezcan implementaciones `v2`, `final`, `old`, `backup`, `copy`, etc.;
-- que la cantidad de handlers inline no aumente sobre el límite temporal existente.
+- un solo límite `dangerouslySetInnerHTML`;
+- `AppErrorBoundary` activo;
+- legacy `site.js` y `styles.css` sin crecimiento;
+- ningún nuevo owner TypeScript basado en `innerHTML`;
+- handlers inline sin crecimiento;
+- `!important` sin crecimiento;
+- destinos internos existentes;
+- imágenes con `alt`;
+- enlaces externos seguros;
+- URLs HTTP/javascript prohibidas;
+- metadatos básicos;
+- Node 24 y lockfile;
+- headers de Vercel;
+- presupuesto de tamaño de assets.
+
+### `npm run check:architecture`
+
+Comprueba owners, archivos requeridos/prohibidos, unicidad de vistas, runtime, inicializadores, CSS canónicos y referencias a assets.
 
 ### `npm run check:dist`
 
-Después de Vite valida lo que realmente se va a publicar:
+Valida la salida de producción real: archivos requeridos, rutas relativas, assets copiados, referencias HTML/CSS y sintaxis JavaScript.
 
-- archivos obligatorios de producción;
-- ausencia de `career.js` y `calendar.js` retirados;
-- bundle ESM relativo para GitHub Pages;
-- ausencia de rutas locales absolutas;
-- todos los assets copiados y no vacíos;
-- referencias HTML/CSS locales existentes;
-- sintaxis válida de todos los JavaScript del `dist`.
+### `npm run check:browser`
 
-### Auditoría profunda
+Arranca `dist` y usa Chrome headless real para verificar:
 
-`scripts/deep-audit.mjs` mide deuda estructural: handlers inline, tamaño de `site.js`, `!important`, assets duplicados, imports legacy y adopción del markup canónico. Sirve para evitar que el proyecto vuelva a crecer hacia una arquitectura híbrida descontrolada.
+- Inicio
+- Nosotros
+- Formación
+- Comunidad
+- Eventos
+- TELCON
+- Recursos
+- fallback de una ruta inexistente a Inicio
+- aula `course.html`
+- que React haya retirado el fallback inicial
+- que no aparezca el Error Boundary
+- que los módulos TypeScript de Inicio se inicialicen
 
 ## Flujo de cambios
 
-Para una imagen:
+### Cambio simple de imagen
 
 ```text
-asset existente -> reemplazar mismo archivo -> npm run build
+IMAGE_MAP.md → mismo asset → npm run check:all
 ```
 
-Para lógica:
+### Cambio de contenido/estructura existente
 
 ```text
-feature dueña -> editar TypeScript -> npm run build
+markup de la vista → CSS canónico de esa vista → npm run check:all
 ```
 
-Para estilo:
+### Componente o interacción nueva
 
 ```text
-CSS canónico de la sección -> editar -> npm run build
+React/TypeScript → CSS canónico → npm run check:all
 ```
 
-Nunca crear una segunda implementación del mismo bloque para “no tocar la anterior”.
+No agregar nueva lógica a `site.js`, no crear scripts globales auxiliares y no crear una segunda implementación del mismo bloque.
 
-## Build
+## Verificación completa
 
 ```bash
 npm ci
-npm run build
+npm run check:all
 ```
 
-Orden efectivo:
+`check:all` ejecuta auditoría profunda, contrato frontend, TypeScript, Vite, validación de `dist` y navegador real.
 
-```text
-check:architecture
-→ TypeScript
-→ Vite
-→ check:dist
-```
-
-La salida estática vive en `dist/` y usa rutas relativas para funcionar tanto en Vercel como bajo la subruta de GitHub Pages.
+GitHub Actions repite estas verificaciones en pull requests. GitHub Pages ejecuta Chrome antes de desplegar; por tanto un cambio que rompe el arranque del frontend no debe llegar al sitio publicado.

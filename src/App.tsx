@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { TrustedStaticShell } from './components/TrustedStaticShell';
 import { beforeMainMarkup, footerMarkup, afterMainMarkup } from './layout/markup';
 import { inicioMarkup } from './pages/inicio';
 import { nosotrosMarkup } from './pages/nosotros';
@@ -73,5 +74,5 @@ export default function App() {
       });
   }, []);
 
-  return <div className="cct-react-shell" dangerouslySetInnerHTML={{ __html: appMarkup }} />;
+  return <TrustedStaticShell html={appMarkup} />;
 }

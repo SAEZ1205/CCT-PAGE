@@ -210,11 +210,6 @@ function goToConvocatoriasFromWelcome(){
     navigateTo('#convocatorias');
 }
 
-function goToAreasFromWelcome(){
-    closeWelcomeToast();
-    navigateTo('#areas');
-}
-
 function closeWelcomeToast() {
     const toast = document.getElementById('welcomeToast');
     if (toast) toast.classList.remove('active');
@@ -381,33 +376,6 @@ function moveGallery(direction) {
 
     const scrollAmount = galleryIndex * (cardWidth + gap);
     track.scrollTo({ left: scrollAmount, behavior: 'smooth' });
-}
-
-
-// ============================================
-// CAROUSEL
-// ============================================
-function moveCarousel(carouselName, direction) {
-    const carousel = document.getElementById(`${carouselName}Carousel`);
-    const track = carousel.querySelector('.carousel-track');
-    const cards = track.querySelectorAll('.story-card');
-    const cardWidth = cards[0].offsetWidth;
-    const gap = 32; // 2rem
-    
-    currentCarouselIndex[carouselName] += direction;
-    
-    // Loop carousel
-    if (currentCarouselIndex[carouselName] < 0) {
-        currentCarouselIndex[carouselName] = cards.length - 1;
-    } else if (currentCarouselIndex[carouselName] >= cards.length) {
-        currentCarouselIndex[carouselName] = 0;
-    }
-    
-    const scrollAmount = currentCarouselIndex[carouselName] * (cardWidth + gap);
-    track.scrollTo({
-        left: scrollAmount,
-        behavior: 'smooth'
-    });
 }
 
 
@@ -810,14 +778,6 @@ function handleFormSubmit() {
     }, 1500);
 }
 
-// ============================================
-// MODALS (Generic)
-// ============================================
-function openStoryModal(storyId) {
-    // In a real implementation, this would open a modal with full story content
-    alert(`Abriendo entrevista #${storyId}. En producción, esto abriría un modal con el contenido completo.`);
-}
-
 const AREA_INFO = {
         direccion: {
             title: 'Dirección Ejecutiva',
@@ -962,26 +922,6 @@ function initBoardMemberPhotos(){
     });
 }
 
-
-function openAreaModal(areaKey) {
-
-    const info = AREA_INFO[areaKey];
-    if (!info) return;
-
-    const activitiesHTML = info.activities.map(a => `<li>${a}</li>`).join('');
-    const bodyHTML = `
-        <p class="modal-lead">${info.description}</p>
-        <div class="modal-meta">
-            <div><strong>Encargado(a):</strong> ${info.director}</div>
-        </div>
-        <h3 class="modal-subtitle">Actividades</h3>
-        <ul class="modal-list">${activitiesHTML}</ul>
-        <div class="modal-callout"><strong>¿Cómo unirte?</strong> ${info.howToJoin}</div>
-    `;
-
-    openDynamicModal('areaModal', info.title, bodyHTML);
-}
-
 function openMemberModal(memberKey){
     const member = BOARD_MEMBERS[memberKey];
     if (!member) return;
@@ -1050,14 +990,6 @@ function openMemberModal(memberKey){
     const meta = `<p style="margin-top:8px;color:var(--gray-text);font-weight:600">${member.role} • ${member.areaLabel}</p>`;
     // Modal más ancho que alto (mejor proporción visual para perfil)
     openDynamicModal('memberModal', 'Perfil del miembro', body, meta, 'modal-profile');
-}
-
-function closeAreaModal() {
-    const modal = document.getElementById('areaModal');
-    if (modal) {
-        modal.remove();
-    }
-
 }
 
 function openInterviewModal(id){
@@ -1203,28 +1135,6 @@ function openEventModal(eventId){
     openDynamicModal('eventModal', item.title, body, meta);
 }
 
-function openNewsModal(newsId){
-    const item = TELEINFORMA_ITEMS.find(x => x.id === newsId);
-    if (!item) return;
-
-    const meta = `<p style="margin-top:8px;color:var(--text-tertiary)"><strong>${item.cat}</strong> • ${item.date}</p>`;
-    const body = `
-        <div style="display:grid;grid-template-columns: 1fr;gap:12px">
-            <div style="border-radius:14px;overflow:hidden;border:1px solid rgba(0,0,0,0.08)">
-                <img src="${item.image}" alt="${item.title}" style="width:100%;height:260px;object-fit:cover;display:block">
-            </div>
-            <p style="line-height:1.8;margin:0 0 10px 0;color:var(--text-secondary)">${item.body}</p>
-            <p style="margin:0;color:var(--text-tertiary)">*Contenido placeholder: aquí irá el artículo completo / link real.</p>
-            <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
-                <a href="#comunidad" class="btn-primary btn-pill">Volver a Teleinforma</a>
-                <button class="btn-secondary btn-pill" onclick="closeDynamicModal('newsModal')">Cerrar</button>
-            </div>
-        </div>
-    `;
-
-    openDynamicModal('newsModal', item.title, body, meta);
-}
-
 
 // ============================================
 // DYNAMIC MODAL (news / interviews / projects / events)
@@ -1296,21 +1206,6 @@ if ('IntersectionObserver' in window) {
     });
 }
 
-// ============================================
-// PERFORMANCE: Debounce for scroll events
-// ============================================
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
 console.log('CCT-UNI Website Loaded Successfully! 🚀');
 
 
@@ -1324,36 +1219,6 @@ const ACADEMY_PROGRAMS = {
   ccnp_security: { label: 'CCNP Security', provider: 'Cisco' },
   fortinet_fcp:  { label: 'Fortinet Certified Professional · Secure Networking', provider: 'Fortinet Training Institute' },
 };
-
-function openEnrollModal(programId){
-  const overlay = document.getElementById('enrollOverlay');
-  const stepForm = document.getElementById('enrollStepForm');
-  const stepSuccess = document.getElementById('enrollStepSuccess');
-  const titleEl = document.getElementById('enrollTitle');
-  const progEl = document.getElementById('enrollProgram');
-  const progIdEl = document.getElementById('enrollProgramId');
-  const form = document.getElementById('enrollForm');
-
-  if (!overlay || !titleEl || !progEl || !progIdEl || !form) return;
-
-  const meta = ACADEMY_PROGRAMS[programId] || { label: 'Programa', provider: 'CCT' };
-  titleEl.textContent = 'Inscribirse';
-  progEl.textContent = `Programa: ${meta.label} · ${meta.provider}`;
-  progIdEl.value = programId || '';
-
-  // reset UI
-  if (stepForm) stepForm.hidden = false;
-  if (stepSuccess) stepSuccess.hidden = true;
-
-  form.reset();
-
-  overlay.classList.add('active');
-  overlay.setAttribute('aria-hidden', 'false');
-
-  // focus
-  const nameInput = document.getElementById('enrollName');
-  if (nameInput) setTimeout(() => nameInput.focus(), 50);
-}
 
 function closeEnrollModal(){
   const overlay = document.getElementById('enrollOverlay');
@@ -1369,35 +1234,4 @@ function closeEnrollModal(){
   if (form) form.reset();
   if (stepForm) stepForm.hidden = false;
   if (stepSuccess) stepSuccess.hidden = true;
-}
-
-function collectEnrollmentPayload(){
-  const programId = (document.getElementById('enrollProgramId') || {}).value || '';
-  const meta = ACADEMY_PROGRAMS[programId] || { label: 'Programa', provider: 'CCT' };
-
-  return {
-    timestamp: new Date().toISOString(),
-    programId,
-    program: meta.label,
-    provider: meta.provider,
-    name: (document.getElementById('enrollName') || {}).value || '',
-    email: (document.getElementById('enrollEmail') || {}).value || '',
-    phone: (document.getElementById('enrollPhone') || {}).value || '',
-    cycle: (document.getElementById('enrollCycle') || {}).value || '',
-    availability: (document.getElementById('enrollAvailability') || {}).value || '',
-    notes: (document.getElementById('enrollNotes') || {}).value || ''
-  };
-}
-
-function saveEnrollment(record){
-  const key = 'cct_enrollments';
-  let items = [];
-  try {
-    items = JSON.parse(localStorage.getItem(key) || '[]');
-    if (!Array.isArray(items)) items = [];
-  } catch(_){
-    items = [];
-  }
-  items.push(record);
-  localStorage.setItem(key, JSON.stringify(items));
 }
