@@ -1,5 +1,7 @@
-import { extractAfterMain, extractBeforeMain, extractSelector } from '../legacy/extract';
+import beforeMain from './before-main.html?raw';
+import footer from './footer.html?raw';
+import afterMain from './after-main.html?raw';
 
-export const beforeMainMarkup = extractBeforeMain();
-export const footerMarkup = extractSelector('footer.footer');
-export const afterMainMarkup = extractAfterMain();
+export const beforeMainMarkup = beforeMain;
+export const footerMarkup = footer;
+export const afterMainMarkup = afterMain;
