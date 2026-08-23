@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "check:architecture": "node scripts/check-architecture.mjs",
+    "build": "npm run check:architecture && tsc --noEmit && vite build",
     "preview": "vite preview"
   },
   "dependencies": {

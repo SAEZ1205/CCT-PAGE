@@ -7,9 +7,50 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <style>
+    .cct-boot-fallback {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: #0C0F1A;
+      color: #FFFFFF;
+      font-family: Montserrat, Arial, sans-serif;
+      text-align: center;
+    }
+    .cct-boot-fallback strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: clamp(1.2rem, 3vw, 2rem);
+      letter-spacing: .04em;
+    }
+    .cct-boot-fallback span {
+      color: #C8CAD0;
+      font-size: .9rem;
+    }
+  </style>
 </head>
 <body>
-  <div id="root"></div>
+  <div id="root">
+    <div id="cctBootFallback" class="cct-boot-fallback" role="status" aria-live="polite">
+      <div>
+        <strong>CCT · FIEE UNI</strong>
+        <span id="cctBootMessage">Cargando el sitio…</span>
+      </div>
+    </div>
+  </div>
+  <script>
+    (() => {
+      const showBootError = () => {
+        const message = document.getElementById('cctBootMessage');
+        if (message) message.textContent = 'No se pudo iniciar la interfaz. Recarga la página para volver a intentarlo.';
+      };
+      window.addEventListener('error', showBootError);
+      window.addEventListener('unhandledrejection', showBootError);
+    })();
+  </script>
   <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>

@@ -13,6 +13,7 @@ import { initFormation } from './features/formation/formation';
 import { initOpenCourseFormation } from './features/formation/openCourse';
 import { initCommunity } from './features/community/community';
 import { initEvents } from './features/events/events';
+import { initKeyboardAccessibility, initRevealMotion } from './features/shared/ui';
 
 const viewsMarkup = [
   inicioMarkup,
@@ -33,16 +34,40 @@ ${footerMarkup}
 ${afterMainMarkup}
 `;
 
+const featureInitializers = [
+  ['Nosotros', initNosotros],
+  ['Formación', initFormation],
+  ['Open Course', initOpenCourseFormation],
+  ['Comunidad', initCommunity],
+  ['Eventos', initEvents],
+] as const;
+
+function initFeaturesSafely() {
+  featureInitializers.forEach(([name, init]) => {
+    try {
+      init();
+    } catch (error) {
+      console.error(`[CCT] La sección ${name} no pudo inicializarse:`, error);
+    }
+  });
+
+  try {
+    initRevealMotion();
+    initKeyboardAccessibility();
+  } catch (error) {
+    console.error('[CCT] No pudieron inicializarse los comportamientos compartidos:', error);
+  }
+}
+
 export default function App() {
   useEffect(() => {
-    void bootLegacyRuntime().then(() => {
-      // Cada sección moderna tiene un solo dueño. El runtime legacy ya no las reconstruye.
-      initNosotros();
-      initFormation();
-      initOpenCourseFormation();
-      initCommunity();
-      initEvents();
-    });
+    void bootLegacyRuntime()
+      .then(initFeaturesSafely)
+      .catch((error) => {
+        console.error('[CCT] Falló el arranque del runtime base:', error);
+        // Las secciones modernas siguen intentando arrancar aunque falle el núcleo legacy.
+        initFeaturesSafely();
+      });
   }, []);
 
   return <div className="cct-react-shell" dangerouslySetInnerHTML={{ __html: appMarkup }} />;
