@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "check:architecture": "node scripts/check-architecture.mjs",
-    "build": "npm run check:architecture && tsc --noEmit && vite build",
+    "check:dist": "node scripts/check-dist.mjs",
+    "build": "npm run check:architecture && tsc --noEmit && vite build && npm run check:dist",
     "preview": "vite preview"
   },
   "dependencies": {
