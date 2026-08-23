@@ -12,7 +12,9 @@ Ejemplo:
 assets/equipo-cct-2026.webp
 ```
 
-Si llega una nueva foto de la Junta Directiva, se sustituye ese archivo. No se crea `equipo-v2.webp`, `equipo-final.webp`, otro script ni otro CSS.
+Si llega una nueva foto principal de la Junta Directiva, se sustituye ese archivo. No se crea `equipo-v2.webp`, `equipo-final.webp`, otro script ni otro CSS.
+
+La sección Nosotros usa actualmente dos fotos canónicas dentro del mismo cuadro; cada una se reemplaza conservando su nombre correspondiente.
 
 El build comprueba que los assets referenciados existan y que todos los archivos de `assets/` lleguen al `dist` final.
 
@@ -38,7 +40,8 @@ El build comprueba que los assets referenciados existan y que todos los archivos
 
 | Elemento visible | Asset canónico |
 |---|---|
-| Foto principal de Junta Directiva | `assets/equipo-cct-2026.webp` |
+| Junta Directiva · foto sentados | `assets/equipo-cct-2026.webp` |
+| Junta Directiva · foto grupal | `assets/equipo-cct-2026-grupal.webp` |
 | Jorge | `assets/team/jorge.png` |
 | Johann | `assets/team/johann.png` |
 | Fernando | `assets/team/fernando.png` |
