@@ -103,7 +103,7 @@ Su función es mantener navegación, modales y acciones conectadas a handlers HT
 
 `src/legacy/runtime.ts` espera el DOM nativo, carga `site.js` y ejecuta solamente una lista blanca de inicializadores.
 
-`site.js` está congelado en un presupuesto máximo de 58,650 bytes. El build falla si crece. La dirección permitida es reducirlo conforme las interacciones se migren a React.
+`site.js` está congelado en un presupuesto máximo de **52,736 bytes**. El build falla si crece. La dirección permitida es reducirlo conforme las interacciones se migren a React. La auditoría profunda actual no detecta funciones top-level sin referencias dentro de este núcleo.
 
 No existen ni deben reaparecer:
 
@@ -165,6 +165,10 @@ Guardas actuales:
 - nombres de implementación versionados/copia: error;
 - referencias a assets inexistentes: error.
 
+## Navegación interna
+
+Los destinos hash literales usados por `href="#..."` y `navigateTo('#...')` se comparan con los IDs reales del markup canónico. Un cambio que deja un botón apuntando a una sección inexistente falla en CI.
+
 ## Open Course
 
 `course.html`, `course.css` y `course.js` forman el aula autónoma de Open Course. No participan en el montaje React principal, pero sí forman parte del producto publicado.
@@ -198,6 +202,7 @@ Comprueba, entre otros puntos:
 - ningún nuevo owner TypeScript basado en `innerHTML`;
 - handlers inline sin crecimiento;
 - `!important` sin crecimiento;
+- destinos internos existentes;
 - imágenes con `alt`;
 - enlaces externos seguros;
 - URLs HTTP/javascript prohibidas;
