@@ -22,5 +22,7 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci --no-audit --no-fund
+      - name: Deep architecture inventory
+        run: node scripts/deep-audit.mjs
       - name: Architecture + TypeScript + Vite + dist smoke test
         run: npm run build
