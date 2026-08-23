@@ -1,9 +1,9 @@
-import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { extname, join, relative } from 'node:path';
 
 const root = process.cwd();
-const read = (p) => readFileSync(join(root, p), 'utf8');
-const exists = (p) => existsSync(join(root, p));
+const read = (path) => readFileSync(join(root, path), 'utf8');
+const exists = (path) => existsSync(join(root, path));
 
 function walk(dir) {
   const out = [];
@@ -17,133 +17,126 @@ function walk(dir) {
 }
 
 const files = walk(root);
-const paths = files.map((f) => relative(root, f).replaceAll('\\', '/'));
-const textPaths = paths.filter((p) => ['.html','.css','.js','.ts','.tsx','.json','.md','.txt','.cjs'].includes(extname(p)));
+const paths = files.map((file) => relative(root, file).replaceAll('\\', '/'));
+const pages = ['inicio', 'nosotros', 'formacion', 'comunidad', 'eventos', 'telcon', 'recursos'];
+const markupPaths = [
+  'src/layout/before-main.html',
+  ...pages.map((page) => `src/pages/${page}/markup.html`),
+  'src/layout/footer.html',
+  'src/layout/after-main.html',
+].filter(exists);
+const markup = markupPaths.map(read).join('\n');
 
-const report = {
-  inventory: {},
-  snapshot: {},
-  javascript: {},
-  css: {},
-  assets: {},
-  coupling: {},
-  findings: [],
-};
-
-report.inventory.totalFiles = paths.length;
-report.inventory.totalBytes = files.reduce((n, f) => n + statSync(f).size, 0);
-report.inventory.largestTextFiles = textPaths
-  .map((p) => ({ path: p, bytes: statSync(join(root,p)).size }))
-  .sort((a,b) => b.bytes-a.bytes)
-  .slice(0, 20);
-
-const snapshot = exists('src/legacy/snapshot.html') ? read('src/legacy/snapshot.html') : '';
-const attrHandlerRegex = /\s(on[a-z]+)\s*=\s*["']([^"']*)["']/gi;
-const handlerAttrs = [...snapshot.matchAll(attrHandlerRegex)];
+const handlerAttrs = [...markup.matchAll(/\s(on[a-z]+)\s*=\s*["']([^"']*)["']/gi)];
 const handlerCalls = new Map();
-for (const [, attr, code] of handlerAttrs) {
+for (const [, , code] of handlerAttrs) {
   for (const match of code.matchAll(/\b([A-Za-z_$][\w$]*)\s*\(/g)) {
     const name = match[1];
-    if (['if','for','while','switch','function'].includes(name)) continue;
-    handlerCalls.set(name, (handlerCalls.get(name) || 0) + 1);
-  }
-}
-
-const ids = [...snapshot.matchAll(/\bid=["']([^"']+)["']/gi)].map((m) => m[1]);
-const idCounts = new Map();
-ids.forEach((id) => idCounts.set(id, (idCounts.get(id) || 0) + 1));
-const duplicateIds = [...idCounts.entries()].filter(([,n]) => n > 1).sort((a,b) => b[1]-a[1]);
-
-report.snapshot.bytes = Buffer.byteLength(snapshot);
-report.snapshot.inlineEventAttributes = handlerAttrs.length;
-report.snapshot.uniqueInlineFunctions = [...handlerCalls.entries()].sort((a,b) => b[1]-a[1]);
-report.snapshot.duplicateIds = duplicateIds;
-report.snapshot.scriptTags = [...snapshot.matchAll(/<script\b/gi)].length;
-report.snapshot.styleTags = [...snapshot.matchAll(/<style\b/gi)].length;
-report.snapshot.views = [...snapshot.matchAll(/\bdata-view=["']([^"']+)["']/gi)].map((m)=>m[1]);
-
-const codeFiles = ['site.js','career.js','calendar.js','course.js', ...paths.filter((p)=>p.startsWith('src/') && ['.ts','.tsx','.js'].includes(extname(p)))].filter(exists);
-const functionsByFile = {};
-const allDefined = new Map();
-for (const p of codeFiles) {
-  const c = read(p);
-  const names = new Set();
-  for (const m of c.matchAll(/\bfunction\s+([A-Za-z_$][\w$]*)\s*\(/g)) names.add(m[1]);
-  for (const m of c.matchAll(/\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*(?:async\s*)?\([^)]*\)\s*=>/g)) names.add(m[1]);
-  for (const m of c.matchAll(/\bwindow\.([A-Za-z_$][\w$]*)\s*=/g)) names.add(m[1]);
-  functionsByFile[p] = [...names].sort();
-  for (const n of names) {
-    if (!allDefined.has(n)) allDefined.set(n, []);
-    allDefined.get(n).push(p);
-  }
-}
-report.javascript.functionsByFile = functionsByFile;
-report.javascript.duplicateFunctionNames = [...allDefined.entries()].filter(([,ps])=>ps.length>1).sort((a,b)=>b[1].length-a[1].length);
-report.javascript.domReadyListeners = codeFiles.filter((p)=>/DOMContentLoaded/.test(read(p)));
-report.javascript.siteBytes = exists('site.js') ? statSync(join(root,'site.js')).size : 0;
-
-const unresolvedInline = [];
-for (const [name,count] of handlerCalls) {
-  const defs = allDefined.get(name) || [];
-  if (!defs.length) unresolvedInline.push([name,count]);
-}
-report.coupling.inlineHandlersByFunction = [...handlerCalls.entries()].sort((a,b)=>b[1]-a[1]);
-report.coupling.inlineHandlerDefinitions = [...handlerCalls.keys()].sort().map((name)=>({ name, files: allDefined.get(name)||[] }));
-report.coupling.unresolvedInlineHandlers = unresolvedInline;
-
-const cssFiles = ['styles.css', ...paths.filter((p)=>p.startsWith('src/styles/') && p.endsWith('.css')), 'course.css'].filter(exists);
-const selectorFiles = new Map();
-let importantCount = 0;
-for (const p of cssFiles) {
-  const c = read(p).replace(/\/\*[\s\S]*?\*\//g,'');
-  importantCount += (c.match(/!important/g) || []).length;
-  for (const m of c.matchAll(/(^|})\s*([^@{}][^{}]*)\s*\{/gm)) {
-    const raw = m[2].trim();
-    if (!raw || raw.includes('@keyframes')) continue;
-    for (const selector of raw.split(',').map((s)=>s.trim()).filter(Boolean)) {
-      if (!selectorFiles.has(selector)) selectorFiles.set(selector, new Set());
-      selectorFiles.get(selector).add(p);
+    if (!['if', 'for', 'while', 'switch', 'function'].includes(name)) {
+      handlerCalls.set(name, (handlerCalls.get(name) || 0) + 1);
     }
   }
 }
-report.css.files = cssFiles.map((p)=>({path:p, bytes:statSync(join(root,p)).size, important:(read(p).match(/!important/g)||[]).length}));
-report.css.importantCount = importantCount;
-report.css.crossFileDuplicateSelectors = [...selectorFiles.entries()]
-  .filter(([,set])=>set.size>1)
-  .map(([selector,set])=>({selector, files:[...set]}))
-  .sort((a,b)=>b.files.length-a.files.length)
-  .slice(0,120);
 
-const assetFiles = paths.filter((p)=>p.startsWith('assets/') && !p.endsWith('/'));
-const baseNames = new Map();
-for (const p of assetFiles) {
-  const name = p.slice(p.lastIndexOf('/')+1).replace(/\.[^.]+$/,'');
-  if (!baseNames.has(name)) baseNames.set(name, []);
-  baseNames.get(name).push(p);
+const ids = [...markup.matchAll(/\bid=["']([^"']+)["']/gi)].map((match) => match[1]);
+const idCounts = new Map();
+for (const id of ids) idCounts.set(id, (idCounts.get(id) || 0) + 1);
+const duplicateIds = [...idCounts.entries()].filter(([, count]) => count > 1);
+
+const codePaths = [
+  'site.js',
+  'course.js',
+  ...paths.filter((path) => path.startsWith('src/') && ['.ts', '.tsx', '.js'].includes(extname(path))),
+].filter(exists);
+const allDefined = new Map();
+for (const path of codePaths) {
+  const content = read(path);
+  const names = new Set();
+  for (const match of content.matchAll(/\bfunction\s+([A-Za-z_$][\w$]*)\s*\(/g)) names.add(match[1]);
+  for (const match of content.matchAll(/\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*(?:async\s*)?\([^)]*\)\s*=>/g)) names.add(match[1]);
+  for (const name of names) {
+    if (!allDefined.has(name)) allDefined.set(name, []);
+    allDefined.get(name).push(path);
+  }
 }
-report.assets.total = assetFiles.length;
-report.assets.duplicateBasenames = [...baseNames.entries()].filter(([,ps])=>ps.length>1);
-report.assets.largest = assetFiles.map((p)=>({path:p,bytes:statSync(join(root,p)).size})).sort((a,b)=>b.bytes-a.bytes).slice(0,20);
 
-const legacyNeedles = [
-  'initAcademyEnrollments','initCctV2Experience','initCareerExplorer','initEditorialAgenda','initAcademyOrbit','initRevealMotion','initTeleinformaFilters','initEventosBoomerang','initCalendar'
-];
-report.javascript.legacyInitializerOccurrences = legacyNeedles.map((name)=>({
-  name,
-  files: codeFiles.filter((p)=>read(p).includes(name))
+const cssPaths = ['styles.css', ...paths.filter((path) => path.startsWith('src/styles/') && path.endsWith('.css')), 'course.css'].filter(exists);
+const importantByFile = cssPaths.map((path) => ({
+  path,
+  bytes: statSync(join(root, path)).size,
+  important: (read(path).match(/!important/g) || []).length,
 }));
 
-const rootRuntimeFiles = ['site.js','career.js','calendar.js','course.js','course.css','course.html','styles.css'].filter(exists);
-report.coupling.rootRuntimeFiles = rootRuntimeFiles;
-report.coupling.pagesDependingOnSnapshot = paths.filter((p)=>p.startsWith('src/pages/') && p.endsWith('/index.ts') && /extractView\(/.test(read(p)));
-report.coupling.filesImportingLegacy = paths.filter((p)=>p.startsWith('src/') && ['.ts','.tsx'].includes(extname(p)) && /legacy\//.test(read(p)));
+const assetPaths = paths.filter((path) => path.startsWith('assets/'));
+const basenameGroups = new Map();
+for (const path of assetPaths) {
+  const base = path.slice(path.lastIndexOf('/') + 1).replace(/\.[^.]+$/, '');
+  if (!basenameGroups.has(base)) basenameGroups.set(base, []);
+  basenameGroups.get(base).push(path);
+}
 
-if (duplicateIds.length) report.findings.push(`snapshot tiene ${duplicateIds.length} IDs duplicados`);
-if (handlerAttrs.length > 0) report.findings.push(`snapshot mantiene ${handlerAttrs.length} handlers inline`);
-if (unresolvedInline.length) report.findings.push(`${unresolvedInline.length} handlers inline no tienen definición estática detectable`);
-if (report.css.crossFileDuplicateSelectors.length) report.findings.push(`${report.css.crossFileDuplicateSelectors.length} selectores CSS se repiten entre archivos (muestra truncada a 120)`);
-if (report.css.importantCount > 100) report.findings.push(`hay ${report.css.importantCount} usos de !important`);
-if (report.coupling.pagesDependingOnSnapshot.length) report.findings.push(`${report.coupling.pagesDependingOnSnapshot.length} páginas siguen dependiendo del snapshot legacy`);
+const retired = ['initAcademyEnrollments', 'initAcademyOrbit', 'initCalendar', 'initCareerExplorer', 'initCctV2Experience', 'initEditorialAgenda', 'initEventosBoomerang', 'initRevealMotion', 'initTeleinformaFilters'];
+const site = exists('site.js') ? read('site.js') : '';
+const pageIndexes = pages.map((page) => `src/pages/${page}/index.ts`);
+const legacyImports = paths.filter((path) => path.startsWith('src/') && ['.ts', '.tsx'].includes(extname(path)) && /legacy\/(?:extract|snapshot)/.test(read(path)));
+
+const report = {
+  inventory: {
+    totalFiles: paths.length,
+    totalBytes: files.reduce((total, file) => total + statSync(file).size, 0),
+    largestTextFiles: paths
+      .filter((path) => ['.html', '.css', '.js', '.ts', '.tsx', '.json'].includes(extname(path)))
+      .map((path) => ({ path, bytes: statSync(join(root, path)).size }))
+      .sort((a, b) => b.bytes - a.bytes)
+      .slice(0, 15),
+  },
+  markup: {
+    files: markupPaths,
+    totalBytes: markupPaths.reduce((total, path) => total + statSync(join(root, path)).size, 0),
+    inlineEventAttributes: handlerAttrs.length,
+    inlineFunctions: [...handlerCalls.entries()].sort((a, b) => b[1] - a[1]),
+    duplicateIds,
+    scriptTags: [...markup.matchAll(/<script\b/gi)].length,
+    styleTags: [...markup.matchAll(/<style\b/gi)].length,
+  },
+  javascript: {
+    siteBytes: exists('site.js') ? statSync(join(root, 'site.js')).size : 0,
+    domReadyListeners: codePaths.filter((path) => /DOMContentLoaded/.test(read(path))),
+    duplicateFunctionNames: [...allDefined.entries()].filter(([, definitions]) => definitions.length > 1),
+    retiredSiteFunctionsStillDefined: retired.filter((name) => new RegExp(`function\\s+${name}\\s*\\(`).test(site)),
+  },
+  css: {
+    importantTotal: importantByFile.reduce((total, file) => total + file.important, 0),
+    files: importantByFile,
+  },
+  assets: {
+    total: assetPaths.length,
+    duplicateBasenames: [...basenameGroups.entries()].filter(([, group]) => group.length > 1),
+    largest: assetPaths.map((path) => ({ path, bytes: statSync(join(root, path)).size })).sort((a, b) => b.bytes - a.bytes).slice(0, 12),
+  },
+  coupling: {
+    pagesUsingCanonicalMarkup: pageIndexes.filter((path) => exists(path) && read(path).includes('./markup.html?raw')).length,
+    legacySnapshotImports: legacyImports,
+    retiredRootScriptsPresent: ['career.js', 'calendar.js'].filter(exists),
+    rootRuntimeFiles: ['site.js', 'course.js', 'course.css', 'course.html', 'styles.css'].filter(exists),
+  },
+};
 
 console.log('=== CCT DEEP AUDIT ===');
 console.log(JSON.stringify(report, null, 2));
+
+const hardProblems = [];
+if (duplicateIds.length) hardProblems.push(`${duplicateIds.length} IDs duplicados`);
+if (report.markup.scriptTags) hardProblems.push(`${report.markup.scriptTags} scripts embebidos en markup`);
+if (legacyImports.length) hardProblems.push(`${legacyImports.length} imports al snapshot/extractor retirado`);
+if (report.javascript.retiredSiteFunctionsStillDefined.length) hardProblems.push(`${report.javascript.retiredSiteFunctionsStillDefined.length} funciones retiradas siguen en site.js`);
+if (report.coupling.retiredRootScriptsPresent.length) hardProblems.push(`scripts retirados presentes: ${report.coupling.retiredRootScriptsPresent.join(', ')}`);
+if (report.coupling.pagesUsingCanonicalMarkup !== pages.length) hardProblems.push('no todas las páginas usan markup canónico');
+
+if (hardProblems.length) {
+  console.error('\n[CCT] Deep audit detectó problemas estructurales:');
+  hardProblems.forEach((problem) => console.error(` - ${problem}`));
+  process.exit(1);
+}
+
+console.log(`\n[CCT] Deep audit OK: ${markupPaths.length} fragmentos canónicos, ${handlerAttrs.length} handlers inline, ${report.css.importantTotal} !important, site.js ${report.javascript.siteBytes} bytes.`);
