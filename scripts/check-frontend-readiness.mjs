@@ -52,7 +52,6 @@ for (const path of [
 const tsSources = paths.filter((path) => path.startsWith('src/') && ['.ts', '.tsx'].includes(extname(path)));
 const dangerousOwners = [];
 for (const path of tsSources) {
-  // Cuenta únicamente el atributo JSX real, no menciones en comentarios/documentación.
   const count = (read(path).match(/\bdangerouslySetInnerHTML\s*=\s*\{/g) || []).length;
   if (count) dangerousOwners.push([path, count]);
 }
@@ -88,7 +87,7 @@ const sitePath = join(root, 'site.js');
 const site = existsSync(sitePath) ? read('site.js') : '';
 if (existsSync(sitePath)) {
   const size = statSync(sitePath).size;
-  if (size > 58650) fail(`site.js creció a ${size} bytes. El núcleo legacy está congelado en 58650 bytes y no debe recibir lógica nueva.`);
+  if (size > 52736) fail(`site.js creció a ${size} bytes. El núcleo legacy está congelado en 52736 bytes y no debe recibir lógica nueva.`);
   if (/\beval\s*\(|new\s+Function\s*\(|document\.write\s*\(/.test(site)) {
     fail('site.js contiene una API de ejecución dinámica prohibida (eval/new Function/document.write).');
   }
@@ -127,8 +126,6 @@ for (const path of canonicalMarkupPaths) {
 const inlineHandlers = markup.match(/\son[a-z]+\s*=/gi)?.length ?? 0;
 if (inlineHandlers > 106) fail(`Aumentaron los handlers HTML inline: ${inlineHandlers} (máximo transicional 106).`);
 
-// Cada enlace/hash interno literal debe apuntar a un ID real del markup canónico.
-// Esto evita botones que visualmente existen pero terminan cayendo al fallback de Inicio.
 const markupIds = new Set([...markup.matchAll(/\bid\s*=\s*["']([^"']+)["']/gi)].map((match) => match[1]));
 const hashTargets = new Set();
 for (const match of markup.matchAll(/\bhref\s*=\s*["']#([^"']+)["']/gi)) hashTargets.add(match[1]);
