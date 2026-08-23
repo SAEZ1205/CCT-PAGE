@@ -1,0 +1,73 @@
+<div class="view" data-view="telcon" id="view-telcon">
+    <section class="section-telcon" id="telcon">
+        <div class="telcon-hero">
+            <div class="telcon-overlay"></div>
+            <div class="telcon-content">
+                <div class="telcon-logo">TELCON 2026</div>
+                <h2>Congreso Nacional de Telecomunicaciones</h2>
+                <p class="telcon-date">15 - 17 de Marzo, 2026 | Lima, Perú</p>
+            </div>
+        </div>
+        <div class="telcon-about">
+            <div style="max-width:var(--container);margin:0 auto;padding:0 2rem;">
+                <h3>¿Qué es TELCON?</h3>
+                <p class="lead-text">TELCON es el congreso nacional de telecomunicaciones más importante del Perú, organizado anualmente por el CCT-UNI. Durante tres días, reúne a estudiantes, profesionales y líderes de la industria.</p>
+                <div class="telcon-stats">
+                    <div class="stat"><span class="stat-number">1,500+</span><span class="stat-label">Participantes</span></div>
+                    <div class="stat"><span class="stat-number">30+</span><span class="stat-label">Conferencias</span></div>
+                    <div class="stat"><span class="stat-number">20+</span><span class="stat-label">Talleres</span></div>
+                    <div class="stat"><span class="stat-number">15+</span><span class="stat-label">Empresas</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="telcon-grid" style="max-width:var(--container);margin:0 auto;">
+            <div class="telcon-block">
+                <h4>Inscripciones</h4>
+                <p>Inscríbete ahora y asegura tu lugar en el evento más importante del año.</p>
+                <ul class="telcon-list"><li>Early bird hasta el 28 de febrero</li><li>Descuentos para grupos</li><li>Certificado de participación</li></ul>
+                <button class="btn-primary" onclick="location.href='#inscripcion'">Inscribirme</button>
+            </div>
+            <div class="telcon-block">
+                <h4>Cronograma</h4>
+                <div class="telcon-schedule">
+                    <div class="schedule-day"><strong>Día 1 (15 Mar)</strong><span>Conferencias magistrales</span></div>
+                    <div class="schedule-day"><strong>Día 2 (16 Mar)</strong><span>Talleres técnicos</span></div>
+                    <div class="schedule-day"><strong>Día 3 (17 Mar)</strong><span>Concursos y clausura</span></div>
+                </div>
+            </div>
+            <div class="telcon-block">
+                <h4>Categorías de Concurso</h4>
+                <ul class="telcon-list"><li>Mejor Proyecto de Innovación</li><li>Hackathon 24h</li><li>Presentación de Papers</li><li>Robótica y Automatización</li></ul>
+            </div>
+            <div class="telcon-block">
+                <h4>Preguntas Frecuentes</h4>
+                <details class="faq-item"><summary>¿Quiénes pueden participar?</summary><p>Estudiantes universitarios, técnicos y profesionales del sector.</p></details>
+                <details class="faq-item"><summary>¿Hay descuentos?</summary><p>Sí, ofrecemos descuentos early bird y para grupos de 5+ personas.</p></details>
+                <details class="faq-item"><summary>¿Se entrega certificado?</summary><p>Todos los participantes reciben certificado digital de asistencia.</p></details>
+            </div>
+        </div>
+        <div class="telcon-register" id="inscripcion">
+            <div style="max-width:var(--container);margin:0 auto;">
+                <div class="telcon-register-card">
+                    <span class="section-tag" style="background:rgba(0,202,255,0.12);color:var(--cyan);">INSCRIPCIONES</span>
+                    <h3>Inscripción rápida</h3>
+                    <p>Deja tus datos y te enviamos el enlace oficial de registro y las bases actualizadas.</p>
+                    <form class="telcon-form" onsubmit="event.preventDefault(); alert('¡Listo! En producción, esto enviaría tus datos.');">
+                        <div class="form-row">
+                            <div class="form-group"><label>Nombre completo *</label><input required type="text" placeholder="Tu nombre"/></div>
+                            <div class="form-group"><label>Correo *</label><input required type="email" placeholder="tu@correo.com"/></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Universidad / Institución</label><input placeholder="UNI, etc." type="text"/></div>
+                            <div class="form-group"><label>Tipo de participación</label><select><option>Asistente</option><option>Expositor</option><option>Concurso / Hackathon</option></select></div>
+                        </div>
+                        <div class="form-actions-inline">
+                            <button class="btn-secondary" onclick="openTelconVolunteerModal()" type="button" style="border-color:rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);">Quiero ser voluntario</button>
+                            <button class="btn-primary" type="submit">Solicitar enlace de registro</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

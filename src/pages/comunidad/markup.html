@@ -1,0 +1,122 @@
+<div class="view" data-view="comunidad" id="view-comunidad">
+    <section class="section-community legacy-section" id="comunidad-legacy" aria-hidden="true">
+        <div class="container">
+            <div class="section-header-editorial">
+                <span class="section-tag">COMUNIDAD Y DIFUSIÓN</span>
+                <h2 class="section-title">Teleinforma</h2>
+                <p class="section-description">Las últimas noticias y novedades del CCT</p>
+            </div>
+            <div class="news-filters" aria-label="Filtros Teleinforma">
+                <button class="news-filter-btn active" data-filter="todo">Todo</button>
+                <button class="news-filter-btn" data-filter="noticia">Noticias</button>
+                <button class="news-filter-btn" data-filter="comunicado">Comunicados</button>
+                <button class="news-filter-btn" data-filter="nota">Notas rápidas</button>
+            </div>
+            <!-- Teleinforma (dinámico por JS) — modo claro, lista izquierda + destacada derecha -->
+            <div class="teleinforma-layout teleinforma-light" id="teleinformaWidget">
+                <aside class="tele-left" aria-label="Lista de noticias">
+                    <div class="tele-left-head">
+                        <div class="tele-left-title">Últimas</div>
+                    </div>
+                    <div class="tele-list" id="teleList"></div>
+                </aside>
+                <article class="tele-right" aria-label="Noticia destacada">
+                    <div class="tele-right-head">
+                        <div class="tele-right-chip">DESTACADO</div>
+                        <div class="tele-right-controls" aria-label="Controles">
+                            <button class="tele-nav-btn" id="telePrev" type="button" aria-label="Anterior">‹</button>
+                            <button class="tele-nav-btn" id="teleNext" type="button" aria-label="Siguiente">›</button>
+                        </div>
+                    </div>
+                    <div class="tele-feature" id="teleFeature"></div>
+                </article>
+            </div>
+            <noscript>
+                <p style="color:#4A5568">Activa JavaScript para ver Teleinforma.</p>
+            </noscript>
+        </div>
+    </section>
+
+    <section class="section-interviews legacy-section" id="historias-legacy" aria-hidden="true">
+        <div class="container">
+            <div class="section-header-editorial">
+                <span class="section-tag">HISTORIAS QUE INSPIRAN</span>
+                <h2 class="section-title">Entrevistas de egresados y estudiantes</h2>
+                <p class="section-description">Experiencias reales para que conozcas tu carrera desde adentro.</p>
+            </div>
+            <div class="interviews-grid">
+                <article class="interview-card" onclick="openInterviewModal(1)" role="button" tabindex="0">
+                    <div class="interview-photo" style="background-image:url('assets/certificates-cct.webp');"></div>
+                    <div class="interview-body"><span class="kicker">EGRESADO</span><h3>De la UNI a redes core</h3><p>Cómo una ruta CCNA + proyectos me abrió puertas en la industria.</p><span class="linkish">Ver entrevista →</span></div>
+                </article>
+                <article class="interview-card" onclick="openInterviewModal(2)" role="button" tabindex="0">
+                    <div class="interview-photo" style="background-image:url('assets/telecom-day-2023.webp');"></div>
+                    <div class="interview-body"><span class="kicker">ESTUDIANTE</span><h3>Mi primer laboratorio en GNS3</h3><p>Lo que aprendí montando una topología real con MPLS y OSPF.</p><span class="linkish">Ver entrevista →</span></div>
+                </article>
+                <article class="interview-card" onclick="openInterviewModal(3)" role="button" tabindex="0">
+                    <div class="interview-photo" style="background-image:url('assets/event-community-group.webp');"></div>
+                    <div class="interview-body"><span class="kicker">COMUNIDAD</span><h3>Aprender con equipo</h3><p>Cómo la comunidad te acelera: mentorías, retos y apoyo constante.</p><span class="linkish">Ver entrevista →</span></div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-projects legacy-section" aria-hidden="true">
+        <div class="container">
+            <div class="section-header-editorial">
+                <span class="section-tag">PROYECTOS</span>
+                <h2 class="section-title">Proyectos CCT</h2>
+                <p class="section-description">Demos, laboratorios y desarrollos que construimos como comunidad.</p>
+            </div>
+            <div class="projects-mosaic">
+                <div class="project-tile tile-main" onclick="openProjectModal(1)" style="background-image: linear-gradient(rgba(12,15,26,0.82), rgba(12,15,26,0.82)), url('assets/visit-network-operations.webp');"><div class="tile-content"><span class="tile-category">SDN / CLOUD</span><h3>Laboratorio remoto en Azure</h3><p>VM + GNS3 + VPN + automatización para prácticas 24/7.</p><span class="tile-cta">Ver detalles →</span></div></div>
+                <div class="project-tile" onclick="openProjectModal(2)" style="background-image: linear-gradient(rgba(12,15,26,0.75), rgba(12,15,26,0.75)), url('assets/hero_network.png');"><div class="tile-content"><span class="tile-category">NETWORKING</span><h3>Topologías CCNA</h3><p>Labs guiados: VLAN, STP, OSPF, NAT.</p></div></div>
+                <div class="project-tile" onclick="openProjectModal(3)" style="background-image: linear-gradient(rgba(12,15,26,0.75), rgba(12,15,26,0.75)), url('assets/certificates-cct.webp');"><div class="tile-content"><span class="tile-category">AUTOMATION</span><h3>Scripts para redes</h3><p>Inventario, backups y validaciones.</p></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="community-collage-hero" id="comunidad">
+        <div class="community-collage-grid" aria-hidden="true">
+            <div style="background-image:url('assets/event-community-group.webp')"></div>
+            <div style="background-image:url('assets/visit-network-operations.webp')"></div>
+            <div style="background-image:url('assets/certificates-cct.webp')"></div>
+            <div style="background-image:url('assets/event-auditorium.webp')"></div>
+        </div>
+        <div class="community-collage-shade"></div>
+        <div class="container community-collage-copy"><span>CCT · FIEE UNI</span><h1>COMUNIDAD</h1><p>Una carrera se estudia. Una comunidad se vive.</p></div>
+    </section>
+
+    <section class="teleinforma-curated cct-reveal" id="teleinforma">
+        <div class="container">
+            <div class="v2-heading-row dark-text"><div><span class="v2-kicker">TELEINFORMA</span><h2>Lo importante, <span>bien contado.</span></h2></div><p>Una selección editorial; no un muro infinito de publicaciones.</p></div>
+            <div class="tele-curated-grid">
+                <article class="tele-main-story">
+                    <img src="assets/teleinforma-amazon.webp" alt="Amazon LEO, noticia de Teleinforma" loading="lazy">
+                    <div><span class="feed-tag amber">COMUNICACIONES SATELITALES</span><h3>Amazon LEO quiere llevar internet desde el espacio</h3><p>Teleinforma traduce los cambios tecnológicos que están transformando la industria y nuestra carrera.</p><a href="https://www.instagram.com/cct_uni_fiee/" target="_blank" rel="noopener">Ver publicación en Instagram ↗</a></div>
+                </article>
+                <a class="tele-side-story" href="https://www.instagram.com/cct_uni_fiee/" target="_blank" rel="noopener"><img src="assets/flyer-huawei-courses.webp" alt="Nuevos cursos Huawei"><div><span>FORMACIÓN</span><h3>Nuevos cursos Huawei disponibles</h3><b>Ver publicación ↗</b></div></a>
+                <a class="tele-side-story" href="https://www.instagram.com/cct_uni_fiee/" target="_blank" rel="noopener"><img src="assets/flyer-fiestas-patrias.webp" alt="Saludo CCT por Fiestas Patrias"><div><span>COMUNIDAD</span><h3>El CCT celebra al Perú</h3><b>Ver publicación ↗</b></div></a>
+            </div>
+        </div>
+    </section>
+
+    <section class="cct-family cct-reveal">
+        <div class="container">
+            <div class="v2-heading-row"><div><span class="v2-kicker light">FAMILIA CCT</span><h2>Aprendemos juntos.<br><span>Crecemos juntos.</span></h2></div><p>Visitas técnicas, eventos, certificaciones y momentos que solo existen porque hay personas detrás.</p></div>
+            <div class="family-mosaic">
+                <figure class="family-wide"><img src="assets/telecom-day-2023.webp" alt="Día Mundial de las Telecomunicaciones 2023" loading="lazy"><figcaption><span>COMUNIDAD</span>Día Mundial de las Telecomunicaciones</figcaption></figure>
+                <figure><img src="assets/visit-network-operations.webp" alt="Visita técnica de estudiantes" loading="lazy"><figcaption><span>VISITA TÉCNICA</span>Aprender fuera del aula</figcaption></figure>
+                <figure><img src="assets/certificates-cct.webp" alt="Entrega de certificados CCT" loading="lazy"><figcaption><span>FORMACIÓN</span>Entrega de certificados</figcaption></figure>
+                <figure class="family-tall"><img src="assets/event-auditorium.webp" alt="Auditorio en un evento CCT" loading="lazy"><figcaption><span>EVENTOS</span>Ideas que reúnen</figcaption></figure>
+            </div>
+        </div>
+    </section>
+
+    <section class="voices-cct cct-reveal" id="historias">
+        <div class="container voices-layout">
+            <div class="voices-owl"><img src="assets/owl-front.webp" alt="Mascota CCT"><span>VOCES CCT</span></div>
+            <div class="voices-copy"><span class="v2-kicker">PRÓXIMA SERIE</span><h2>Historias que enseñan lo que no aparece en la malla.</h2><p>Entrevistas breves con egresados, estudiantes destacados y docentes: decisiones, errores, oportunidades y consejos para quienes recién empiezan.</p><div class="voice-topics"><span>01 · Egresados</span><span>02 · Estudiantes</span><span>03 · Docentes</span></div><a href="https://www.instagram.com/cct_uni_fiee/" target="_blank" rel="noopener">Síguenos para la primera entrevista ↗</a></div>
+        </div>
+    </section>
+</div>

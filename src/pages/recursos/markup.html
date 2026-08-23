@@ -1,0 +1,43 @@
+<div class="view" data-view="recursos" id="view-recursos">
+    <section class="resource-hero" id="recursos">
+        <div class="container resource-hero-grid">
+            <div><span class="v2-kicker light">BIBLIOTECA ACADÉMICA CCT</span><h1>Tu carrera,<br><span>mejor organizada.</span></h1><p>Busca por ciclo o por nombre de curso. Cada materia abre directamente su propia carpeta académica en Drive.</p><div class="resource-hero-pills"><span>Organizado por ciclos</span><span>Material FIEE</span><span>Carpetas por curso</span></div></div>
+            <div class="resource-owl-card"><img src="assets/owl-guide.webp" alt="Mascota CCT guiando hacia los recursos"><span>Elige un ciclo para comenzar ↓</span></div>
+        </div>
+    </section>
+    <section class="section-resources resource-browser" id="recursos-browser">
+        <div class="container">
+            <div class="section-header-editorial">
+                <span class="section-tag">EXPLORADOR DE RECURSOS</span>
+                <h2 class="section-title">Drive académico CCT</h2>
+                <p class="section-description">Navega por los ciclos dentro de la página. Drive se abre únicamente cuando eliges una materia.</p>
+            </div>
+            <div class="resources-layout">
+                <aside class="resources-sidebar">
+                    <div class="sidebar-block">
+                        <h3>Ciclos académicos</h3>
+                        <button class="cat-btn active" data-mode="cycle" data-cycle="1">1er ciclo</button>
+                        <button class="cat-btn" data-mode="cycle" data-cycle="2">2do ciclo</button>
+                        <button class="cat-btn" data-mode="cycle" data-cycle="3">3er ciclo</button>
+                        <button class="cat-btn" data-mode="cycle" data-cycle="4">4to ciclo</button>
+                        <button class="cat-btn" data-mode="cycle" data-cycle="5">5to ciclo</button>
+                        <button class="cat-btn" data-mode="cycle" data-cycle="6">6to ciclo</button>
+                    </div>
+                </aside>
+                <div class="resources-content">
+                    <div class="resources-search">
+                        <input type="search" placeholder="Buscar por nombre o código del curso..." class="search-input" id="resourceSearch">
+                        <p class="resources-hint">Selecciona un ciclo y luego abre la carpeta específica de tu curso.</p>
+                    </div>
+                    <div class="resources-list" id="resourcesPanel">
+                        <div class="resources-empty">
+                            <h3>Selecciona una categoría</h3>
+                            <p>Elige un ciclo o tipo de recurso para ver el contenido disponible.</p>
+                            <p class="muted">Selecciona un ciclo para ver las materias disponibles.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

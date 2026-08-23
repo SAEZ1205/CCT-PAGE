@@ -1,0 +1,138 @@
+<!-- MODAL CONVOCATORIA -->
+<div id="convocatoriaModal" class="modal-overlay">
+    <div class="modal-container modal-large">
+        <button class="modal-close" onclick="closeConvocatoriaModal()">&times;</button>
+        <div class="modal-header">
+            <h2>Postulación CCT 2026</h2>
+            <p>Únete al equipo que está transformando las telecomunicaciones en la UNI</p>
+            <p id="preselectHint" class="preselect-hint" aria-live="polite"></p>
+        </div>
+        <div class="modal-body">
+            <form id="convocatoriaForm" class="form-convocatoria">
+                <div class="form-stepper">
+                    <div class="step active"><span class="step-number">1</span><span class="step-label">Datos personales</span></div>
+                    <div class="step"><span class="step-number">2</span><span class="step-label">Área de interés</span></div>
+                    <div class="step"><span class="step-number">3</span><span class="step-label">Motivación</span></div>
+                </div>
+                <div class="form-section active" data-section="1">
+                    <div class="form-group"><label>Nombre completo *</label><input type="text" required></div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Correo UNI *</label><input type="email" required></div>
+                        <div class="form-group"><label>Teléfono *</label><input type="tel" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Ciclo actual *</label><select required><option value="">Seleccionar</option><option>1er ciclo</option><option>2do ciclo</option><option>3er ciclo</option><option>4to ciclo</option><option>5to ciclo</option><option>6to+ ciclo</option></select></div>
+                        <!-- Campo "Especialidad" removido: el formulario es para estudiantes de Telecomunicaciones -->
+                    </div>
+                </div>
+                <div class="form-section" data-section="2">
+                    <div class="form-group">
+                        <label>Área de interés *</label>
+                        <div class="radio-group">
+                            <label class="radio-option"><input type="radio" name="area" value="relaciones" required><span>Relaciones Públicas</span></label>
+                            <label class="radio-option"><input type="radio" name="area" value="marketing"><span>Marketing</span></label>
+                            <label class="radio-option"><input type="radio" name="area" value="finanzas"><span>Economía y Finanzas</span></label>
+                            <label class="radio-option"><input type="radio" name="area" value="asuntos"><span>Asuntos Académicos</span></label>
+                            <label class="radio-option"><input type="radio" name="area" value="capacitacion"><span>Capacitación Tecnológica</span></label>
+                            <label class="radio-option"><input type="radio" name="area" value="proyectos"><span>Proyectos e Investigación</span></label>
+                            <label class="radio-option"><input type="radio" name="area" value="secretaria"><span>Secretaría General</span></label>
+                            <label class="radio-option"><input type="radio" name="area" value="cisco"><span>Academia Local Cisco</span></label>
+                            <label class="radio-option"><input type="radio" name="area" value="direccion"><span>Dirección Ejecutiva</span></label>
+                        </div>
+                    </div>
+                    <div class="form-group"><label>Habilidades relevantes</label><textarea rows="3" placeholder="Describe tus habilidades y experiencia..."></textarea></div>
+                </div>
+                <div class="form-section" data-section="3">
+                    <div class="form-group"><label>¿Por qué quieres unirte al CCT? *</label><textarea rows="4" required placeholder="Cuéntanos tu motivación..."></textarea></div>
+                    <div class="form-group"><label>¿Cómo te enteraste del CCT?</label><select><option value="">Seleccionar</option><option>Redes sociales</option><option>Amigo/Compañero</option><option>Evento</option><option>Profesor</option><option>Otro</option></select></div>
+                    <div class="form-group"><label class="checkbox-label"><input type="checkbox" required><span>Acepto los términos y condiciones de la convocatoria</span></label></div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="prevFormStep()">Anterior</button>
+                    <button type="button" class="btn-primary" onclick="nextFormStep()">Siguiente</button>
+                    <button type="submit" class="btn-primary" style="display: none;">Enviar postulación</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ENROLL MODAL (ACADEMIAS) -->
+<div id="enrollOverlay" class="enroll-overlay" aria-hidden="true">
+  <div class="enroll-dialog" role="dialog" aria-modal="true" aria-labelledby="enrollTitle">
+    <button class="enroll-close" type="button" onclick="closeEnrollModal()" aria-label="Cerrar">&times;</button>
+
+    <div class="enroll-head">
+      <div class="enroll-head-text">
+        <div class="enroll-kicker">INSCRIPCIÓN</div>
+        <h3 id="enrollTitle" class="enroll-title">Inscribirse</h3>
+        <p id="enrollProgram" class="enroll-program">Programa: —</p>
+      </div>
+      <div class="enroll-mini-badge" aria-hidden="true">CCT</div>
+    </div>
+
+    <div id="enrollStepForm" class="enroll-step enroll-step--form">
+      <form id="enrollForm" class="enroll-form" novalidate>
+        <input type="hidden" id="enrollProgramId" name="programId" value="">
+        <div class="enroll-grid">
+          <label class="enroll-field">
+            <span>Nombres y apellidos *</span>
+            <input id="enrollName" name="name" type="text" required placeholder="Ej. Juan Carlos Pizarro">
+          </label>
+
+          <label class="enroll-field">
+            <span>Correo *</span>
+            <input id="enrollEmail" name="email" type="email" required placeholder="tucorreo@ejemplo.com">
+          </label>
+
+          <label class="enroll-field">
+            <span>Teléfono / WhatsApp *</span>
+            <input id="enrollPhone" name="phone" type="tel" required placeholder="+51 999 999 999">
+          </label>
+
+          <label class="enroll-field">
+            <span>Ciclo / Condición</span>
+            <select id="enrollCycle" name="cycle">
+              <option value="">Seleccionar</option>
+              <option>1er ciclo</option><option>2do ciclo</option><option>3er ciclo</option><option>4to ciclo</option>
+              <option>5to ciclo</option><option>6to ciclo o más</option><option>Egresado</option><option>Externo</option>
+            </select>
+          </label>
+
+          <label class="enroll-field enroll-field--full">
+            <span>Disponibilidad</span>
+            <select id="enrollAvailability" name="availability">
+              <option value="">Seleccionar</option>
+              <option>Noches (L-V)</option>
+              <option>Fines de semana</option>
+              <option>Flexible</option>
+            </select>
+          </label>
+
+          <label class="enroll-field enroll-field--full">
+            <span>Comentario (opcional)</span>
+            <textarea id="enrollNotes" name="notes" rows="3" placeholder="Cuéntanos tu objetivo o experiencia previa."></textarea>
+          </label>
+        </div>
+
+        <div class="enroll-actions">
+          <button type="button" class="enroll-btn-secondary" onclick="closeEnrollModal()">Cancelar</button>
+          <button type="submit" class="enroll-btn-primary">Enviar inscripción</button>
+        </div>
+
+        <p class="enroll-footnote">
+          Al enviar tu inscripción, aceptas que el CCT se comunique contigo por correo y teléfono para coordinar la convocatoria.
+        </p>
+      </form>
+    </div>
+
+    <div id="enrollStepSuccess" class="enroll-step enroll-step--success" hidden>
+      <h4 class="enroll-success-title">¡Inscripción registrada!</h4>
+      <p class="enroll-success-text">Estaremos en contacto a través de tu correo y tu número de teléfono.</p>
+      <div class="enroll-success-actions">
+        <button type="button" class="enroll-btn-primary" onclick="closeEnrollModal()">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
+</div>

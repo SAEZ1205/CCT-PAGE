@@ -1,0 +1,199 @@
+<div class="view" data-view="eventos" id="view-eventos">
+    <span id="eventos" class="view-anchor" aria-hidden="true"></span>
+
+    <!-- HERO FULLSCREEN — VIDEO BOOMERANG -->
+    <section class="eventos-hero eventos-hero--video legacy-section" aria-hidden="true">
+        <div class="eventos-hero-media" aria-hidden="true">
+            <video id="eventosBoomF" class="eventos-hero-video is-active" muted playsinline preload="none" disablepictureinpicture>
+                <source src="assets/puntosunidos.mp4" type="video/mp4">
+            </video>
+            <video id="eventosBoomR" class="eventos-hero-video" muted playsinline preload="none" disablepictureinpicture>
+                <source src="assets/puntosunidos_rev.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div class="eventos-hero-overlay" aria-hidden="true"></div>
+        <div class="eventos-hero-content">
+            <h1>Eventos CCT</h1>
+            <p>Innovación, Tecnología Y Comunidad En Acción</p>
+            <a href="#agenda" class="btn-eventos-cta" onclick="document.getElementById('agenda').scrollIntoView({behavior:'smooth'});return false;">CONOCE MÁS</a>
+        </div>
+    </section>
+
+    <!-- NUESTRA COMUNIDAD EN ACCIÓN -->
+    <section class="section-comunidad-action legacy-section" aria-hidden="true">
+        <div class="container">
+            <h2 class="comunidad-action-title">Nuestra comunidad <span>en acción</span></h2>
+            <p style="color:rgba(255,255,255,0.5);font-size:0.85rem;margin-top:0.25rem;">Momentos que definen al CCT-UNI</p>
+            <div class="comunidad-action-grid">
+                <div class="comunidad-photo-lg">
+                    <div class="comunidad-photo-inner" style="background-image:url('assets/event-community-group.webp');"></div>
+                </div>
+                <div class="comunidad-photo-sm">
+                    <div class="comunidad-photo-inner" style="background-image:url('assets/event-auditorium.webp');"></div>
+                </div>
+                <div class="comunidad-photo-sm">
+                    <div class="comunidad-photo-inner" style="background-image:url('assets/telecom-day-2023.webp');"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- PRÓXIMOS EVENTOS -->
+    <section class="section-agenda-preview legacy-section" id="agenda-legacy" aria-hidden="true">
+        <div class="container">
+            <div class="agenda-topbar">
+                <div class="agenda-topbar-left">
+                    <span class="section-tag">AGENDA</span>
+                    <h2 class="section-title">Próximos eventos</h2>
+                    <p class="agenda-subtitle">No te pierdas charlas, talleres y eventos del CCT.</p>
+                </div>
+                <div class="agenda-topbar-actions">
+                    <a href="#telecalendar" class="btn-primary btn-sm" onclick="navigateTo('#telecalendar'); return false;">Abrir Telecalendar</a>
+                </div>
+            </div>
+
+            <div class="agenda-cards">
+                <article class="agenda-card" data-category="telcon">
+                    <div class="agenda-card-head">
+                        <div class="agenda-date"><span class="day">15</span><span class="mon">MAR</span></div>
+                        <div class="agenda-badges">
+                            <span class="badge badge-red">TELCON</span>
+                            <span class="badge badge-ghost">9:00 AM – 6:00 PM</span>
+                        </div>
+                    </div>
+                    <h3 class="agenda-title">TELCON 2026 – Día 1</h3>
+                    <p class="agenda-desc">Conferencias magistrales y keynotes.</p>
+                    <div class="agenda-card-actions">
+                        <button class="btn-event btn-event-solid" onclick="openEventModal(1)">Ver detalles</button>
+                    </div>
+                    <span class="agenda-watermark" aria-hidden="true">TELCON</span>
+                </article>
+
+                <article class="agenda-card" data-category="charlas">
+                    <div class="agenda-card-head">
+                        <div class="agenda-date"><span class="day">20</span><span class="mon">FEB</span></div>
+                        <div class="agenda-badges">
+                            <span class="badge badge-red">CHARLA</span>
+                            <span class="badge badge-ghost">6:00 PM – 8:00 PM</span>
+                        </div>
+                    </div>
+                    <h3 class="agenda-title">IA en Telecomunicaciones</h3>
+                    <p class="agenda-desc">Dr. Roberto Silva – Huawei Research.</p>
+                    <div class="agenda-card-actions">
+                        <button class="btn-event btn-event-solid" onclick="openEventModal(2)">Ver detalles</button>
+                    </div>
+                    <span class="agenda-watermark" aria-hidden="true">IA</span>
+                </article>
+
+                <article class="agenda-card" data-category="talleres">
+                    <div class="agenda-card-head">
+                        <div class="agenda-date"><span class="day">25</span><span class="mon">FEB</span></div>
+                        <div class="agenda-badges">
+                            <span class="badge badge-red">TALLER</span>
+                            <span class="badge badge-ghost">3:00 PM – 7:00 PM</span>
+                        </div>
+                    </div>
+                    <h3 class="agenda-title">Python para Redes</h3>
+                    <p class="agenda-desc">Automatización con Python y Ansible.</p>
+                    <div class="agenda-card-actions">
+                        <button class="btn-event btn-event-solid" onclick="openEventModal(3)">Ver detalles</button>
+                    </div>
+                    <span class="agenda-watermark" aria-hidden="true">PY</span>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALERÍA -->
+    <section class="section-events-gallery legacy-section" aria-hidden="true">
+        <div class="container">
+            <div class="section-header-editorial">
+                <span class="section-tag">GALERÍA</span>
+                <h2 class="section-title">Momentos CCT</h2>
+                <p class="section-description">Fotos de charlas, talleres, ferias y TELCON.</p>
+            </div>
+            <div class="gallery-strip" role="list">
+                <button class="gallery-nav prev" onclick="moveGallery(-1)">‹</button>
+                <div class="gallery-track" id="eventsGalleryTrack">
+                    <div class="gallery-card" style="background-image:url('assets/event-osiptel-stage.webp');"><div class="gallery-overlay"><span class="gallery-kicker">CHARLAS</span><h3>Invitados y Keynotes</h3></div></div>
+                    <div class="gallery-card" style="background-image:url('assets/visit-network-operations.webp');"><div class="gallery-overlay"><span class="gallery-kicker">TALLERES</span><h3>Hands-on labs</h3></div></div>
+                    <div class="gallery-card" style="background-image:url('assets/event-auditorium.webp');"><div class="gallery-overlay"><span class="gallery-kicker">TELCON</span><h3>Congreso nacional</h3></div></div>
+                    <div class="gallery-card" style="background-image:url('assets/event-community-group.webp');"><div class="gallery-overlay"><span class="gallery-kicker">COMUNIDAD</span><h3>Networking y equipo</h3></div></div>
+                </div>
+                <button class="gallery-nav next" onclick="moveGallery(1)">›</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- EVENT CARDS -->
+    <section class="section-events-list legacy-section" aria-hidden="true">
+        <div class="container">
+            <div class="section-header-editorial">
+                <span class="section-tag">EVENTOS</span>
+                <h2 class="section-title">Charlas, talleres y ferias</h2>
+            </div>
+            <div class="event-cards-grid">
+                <article class="event-card" onclick="openEventModal(101)"><div class="event-card-date"><span class="d">22</span><span class="m">FEB</span></div><div class="event-card-body"><span class="kicker">CHARLA</span><h3>Introducción a redes core</h3><p>Conceptos clave, roles y rutas para empezar.</p></div><span class="linkish">Ver detalles →</span></article>
+                <article class="event-card" onclick="openEventModal(102)"><div class="event-card-date"><span class="d">01</span><span class="m">MAR</span></div><div class="event-card-body"><span class="kicker">TALLER</span><h3>Automatización con Python</h3><p>Scripts para inventario y validación de redes.</p></div><span class="linkish">Ver detalles →</span></article>
+                <article class="event-card" onclick="openEventModal(103)"><div class="event-card-date"><span class="d">12</span><span class="m">MAR</span></div><div class="event-card-body"><span class="kicker">FERIA</span><h3>Expo Telecom UNI</h3><p>Stands, demos y networking.</p></div><span class="linkish">Ver detalles →</span></article>
+            </div>
+        </div>
+    </section>
+
+    <!-- EVENTOS PASADOS -->
+    <section class="section-events-past legacy-section" aria-hidden="true">
+        <div class="container">
+            <div class="section-header-editorial">
+                <span class="section-tag">ARCHIVO</span>
+                <h2 class="section-title">Eventos pasados</h2>
+            </div>
+            <div class="past-grid">
+                <div class="past-item"><h3>Taller GNS3 (Dic 2025)</h3><p>Memoria + fotos + grabación.</p><div class="past-actions"><a class="btn-secondary btn-pill" href="#" onclick="return false;">Memoria (PDF)</a><a class="btn-secondary btn-pill" href="#" onclick="return false;">Fotos</a><a class="btn-secondary btn-pill" href="#" onclick="return false;">Grabación</a></div></div>
+                <div class="past-item"><h3>Charla Huawei ICT (Nov 2025)</h3><p>Materiales y recursos.</p><div class="past-actions"><a class="btn-secondary btn-pill" href="#" onclick="return false;">Slides</a><a class="btn-secondary btn-pill" href="#" onclick="return false;">Grabación</a></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="events-collage-hero">
+        <div class="events-collage-panels" aria-hidden="true">
+            <div style="background-image:url('assets/feria-stem-2023.webp')"></div>
+            <div style="background-image:url('assets/event-osiptel-stage.webp')"></div>
+            <div style="background-image:url('assets/event-community-group.webp')"></div>
+        </div>
+        <div class="events-hero-mask"></div>
+        <div class="container events-collage-copy"><span class="v2-kicker light">EVENTOS CCT</span><h1>Donde las ideas<br><em>encuentran público.</em></h1><p>Charlas, ferias y encuentros que convierten conocimiento en experiencia.</p></div>
+    </section>
+
+    <section class="featured-event-slot cct-reveal" id="agenda">
+        <div class="container">
+            <div class="v2-heading-row dark-text"><div><span class="v2-kicker">PRÓXIMO EVENTO</span><h2>Una sola cita.<br><span>La que no debes perderte.</span></h2></div><p>Este espacio se activa únicamente cuando exista un evento confirmado.</p></div>
+            <div class="featured-event-empty" data-event-state="empty">
+                <div class="event-radar" aria-hidden="true"><i></i><i></i><i></i><span>⌁</span></div>
+                <div><span>AGENDA EN ACTUALIZACIÓN</span><h3>Aún no hay un próximo evento confirmado.</h3><p>Evitar mostrar fechas inventadas o eventos vencidos mantiene esta sección clara y confiable.</p><a href="https://www.instagram.com/cct_uni_fiee/" target="_blank" rel="noopener">Revisar novedades en Instagram ↗</a></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="event-yearline cct-reveal">
+        <div class="container">
+            <div class="v2-heading-row"><div><span class="v2-kicker light">TELE-CALENDAR DE EVENTOS</span><h2>Pocos eventos.<br><span>Grandes momentos.</span></h2></div><p>En lugar de un mes lleno de casillas vacías, la agenda avanza por hitos confirmados.</p></div>
+            <div class="yearline-scroll" aria-label="Archivo de hitos CCT">
+                <article><time>2023</time><img src="assets/feria-stem-2023.webp" alt="Feria STEM UNI CCT 2023" loading="lazy"><div><span>FERIA</span><h3>Feria STEM UNI</h3><p>Una jornada para descubrir tecnología, ciencia y vocación.</p></div></article>
+                <article><time>2023</time><img src="assets/telecom-day-2023.webp" alt="Día Mundial de las Telecomunicaciones 2023" loading="lazy"><div><span>ENCUENTRO</span><h3>Día Mundial de las Telecomunicaciones</h3><p>La comunidad reunida para celebrar la carrera y su impacto.</p></div></article>
+                <article><time>CCT</time><img src="assets/event-osiptel-stage.webp" alt="Presentación en auditorio CCT UNI" loading="lazy"><div><span>CHARLA</span><h3>Industria y universidad</h3><p>Especialistas, instituciones y estudiantes compartiendo un mismo escenario.</p></div></article>
+                <article><time>CCT</time><img src="assets/certificates-cct.webp" alt="Entrega de certificados CCT" loading="lazy"><div><span>FORMACIÓN</span><h3>Entrega de certificados</h3><p>El cierre de una ruta y el inicio de la siguiente.</p></div></article>
+            </div>
+        </div>
+    </section>
+
+    <section class="past-moments cct-reveal">
+        <div class="container">
+            <div class="past-moments-head"><span class="v2-kicker">MEMORIA CCT</span><h2>Lo que vivimos también construye lo que somos.</h2></div>
+            <div class="past-moments-grid">
+                <figure class="moment-main"><img src="assets/event-community-group.webp" alt="Foto grupal de la comunidad CCT" loading="lazy"><figcaption>Comunidad en acción <span>01</span></figcaption></figure>
+                <figure><img src="assets/event-auditorium.webp" alt="Auditorio durante evento CCT" loading="lazy"><figcaption>Auditorios llenos <span>02</span></figcaption></figure>
+                <figure><img src="assets/visit-network-operations.webp" alt="Visita técnica CCT" loading="lazy"><figcaption>Visitas técnicas <span>03</span></figcaption></figure>
+            </div>
+        </div>
+    </section>
+
+</div>
