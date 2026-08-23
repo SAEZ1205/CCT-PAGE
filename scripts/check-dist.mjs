@@ -28,11 +28,17 @@ function cleanRef(value) {
 if (!existsSync(dist)) {
   fail('No existe dist/. Vite no generó la salida de producción.');
 } else {
-  const requiredDistFiles = ['index.html', 'site.js', 'career.js', 'calendar.js', 'course.html', 'course.css', 'course.js'];
+  const requiredDistFiles = ['index.html', 'site.js', 'course.html', 'course.css', 'course.js'];
   for (const path of requiredDistFiles) {
     const full = join(dist, path);
     if (!existsSync(full) || !statSync(full).isFile() || statSync(full).size === 0) {
       fail(`Falta archivo de producción o está vacío: dist/${path}`);
+    }
+  }
+
+  for (const retired of ['career.js', 'calendar.js']) {
+    if (existsSync(join(dist, retired))) {
+      fail(`Script retirado volvió a aparecer en producción: dist/${retired}`);
     }
   }
 
@@ -111,4 +117,4 @@ if (errors.length) {
 }
 
 const distFiles = walk(dist).length;
-console.log(`[CCT] dist verificado: ${distFiles} archivos, rutas relativas correctas, assets copiados y JavaScript válido.`);
+console.log(`[CCT] dist verificado: ${distFiles} archivos, sin scripts retirados, rutas relativas correctas, assets copiados y JavaScript válido.`);
