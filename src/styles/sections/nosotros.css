@@ -48,28 +48,28 @@ html body #view-nosotros section.about-hero .container.inner-hero-content > h1 {
   background: #10141f !important;
   border-radius: 24px !important;
   position: relative !important;
-  isolation: isolate !important;
+  isolation: isolate;
 }
 
 #view-nosotros .about-photo-main.nosotros-photo-stable > img {
   display: block !important;
-  position: absolute !important;
-  inset: 0 !important;
+  position: absolute;
+  inset: 0;
   width: 100% !important;
   height: 100% !important;
   object-fit: contain !important;
   object-position: center center !important;
-  opacity: 0 !important;
+  opacity: 0;
   visibility: visible !important;
   filter: none !important;
-  image-rendering: auto !important;
-  transition: opacity 1.35s cubic-bezier(.4, 0, .2, 1) !important;
+  image-rendering: auto;
+  transition: opacity 1.35s cubic-bezier(.4, 0, .2, 1);
   will-change: opacity;
   z-index: 0;
 }
 
 #view-nosotros .about-photo-main.nosotros-photo-stable > img.is-active {
-  opacity: 1 !important;
+  opacity: 1;
 }
 
 #view-nosotros .about-photo-main.nosotros-photo-stable::after {
@@ -91,7 +91,7 @@ html body #view-nosotros section.about-hero .container.inner-hero-content > h1 {
 
 @media (prefers-reduced-motion: reduce) {
   #view-nosotros .about-photo-main.nosotros-photo-stable > img {
-    transition: none !important;
+    transition: none;
   }
 }
 
