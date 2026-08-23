@@ -16,6 +16,11 @@ function walk(dir) {
   return out;
 }
 
+function tokenCount(text, name) {
+  const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return [...text.matchAll(new RegExp(`\\b${escaped}\\b`, 'g'))].length;
+}
+
 const files = walk(root);
 const paths = files.map((file) => relative(root, file).replaceAll('\\', '/'));
 const pages = ['inicio', 'nosotros', 'formacion', 'comunidad', 'eventos', 'telcon', 'recursos'];
@@ -77,6 +82,11 @@ for (const path of assetPaths) {
 
 const retired = ['initAcademyEnrollments', 'initAcademyOrbit', 'initCalendar', 'initCareerExplorer', 'initCctV2Experience', 'initEditorialAgenda', 'initEventosBoomerang', 'initRevealMotion', 'initTeleinformaFilters'];
 const site = exists('site.js') ? read('site.js') : '';
+const siteFunctionNames = [...site.matchAll(/\bfunction\s+([A-Za-z_$][\w$]*)\s*\(/g)].map((match) => match[1]);
+const siteUsageCorpus = `${site}\n${markup}`;
+const siteFunctionsReferencedOnlyByDefinition = siteFunctionNames
+  .filter((name) => tokenCount(siteUsageCorpus, name) === 1)
+  .sort();
 const pageIndexes = pages.map((page) => `src/pages/${page}/index.ts`);
 const legacyImports = paths.filter((path) => path.startsWith('src/') && ['.ts', '.tsx'].includes(extname(path)) && /legacy\/(?:extract|snapshot)/.test(read(path)));
 
@@ -104,6 +114,7 @@ const report = {
     domReadyListeners: codePaths.filter((path) => /DOMContentLoaded/.test(read(path))),
     duplicateFunctionNames: [...allDefined.entries()].filter(([, definitions]) => definitions.length > 1),
     retiredSiteFunctionsStillDefined: retired.filter((name) => new RegExp(`function\\s+${name}\\s*\\(`).test(site)),
+    siteFunctionsReferencedOnlyByDefinition,
   },
   css: {
     importantTotal: importantByFile.reduce((total, file) => total + file.important, 0),
@@ -140,3 +151,6 @@ if (hardProblems.length) {
 }
 
 console.log(`\n[CCT] Deep audit OK: ${markupPaths.length} fragmentos canónicos, ${handlerAttrs.length} handlers inline, ${report.css.importantTotal} !important, site.js ${report.javascript.siteBytes} bytes.`);
+if (siteFunctionsReferencedOnlyByDefinition.length) {
+  console.log(`[CCT] Candidatos de código muerto en site.js (solo aparece su definición): ${siteFunctionsReferencedOnlyByDefinition.join(', ')}`);
+}
