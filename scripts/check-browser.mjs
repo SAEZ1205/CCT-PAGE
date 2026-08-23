@@ -30,9 +30,18 @@ async function waitForServer() {
 
 function assertRendered(html, route) {
   const failures = [];
+
   if (!html.includes('id="appMain"')) failures.push('falta #appMain');
-  if (html.includes('Cargando el sitio')) failures.push('sigue visible el fallback de carga');
-  if (html.includes('No se pudo iniciar la interfaz')) failures.push('se activó el fallback de error');
+
+  // React reemplaza por completo el contenido inicial de #root. Por eso el
+  // criterio correcto no es buscar el texto del error (que también vive dentro
+  // del script inline), sino comprobar que el fallback real ya no exista.
+  if (/id=["']cctBootFallback["']/i.test(html)) {
+    failures.push('el fallback inicial sigue montado: React no reemplazó #root');
+  }
+  if (/id=["']cctBootMessage["']/i.test(html)) {
+    failures.push('el mensaje de arranque sigue presente');
+  }
 
   const viewPattern = new RegExp(`<[^>]*\\bid="view-${route}"[^>]*>`, 'i');
   const viewTag = html.match(viewPattern)?.[0] ?? '';
@@ -84,7 +93,7 @@ try {
     console.log(`[CCT] Browser OK: #${route}`);
   }
 
-  console.log('[CCT] Browser smoke test OK: React montó, no hubo fallback blanco/error y las 7 rutas activaron su vista.');
+  console.log('[CCT] Browser smoke test OK: React reemplazó el fallback y las 7 rutas activaron su vista.');
 } catch (error) {
   console.error('[CCT] Browser smoke test FALLÓ.');
   console.error(error);
