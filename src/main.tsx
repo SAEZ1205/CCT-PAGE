@@ -6,6 +6,7 @@ import './styles/sections/nosotros.css';
 import './styles/sections/formacion.css';
 import './styles/sections/comunidad.css';
 import './styles/sections/eventos.css';
+import './styles/sections/inicio.css';
 import App from './App';
 
 const root = document.getElementById('root');

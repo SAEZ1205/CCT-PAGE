@@ -1,0 +1,252 @@
+<div class="view active" data-view="inicio" id="view-inicio">
+
+    <!-- HERO (SIN CARRUSEL) -->
+    <section class="hero hero-static" id="inicio">
+        <div class="hero-media" aria-hidden="true">
+            <video id="heroVideo" class="hero-bg-video" autoplay muted playsinline preload="metadata" poster="assets/hero_telescopes.png">
+                <source src="assets/hero_bg.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div class="hero-overlay"></div>
+
+        <!-- Hero Content: left text + right floating card -->
+        <div class="hero-content">
+            <div class="hero-left">
+                <div class="hero-eyebrow">CCT-UNI · FIEE</div>
+                <h1 class="hero-title" id="heroFeatureTitle">
+                    Liderando la<br>
+                    Transformación<br>
+                    <span>Digital del Perú</span>
+                </h1>
+                <p class="hero-desc" id="heroFeatureDesc">
+                    Somos la principal organización estudiantil de telecomunicaciones en el Perú. Creamos el puente entre la universidad y tu futuro profesional.
+                </p>
+</div>
+
+            <!-- TeleInforma (clic -> Comunidad / Teleinforma) -->
+            <a class="hero-telecard" href="#comunidad" onclick="navigateTo('#comunidad'); return false;" aria-label="Ir a Comunidad: Teleinforma">
+                <div class="hero-telecard-head">
+                    <span class="hero-telecard-kicker">TELEINFORMA</span>
+                    <span class="hero-telecard-sub">Portal de noticias</span>
+                </div>
+                <div class="hero-telecard-media">
+                    <img src="assets/teleinforma_card.png" alt="TeleInforma - Noticia destacada">
+                </div>
+                <div class="hero-telecard-foot">Ver TeleInforma →</div>
+            </a>
+        </div>
+    </section>
+
+    <!-- CONOCE TU CARRERA -->
+    <section class="section-conoce legacy-section" id="conoce-legacy" aria-hidden="true">
+        <div class="container">
+            <p class="section-label">¿Por qué Telecomunicaciones?</p>
+            <h2>Conoce tu Carrera</h2>
+
+            <div class="conoce-grid">
+                <div class="conoce-card theme-cct">
+                    <div class="conoce-watermark" aria-hidden="true">CCT</div>
+                    <h3>Ingeniería de Telecomunicaciones</h3>
+                    <p>La Ingeniería de Telecomunicaciones es la rama de la ingeniería que resuelve problemas de transmisión y recepción de señales e interconexión de redes a nivel global.</p>
+                </div>
+
+                <div class="conoce-card theme-fiee">
+                    <div class="conoce-watermark" aria-hidden="true">FIEE</div>
+                    <h3>Respaldo de la FIEE-UNI</h3>
+                    <p>En la FIEE-UNI, esta carrera forma profesionales capaces de diseñar, implementar y gestionar infraestructuras tecnológicas que permiten la comunicación a distancia, desde la fibra óptica hasta los satélites.</p>
+                </div>
+
+                <div class="conoce-card theme-uni">
+                    <div class="conoce-watermark" aria-hidden="true">UNI</div>
+                    <h3>Nuestra Comunidad</h3>
+                    <p>Desarrollamos diferentes actividades, tanto académicas como de integración. Más que compañeros de carrera, somos toda una familia que crece junta.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- LO MÁS DESTACADO -->
+
+    <section class="section-featured legacy-section" aria-hidden="true">
+        <div class="container">
+            <div class="section-featured-header">
+                <h2>Lo Más Destacado</h2>
+                <p>Las noticias, cursos y eventos más importantes del CCT</p>
+            </div>
+            <div class="featured-grid">
+                <div class="featured-card" onclick="navigateTo('#telcon')" style="cursor:pointer">
+                    <div class="featured-card-img" style="background-image:url('assets/event-auditorium.webp');"></div>
+                    <div class="featured-card-body">
+                        <div class="featured-card-tag">TELCON 2026</div>
+                        <div class="featured-card-title">Congreso Nacional de Telecomunicaciones · 15-17 Marzo</div>
+                        <div class="featured-card-date">10 de Febrero, 2026</div>
+                    </div>
+                </div>
+                <div class="featured-card" onclick="navigateTo('#formacion')" style="cursor:pointer">
+                    <div class="featured-card-img" style="background-image:url('assets/visit-network-operations.webp');"></div>
+                    <div class="featured-card-body">
+                        <div class="featured-card-tag">Academia Cisco</div>
+                        <div class="featured-card-title">CCNA · CyberOps · Python · IoT — Inscripciones abiertas</div>
+                        <div class="featured-card-date">Inicio: Marzo 2026</div>
+                    </div>
+                </div>
+                <div class="featured-card" onclick="navigateTo('#comunidad')" style="cursor:pointer">
+                    <div class="featured-card-img" style="background-image:url('assets/certificates-cct.webp');"></div>
+                    <div class="featured-card-body">
+                        <div class="featured-card-tag">Comunidad</div>
+                        <div class="featured-card-title">CCT firma convenio con Huawei para certificaciones</div>
+                        <div class="featured-card-date">8 de Febrero, 2026</div>
+                    </div>
+                </div>
+                <div class="featured-card" onclick="navigateTo('#nosotros')" style="cursor:pointer">
+                    <div class="featured-card-img" style="background-image:url('assets/event-community-group.webp');"></div>
+                    <div class="featured-card-body">
+                        <div class="featured-card-tag">Convocatoria 2026</div>
+                        <div class="featured-card-title">Únete a la Junta Directiva CCT — Postulaciones abiertas</div>
+                        <div class="featured-card-date">Cierre: 28 de Febrero, 2026</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TELE-CALENDAR -->
+    <section class="section-calendar legacy-section" id="telecalendar-legacy" aria-hidden="true">
+        <div class="container">
+            <div class="section-header-editorial">
+                <span class="section-tag">AGENDA</span>
+                <h2 class="section-title">Tele-Calendar</h2>
+                <p class="section-description">No te pierdas ningún evento, charla o convocatoria</p>
+            </div>
+
+            <div class="calendar-filters">
+                <button class="filter-btn active" data-filter="todos" onclick="filterEvents('todos')">Todos</button>
+                <button class="filter-btn" data-filter="charlas" onclick="filterEvents('charlas')">Charlas</button>
+                <button class="filter-btn" data-filter="talleres" onclick="filterEvents('talleres')">Talleres</button>
+                <button class="filter-btn" data-filter="ferias" onclick="filterEvents('ferias')">Ferias</button>
+                <button class="filter-btn" data-filter="telcon" onclick="filterEvents('telcon')">TELCON</button>
+                <button class="filter-btn" data-filter="convocatorias" onclick="filterEvents('convocatorias')">Convocatorias</button>
+            </div>
+
+            <div class="calendar-container">
+                <div class="calendar-widget" id="calendarWidget"></div>
+                <div class="events-list">
+                    <h3 class="events-title">Próximos eventos</h3>
+                    <div class="event-item" data-category="telcon">
+                        <div class="event-date">
+                            <span class="event-day">15</span>
+                            <span class="event-month">MAR</span>
+                        </div>
+                        <div class="event-info">
+                            <h4>TELCON 2026 - Día 1</h4>
+                            <p>Conferencias magistrales y keynotes</p>
+                            <span class="event-time">9:00 AM - 6:00 PM</span>
+                        </div>
+                        <button class="btn-event" onclick="openEventModal(1)">Ver detalles</button>
+                    </div>
+                    <div class="event-item" data-category="charlas">
+                        <div class="event-date">
+                            <span class="event-day">20</span>
+                            <span class="event-month">FEB</span>
+                        </div>
+                        <div class="event-info">
+                            <h4>Charla: IA en Telecomunicaciones</h4>
+                            <p>Dr. Roberto Silva - Huawei Research</p>
+                            <span class="event-time">6:00 PM - 8:00 PM</span>
+                        </div>
+                        <button class="btn-event" onclick="openEventModal(2)">Ver detalles</button>
+                    </div>
+                    <div class="event-item" data-category="talleres">
+                        <div class="event-date">
+                            <span class="event-day">25</span>
+                            <span class="event-month">FEB</span>
+                        </div>
+                        <div class="event-info">
+                            <h4>Taller: Python para Redes</h4>
+                            <p>Automatización con Python y Ansible</p>
+                            <span class="event-time">3:00 PM - 7:00 PM</span>
+                        </div>
+                        <button class="btn-event" onclick="openEventModal(3)">Ver detalles</button>
+                    </div>
+                    <div class="event-item" data-category="convocatorias">
+                        <div class="event-date">
+                            <span class="event-day">28</span>
+                            <span class="event-month">FEB</span>
+                        </div>
+                        <div class="event-info">
+                            <h4>Cierre: Convocatoria Directiva 2026</h4>
+                            <p>Última fecha para postular</p>
+                            <span class="event-time">11:59 PM</span>
+                        </div>
+                        <button class="btn-event" onclick="openEventVolunteerModal()">Postular</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONOCE TU CARRERA — recorrido visual -->
+    <section class="career-story cct-reveal" id="conoce">
+        <div class="container career-story-grid">
+            <div class="career-copy">
+                <span class="v2-kicker">CONOCE TU CARRERA</span>
+                <h2>Lo invisible que <span>mantiene al mundo conectado.</span></h2>
+                <p>Telecomunicaciones no es solo “internet”. Es diseñar la ruta que permite que una voz, una imagen o un dato viaje desde un teléfono hasta cualquier lugar del planeta.</p>
+                <div class="career-route" aria-label="Recorrido de una comunicación">
+                    <span>SEÑAL</span><i></i><span>RED</span><i></i><span>ENLACE</span><i></i><span>DESTINO</span>
+                </div>
+                <button class="v2-link" type="button" onclick="navigateTo('#formacion')">Descubre cómo empezar <b>↗</b></button>
+            </div>
+            <div class="career-orbit" aria-label="Campos de la Ingeniería de Telecomunicaciones">
+                <div class="career-core"><strong>TELECOM</strong><span>FIEE · UNI</span></div>
+                <button class="career-node node-a" type="button" data-career="Redes que conectan empresas, ciudades y servicios."><b>01</b><span>Redes</span></button>
+                <button class="career-node node-b" type="button" data-career="Comunicaciones móviles, antenas, radio y 5G."><b>02</b><span>Inalámbrico</span></button>
+                <button class="career-node node-c" type="button" data-career="Fibra óptica y transporte de información a gran velocidad."><b>03</b><span>Fibra óptica</span></button>
+                <button class="career-node node-d" type="button" data-career="Enlaces satelitales que superan cualquier frontera."><b>04</b><span>Satélites</span></button>
+                <p class="career-node-copy" id="careerNodeCopy">Selecciona un campo para explorarlo.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- AGENDA EDITORIAL GENERAL -->
+    <section class="home-agenda cct-reveal" id="telecalendar">
+        <div class="container">
+            <div class="v2-heading-row">
+                <div>
+                    <span class="v2-kicker light">AGENDA GENERAL CCT</span>
+                    <h2>Todo lo que está <span>pasando.</span></h2>
+                </div>
+                <p>Noticias, cursos, convocatorias y eventos en un solo recorrido visual.</p>
+            </div>
+
+            <div class="agenda-filter-row" aria-label="Filtrar agenda">
+                <button class="agenda-filter active" data-agenda-filter="todo">Todo</button>
+                <button class="agenda-filter" data-agenda-filter="formacion">Formación</button>
+                <button class="agenda-filter" data-agenda-filter="noticia">Teleinforma</button>
+                <button class="agenda-filter" data-agenda-filter="comunidad">Comunidad</button>
+                <button class="agenda-filter" data-agenda-filter="evento">Eventos</button>
+            </div>
+
+            <div class="agenda-editorial">
+                <div class="agenda-lead-card" data-agenda-category="formacion" onclick="navigateTo('#formacion')" role="button" tabindex="0">
+                    <img src="assets/flyer-huawei-courses.webp" alt="Cursos Huawei disponibles en el CCT" loading="lazy">
+                    <div class="agenda-lead-copy"><span>FORMACIÓN · 07 AGO</span><h3>Nuevos cursos de Huawei disponibles</h3><p>Formación online y asíncrona para seguir impulsando tu perfil tecnológico.</p><b>Ver formación →</b></div>
+                </div>
+                <div class="agenda-feed">
+                    <article class="agenda-feed-item" data-agenda-category="noticia" onclick="navigateTo('#comunidad')">
+                        <time><b>TELE</b><span>INFORMA</span></time><div><span class="feed-tag cyan">NOTICIA</span><h3>Amazon LEO: internet desde el espacio</h3><p>La noticia destacada de nuestra comunidad tecnológica.</p></div><img src="assets/teleinforma-amazon.webp" alt="Teleinforma sobre Amazon LEO" loading="lazy">
+                    </article>
+                    <article class="agenda-feed-item" data-agenda-category="comunidad" onclick="navigateTo('#comunidad')">
+                        <time><b>28</b><span>JUL</span></time><div><span class="feed-tag">COMUNIDAD</span><h3>El CCT celebra al Perú</h3><p>Una fecha para reconocer nuestra historia, cultura y esfuerzo.</p></div><img src="assets/flyer-fiestas-patrias.webp" alt="Saludo del CCT por Fiestas Patrias" loading="lazy">
+                    </article>
+                    <article class="agenda-feed-item agenda-empty" data-agenda-category="evento" onclick="navigateTo('#eventos')">
+                        <time><b>+</b><span>PRÓX.</span></time><div><span class="feed-tag outline">EVENTOS</span><h3>Próxima actividad en preparación</h3><p>Cuando el CCT confirme un evento, aparecerá aquí sin dejar espacios vacíos en la página.</p></div><span class="empty-signal" aria-hidden="true">⌁</span>
+                    </article>
+                </div>
+            </div>
+            <div class="agenda-calendar-note"><span class="live-dot"></span><strong>Preparado para Google Calendar</strong><p>La interfaz ya separa publicaciones y eventos; después solo se añade el calendario público del CCT para actualizar fechas automáticamente.</p></div>
+        </div>
+    </section>
+
+</div>

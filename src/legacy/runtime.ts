@@ -1,5 +1,5 @@
 let bootPromise: Promise<void> | null = null;
-const RUNTIME_VERSION = '20260823-single-owner-runtime';
+const RUNTIME_VERSION = '20260823-site-core-only';
 
 type LegacyGlobal = (...args: never[]) => unknown;
 
@@ -9,9 +9,6 @@ function domContentLoadedAlreadyFired() {
   return Boolean(navigation?.domContentLoadedEventEnd);
 }
 
-// Se crea al importar el módulo, antes de que el runtime legacy sea cargado.
-// Así site.js nunca recibe un DOMContentLoaded artificial ni vuelve a arrancar
-// módulos antiguos de Formación/Eventos después de que React ya tiene dueño.
 const nativeDomReady = domContentLoadedAlreadyFired()
   ? Promise.resolve()
   : new Promise<void>((resolve) => {
@@ -47,7 +44,7 @@ async function loadSafely(src: string) {
   try {
     await loadScript(src);
   } catch (error) {
-    console.error('[CCT] Módulo base omitido:', src, error);
+    console.error('[CCT] Núcleo legacy omitido:', src, error);
   }
 }
 
@@ -84,20 +81,9 @@ export function bootLegacyRuntime(): Promise<void> {
   const runtime = (name: string) => `${base}${name}?v=${RUNTIME_VERSION}`;
 
   bootPromise = (async () => {
-    // Importante: esperamos al DOMContentLoaded NATIVO. site.js se carga después,
-    // por lo que su antiguo listener de DOMContentLoaded ya no puede ejecutarse.
     await nativeDomReady;
-
     await loadSafely(runtime('site.js'));
-
-    // site.js queda reducido a núcleo global. Ejecutamos una lista blanca explícita.
-    // NO arrancar aquí initAcademyEnrollments, initCctV2Experience,
-    // initEditorialAgenda ni initAcademyOrbit: esas áreas ya pertenecen a TypeScript.
     ALLOWED_SITE_INITIALIZERS.forEach(runLegacyGlobal);
-
-    // Estos dos módulos son exclusivos de Inicio y se auto-inicializan al cargarse.
-    await loadSafely(runtime('career.js'));
-    await loadSafely(runtime('calendar.js'));
   })();
 
   return bootPromise;

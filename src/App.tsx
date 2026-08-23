@@ -8,6 +8,8 @@ import { eventosMarkup } from './pages/eventos';
 import { telconMarkup } from './pages/telcon';
 import { recursosMarkup } from './pages/recursos';
 import { bootLegacyRuntime } from './legacy/runtime';
+import { initCareerExperience } from './features/home/career';
+import { initHomeCalendar } from './features/home/calendar';
 import { initNosotros } from './features/nosotros/nosotros';
 import { initFormation } from './features/formation/formation';
 import { initOpenCourseFormation } from './features/formation/openCourse';
@@ -35,6 +37,8 @@ ${afterMainMarkup}
 `;
 
 const featureInitializers = [
+  ['Inicio · Conoce tu carrera', initCareerExperience],
+  ['Inicio · Calendario', initHomeCalendar],
   ['Nosotros', initNosotros],
   ['Formación', initFormation],
   ['Open Course', initOpenCourseFormation],
@@ -65,7 +69,6 @@ export default function App() {
       .then(initFeaturesSafely)
       .catch((error) => {
         console.error('[CCT] Falló el arranque del runtime base:', error);
-        // Las secciones modernas siguen intentando arrancar aunque falle el núcleo legacy.
         initFeaturesSafely();
       });
   }, []);

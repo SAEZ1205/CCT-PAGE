@@ -1,139 +1,196 @@
 # Arquitectura React del CCT
 
 ## Objetivo
-El proyecto debe tener **un solo dueño por sección**. No se crean archivos `v2`, `v3`, `final`, `final2`, `old`, `backup`, `copy`, etc., ni scripts que vuelvan a modificar una sección después de que otra capa ya la construyó.
+
+El proyecto debe tener **un solo dueño por bloque visible**. Una corrección simple —por ejemplo reemplazar una imagen— no debe crear una segunda versión de una sección, un script auxiliar, CSS inyectado ni un snapshot paralelo.
 
 ## Stack
+
 - React 18
 - TypeScript
 - Vite
 - Tailwind CSS con prefijo `tw-` y preflight desactivado
-- Dependencias bloqueadas mediante `package-lock.json`
+- Node 24 LTS
+- dependencias bloqueadas por `package-lock.json`
 
-## Estructura activa
+## Fuente de verdad del markup
 
-### React
-`src/App.tsx` monta el DOM base y, cuando termina el runtime global, inicializa las features TypeScript de cada sección. Cada feature se inicializa de forma aislada: si una sección falla, las demás siguen arrancando.
-
-### Snapshot temporal
-`src/legacy/snapshot.html` conserva únicamente el **markup base** del frontend aprobado. `src/legacy/extract.ts` extrae las vistas para montarlas desde React.
-
-El snapshot **no ejecuta scripts, no cambia imágenes y no vuelve a escribir secciones**. Es un paso temporal hasta migrar el markup completo a JSX.
-
-El chequeo automático exige exactamente una copia de cada vista: Inicio, Nosotros, Formación, Comunidad, Eventos, TELCON y Recursos.
-
-### Runtime global legacy
-Solo quedan tres scripts históricos cargados por `src/legacy/runtime.ts`:
+El snapshot monolítico fue retirado. Ya no existen:
 
 ```text
-site.js        navegación, modales y comportamiento global
-career.js      bloque Conoce tu carrera de Inicio
-calendar.js    calendario general de Inicio
+src/legacy/snapshot.html
+src/legacy/extract.ts
 ```
 
-`site.js` ya no se arranca mediante un `DOMContentLoaded` artificial. El runtime espera al evento nativo y luego ejecuta únicamente `ALLOWED_SITE_INITIALIZERS`, una lista blanca de funciones globales permitidas.
-
-`index.html` **no puede** cargar `site.js`, `career.js` ni `calendar.js` directamente. El build falla si alguien vuelve a hacerlo.
-
-No deben añadirse a la lista blanca inicializadores antiguos de Academias, Formación, Comunidad o Eventos. Esas áreas pertenecen a TypeScript.
-
-### Secciones TypeScript
-Cada sección tiene una única feature activa:
+Cada vista conserva su HTML aprobado en un archivo independiente:
 
 ```text
-src/features/nosotros/nosotros.ts        Nosotros
-src/features/formation/formation.ts      Hero + Academias
-src/features/formation/openCourse.ts     Open Course
-src/features/community/community.ts      Comunidad
-src/features/events/events.ts            Eventos
-src/features/shared/ui.ts                motion + accesibilidad compartida
+src/pages/inicio/markup.html
+src/pages/nosotros/markup.html
+src/pages/formacion/markup.html
+src/pages/comunidad/markup.html
+src/pages/eventos/markup.html
+src/pages/telcon/markup.html
+src/pages/recursos/markup.html
 ```
 
-`formation.ts` no modifica Open Course. `openCourse.ts` es su único dueño y tiene guard idempotente para no volver a renderizar el bloque si ya está inicializado.
+Cada `src/pages/<pagina>/index.ts` importa únicamente su `markup.html?raw`. De esta forma editar una vista no obliga a tocar un documento gigante que contiene toda la aplicación.
 
-### Estilos
+El layout también está separado:
 
 ```text
-styles.css                               base histórica visual
-src/styles/tailwind.css                  solo Tailwind + shell React
+src/layout/before-main.html   header + elementos previos al main
+src/layout/footer.html        footer
+src/layout/after-main.html    modales y elementos posteriores al main
+src/layout/markup.ts          importa esos tres fragmentos
+```
+
+Ningún fragmento canónico puede contener `<script>`.
+
+## React y features
+
+`src/App.tsx` ensambla los fragmentos y después inicializa cada feature de forma aislada. Si una feature falla, las demás siguen intentando arrancar.
+
+Dueños activos:
+
+```text
+src/features/home/career.ts                 Inicio · Conoce tu carrera
+src/features/home/calendar.ts               Inicio · calendario general
+src/features/nosotros/nosotros.ts           Nosotros
+src/features/formation/formation.ts         Formación · hero + academias
+src/features/formation/openCourse.ts        Formación · Open Course
+src/features/community/community.ts         Comunidad
+src/features/events/events.ts               Eventos
+src/features/shared/ui.ts                    motion + accesibilidad común
+```
+
+Las features deben ser idempotentes cuando reconstruyen un bloque: una segunda llamada no puede duplicar el contenido ni agregar listeners repetidos.
+
+## Runtime de compatibilidad
+
+Queda un solo script histórico global:
+
+```text
+site.js
+```
+
+Su función es mantener navegación, modales y acciones que todavía están conectadas mediante handlers HTML existentes. `site.js` **no se autoejecuta** con `DOMContentLoaded`.
+
+`src/legacy/runtime.ts` espera al DOM nativo, carga `site.js` y ejecuta únicamente una lista blanca reducida de inicializadores globales. El build bloquea la reaparición de inicializadores retirados de Formación, Eventos, Comunidad o Inicio.
+
+Ya no existen ni se distribuyen:
+
+```text
+career.js
+calendar.js
+```
+
+Sus comportamientos pasaron a TypeScript y sus estilos a CSS canónico.
+
+## Estilos
+
+```text
+styles.css                               base histórica visual global
+src/styles/tailwind.css                  Tailwind + shell React
+src/styles/sections/inicio.css           Inicio dinámico migrado
 src/styles/sections/nosotros.css         Nosotros
 src/styles/sections/formacion.css        Formación + Open Course
 src/styles/sections/comunidad.css        Comunidad
 src/styles/sections/eventos.css          Eventos
+course.css                               página autónoma de Open Course
 ```
 
-Ya no existe `compat-fixes.css`. Las features TypeScript no pueden crear `<style>` dinámicamente: `check:architecture` lo bloquea para evitar otra capa visual escondida.
+`styles.css` sigue siendo la base visual histórica. No ejecuta lógica ni modifica el DOM. Se mantiene porque su cascada forma parte de la apariencia aprobada; las nuevas correcciones específicas deben ir al CSS canónico de la sección correspondiente, no agregar más parches al archivo global.
 
-## Assets
-Las imágenes se consumen como archivos normales desde `assets/` mediante Vite. No se usan archivos `.b64` ni `fetch()` para construir imágenes en tiempo de ejecución.
+Las features TypeScript **no pueden crear `<style>` dinámicamente**. `check:architecture` falla si vuelve a aparecer ese patrón.
 
-Para reemplazar una imagen aprobada, la opción más segura es **sustituir el archivo conservando exactamente el mismo nombre y extensión**. Así no hace falta tocar TypeScript, JavaScript ni CSS.
+## Assets e imágenes
 
-El mapa de assets visibles está documentado en [`IMAGE_MAP.md`](./IMAGE_MAP.md).
+Los recursos visibles viven en `assets/`. Para un reemplazo visual simple:
 
-La verificación de arquitectura reconoce tanto rutas directas `assets/...` como los helpers `asset('archivo.webp')` usados por `career.js` y `calendar.js`.
+1. identificar el asset en `IMAGE_MAP.md`;
+2. reemplazar el archivo conservando el mismo nombre y extensión;
+3. ejecutar `npm run build`;
+4. no tocar TS/JS/CSS si no es necesario.
 
-## Regla para cambios futuros
-1. Identificar el asset o sección canónica.
-2. Para una imagen simple, reemplazar el asset manteniendo el mismo nombre.
-3. Si cambia lógica, editar la feature TypeScript dueña de la sección.
-4. Si cambia estilo, editar su CSS canónico.
-5. No crear una segunda implementación del mismo bloque.
-6. No volver a disparar `DOMContentLoaded` manualmente.
-7. Ejecutar `npm run build` antes de fusionar a `main`.
+No se permiten `.b64`, archivos `-v2`, `-final`, `-copy`, etc. Tampoco deben coexistir dos formatos del mismo asset solo para conservar una versión vieja.
+
+## Página autónoma Open Course
+
+`course.html`, `course.css` y `course.js` forman una página estática independiente que se abre desde las tarjetas de Open Course. No intervienen en el arranque del SPA principal.
 
 ## Guardas automáticas
 
-### Arquitectura
+### `npm run check:architecture`
 
-```bash
-npm run check:architecture
+Comprueba, entre otros puntos:
+
+- que existan las siete fuentes de markup canónicas;
+- que cada vista tenga exactamente un `data-view` y un `#view-*`;
+- que no reaparezcan `snapshot.html`, `extract.ts`, `career.js` o `calendar.js`;
+- que no haya scripts embebidos en los fragmentos;
+- que `site.js` no tenga autoarranque `DOMContentLoaded` ni funciones retiradas;
+- que runtime cargue únicamente el núcleo permitido;
+- que `App.tsx` inicialice los owners TypeScript actuales;
+- que `main.tsx` cargue todos los CSS canónicos;
+- que ninguna feature inyecte CSS dinámico;
+- que Vite mantenga `base: './'`;
+- que los assets referenciados existan;
+- que no aparezcan implementaciones `v2`, `final`, `old`, `backup`, `copy`, etc.;
+- que la cantidad de handlers inline no aumente sobre el límite temporal existente.
+
+### `npm run check:dist`
+
+Después de Vite valida lo que realmente se va a publicar:
+
+- archivos obligatorios de producción;
+- ausencia de `career.js` y `calendar.js` retirados;
+- bundle ESM relativo para GitHub Pages;
+- ausencia de rutas locales absolutas;
+- todos los assets copiados y no vacíos;
+- referencias HTML/CSS locales existentes;
+- sintaxis válida de todos los JavaScript del `dist`.
+
+### Auditoría profunda
+
+`scripts/deep-audit.mjs` mide deuda estructural: handlers inline, tamaño de `site.js`, `!important`, assets duplicados, imports legacy y adopción del markup canónico. Sirve para evitar que el proyecto vuelva a crecer hacia una arquitectura híbrida descontrolada.
+
+## Flujo de cambios
+
+Para una imagen:
+
+```text
+asset existente -> reemplazar mismo archivo -> npm run build
 ```
 
-Bloquea o comprueba:
-- archivos versionados/copias (`v2`, `final`, `old`, `backup`, `copy`, etc.);
-- `.b64`;
-- scripts legacy prohibidos;
-- carga directa de scripts legacy desde `index.html`;
-- orden seguro del runtime (`DOMContentLoaded` nativo antes de `site.js`);
-- inicializadores legacy reactivados;
-- vistas duplicadas o faltantes en el snapshot;
-- CSS dinámico dentro de `src/features`;
-- guard idempotente de Open Course;
-- configuración `base: './'` de Vite;
-- archivos estáticos que deben copiarse a `dist`;
-- rutas directas y dinámicas de imágenes/videos inexistentes.
+Para lógica:
 
-### Producción
-
-```bash
-npm run check:dist
+```text
+feature dueña -> editar TypeScript -> npm run build
 ```
 
-Se ejecuta después de Vite y comprueba la salida real:
-- `dist/index.html` no puede apuntar a `/src/main.tsx`;
-- no puede haber rutas locales absolutas que rompan GitHub Pages;
-- todos los assets fuente deben llegar a `dist/assets` y no estar vacíos;
-- referencias locales de HTML/CSS deben existir;
-- todos los JavaScript de `dist` deben tener sintaxis válida;
-- los archivos estáticos requeridos (`site.js`, `career.js`, `calendar.js`, `course.*`) deben existir.
+Para estilo:
 
-## Dependencias y CI
-
-`package-lock.json` fija el grafo exacto de dependencias. CI y GitHub Pages usan:
-
-```bash
-npm ci
+```text
+CSS canónico de la sección -> editar -> npm run build
 ```
 
-Así una compilación futura no cambia de dependencias sin que cambie también el lockfile.
+Nunca crear una segunda implementación del mismo bloque para “no tocar la anterior”.
 
 ## Build
 
 ```bash
+npm ci
 npm run build
 ```
 
-Ejecuta arquitectura → TypeScript → Vite → smoke test de `dist`.
+Orden efectivo:
 
-La configuración de Vite usa rutas relativas (`base: './'`) para funcionar en local, GitHub Pages y otros despliegues estáticos.
+```text
+check:architecture
+→ TypeScript
+→ Vite
+→ check:dist
+```
+
+La salida estática vive en `dist/` y usa rutas relativas para funcionar tanto en Vercel como bajo la subruta de GitHub Pages.

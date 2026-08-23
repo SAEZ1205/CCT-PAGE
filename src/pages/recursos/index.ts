@@ -1,2 +1,3 @@
-import { extractView } from '../../legacy/extract';
-export const recursosMarkup = extractView('recursos');
+import markup from './markup.html?raw';
+
+export const recursosMarkup = markup;
