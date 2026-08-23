@@ -156,8 +156,30 @@ if (/legacy\/extract|extractBeforeMain|extractAfterMain|extractSelector/.test(la
 }
 canonicalMarkup.push(read('src/layout/before-main.html'), read('src/layout/footer.html'), read('src/layout/after-main.html'));
 
-const inlineHandlers = canonicalMarkup.join('\n').match(/\son[a-z]+\s*=/gi)?.length ?? 0;
+const allMarkup = canonicalMarkup.join('\n');
+const inlineHandlerMatches = [...allMarkup.matchAll(/\s(on[a-z]+)\s*=\s*["']([^"']*)["']/gi)];
+const inlineHandlers = inlineHandlerMatches.length;
 if (inlineHandlers > 106) fail(`Aumentaron los handlers inline: ${inlineHandlers} (máximo temporal 106).`);
+
+// Los handlers inline todavía son compatibilidad temporal. Mientras existan,
+// ningún botón puede apuntar a una función que no esté realmente disponible
+// como global del script clásico site.js.
+const siteGlobals = new Set();
+for (const match of site.matchAll(/\bfunction\s+([A-Za-z_$][\w$]*)\s*\(/g)) siteGlobals.add(match[1]);
+for (const match of site.matchAll(/\bwindow\.([A-Za-z_$][\w$]*)\s*=/g)) siteGlobals.add(match[1]);
+const browserBuiltins = new Set(['alert', 'confirm', 'prompt', 'preventDefault', 'getElementById', 'scrollTo', 'open']);
+const inlineCalls = new Set();
+for (const [, , code] of inlineHandlerMatches) {
+  for (const call of code.matchAll(/\b([A-Za-z_$][\w$]*)\s*\(/g)) {
+    const name = call[1];
+    if (!['if', 'for', 'while', 'switch', 'function'].includes(name)) inlineCalls.add(name);
+  }
+}
+for (const name of inlineCalls) {
+  if (!browserBuiltins.has(name) && !siteGlobals.has(name)) {
+    fail(`Handler inline apunta a función global inexistente en site.js: ${name}()`);
+  }
+}
 
 const mainTsx = read('src/main.tsx');
 for (const stylesheet of ['inicio.css', 'nosotros.css', 'formacion.css', 'comunidad.css', 'eventos.css']) {
@@ -225,4 +247,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`[CCT] Arquitectura canónica: ${requiredFiles.length} archivos requeridos, ${referencedAssets.size} assets, ${inlineHandlers} handlers inline y sin snapshot/runtime duplicado.`);
+console.log(`[CCT] Arquitectura canónica: ${requiredFiles.length} archivos requeridos, ${referencedAssets.size} assets, ${inlineHandlers} handlers inline verificados y sin snapshot/runtime duplicado.`);
