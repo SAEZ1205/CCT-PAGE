@@ -54,6 +54,41 @@ function assertRendered(html, route) {
   if (failures.length) throw new Error(`${route}: ${failures.join('; ')}`);
 }
 
+function runChrome(chrome, route) {
+  return spawnSync(chrome, [
+    '--headless=new',
+    '--no-sandbox',
+    '--disable-gpu',
+    '--disable-dev-shm-usage',
+    '--disable-background-networking',
+    '--disable-component-update',
+    '--disable-default-apps',
+    '--no-first-run',
+    '--virtual-time-budget=2500',
+    '--dump-dom',
+    `${BASE_URL}/#${route}`,
+  ], {
+    encoding: 'utf8',
+    maxBuffer: 12 * 1024 * 1024,
+    timeout: 25000,
+  });
+}
+
+async function runChromeWithStartupRetry(chrome, route) {
+  let run = runChrome(chrome, route);
+
+  // Los runners hospedados pueden tardar de forma excepcional en arrancar el
+  // binario de Chrome. Reintentamos solo ese caso de infraestructura; un fallo
+  // real de la página, status != 0 o una aserción DOM nunca se ignora.
+  if (run.error?.code === 'ETIMEDOUT') {
+    console.warn(`[CCT] Chrome tardó en arrancar en #${route}; reintentando una vez.`);
+    await delay(1000);
+    run = runChrome(chrome, route);
+  }
+
+  return run;
+}
+
 const preview = spawn(process.execPath, [
   'node_modules/vite/bin/vite.js',
   'preview',
@@ -74,15 +109,7 @@ try {
   const routes = ['inicio', 'nosotros', 'formacion', 'comunidad', 'eventos', 'telcon', 'recursos'];
 
   for (const route of routes) {
-    const run = spawnSync(chrome, [
-      '--headless=new',
-      '--no-sandbox',
-      '--disable-gpu',
-      '--disable-dev-shm-usage',
-      '--virtual-time-budget=2500',
-      '--dump-dom',
-      `${BASE_URL}/#${route}`,
-    ], { encoding: 'utf8', maxBuffer: 12 * 1024 * 1024, timeout: 12000 });
+    const run = await runChromeWithStartupRetry(chrome, route);
 
     if (run.error) throw run.error;
     if (run.status !== 0) {
