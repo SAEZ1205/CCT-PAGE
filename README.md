@@ -3,69 +3,80 @@
 Sitio web del Centro Cultural de Telecomunicaciones (CCT-UNI).
 
 ## Stack
+
 - React 18
 - TypeScript
 - Vite
 - Tailwind CSS
+- Node 24 LTS
 
 ## Regla principal
-La raíz del repositorio **es el proyecto**. No hay copias anidadas de `CCT-PAGE` ni archivos `v2`, `v3`, `final`, `final2`, etc. Una sección tiene una sola implementación activa.
 
-Para cambios de imágenes consulta [`IMAGE_MAP.md`](./IMAGE_MAP.md). La regla preferida es reemplazar el asset conservando su mismo nombre y extensión, sin crear otra capa de código.
+La raíz del repositorio **es el proyecto**. No hay copias anidadas ni implementaciones `v2`, `v3`, `final`, `backup`, `copy`, etc. Cada bloque visible tiene un solo dueño.
 
-## Estructura
+Para cambiar una imagen consulta [`IMAGE_MAP.md`](./IMAGE_MAP.md). La operación preferida es reemplazar el asset conservando exactamente el mismo nombre y extensión.
+
+## Estructura actual
 
 ```text
 CCT-PAGE/
-├─ assets/                         # imágenes, videos y recursos
+├─ assets/                              # imágenes, videos y recursos
 ├─ scripts/
-│  ├─ check-architecture.mjs       # evita dobles, assets rotos y owners incorrectos
-│  └─ check-dist.mjs               # smoke test de la salida real de producción
+│  ├─ check-architecture.mjs            # contrato estructural
+│  ├─ check-dist.mjs                    # smoke test de producción
+│  └─ deep-audit.mjs                    # auditoría de deuda/acoplamiento
 ├─ src/
 │  ├─ features/
-│  │  ├─ nosotros/nosotros.ts      # Nosotros
-│  │  ├─ formation/formation.ts    # Formación + Academias
-│  │  ├─ formation/openCourse.ts   # Open Course
-│  │  ├─ community/community.ts    # Comunidad
-│  │  └─ events/events.ts          # Eventos
-│  ├─ pages/                       # vistas montadas por React
-│  ├─ legacy/                      # snapshot temporal + runtime global
-│  └─ styles/
-│     └─ sections/                 # un CSS canónico por sección
-├─ site.js                         # navegación y comportamiento global
-├─ career.js                       # Conoce tu carrera (Inicio)
-├─ calendar.js                     # calendario general (Inicio)
-├─ course.html/css/js              # aula de Open Course
-├─ styles.css                      # diseño visual base
+│  │  ├─ home/career.ts                 # Conoce tu carrera
+│  │  ├─ home/calendar.ts               # calendario de Inicio
+│  │  ├─ nosotros/nosotros.ts           # Nosotros
+│  │  ├─ formation/formation.ts         # Formación + Academias
+│  │  ├─ formation/openCourse.ts        # Open Course
+│  │  ├─ community/community.ts         # Comunidad
+│  │  ├─ events/events.ts               # Eventos
+│  │  └─ shared/ui.ts                   # UI compartida
+│  ├─ pages/
+│  │  └─ <pagina>/markup.html           # markup canónico por vista
+│  ├─ layout/                           # header/footer/modales separados
+│  ├─ legacy/runtime.ts                 # puente controlado hacia site.js
+│  └─ styles/sections/                  # CSS canónico por sección
+├─ site.js                              # compatibilidad global: navegación/modales
+├─ course.html/css/js                   # página autónoma Open Course
+├─ styles.css                           # base visual histórica global
 ├─ package.json
-├─ package-lock.json               # dependencias reproducibles
+├─ package-lock.json                    # dependencias reproducibles
 └─ vite.config.ts
 ```
 
-## Qué ya no existe en el runtime
+## Eliminado del runtime principal
 
 ```text
+src/legacy/snapshot.html
+src/legacy/extract.ts
+career.js
+calendar.js
 nosotros.js
 formation.js
 community.js
 events.js
 src/styles/compat-fixes.css
-assets/nosotros-slide-*.b64
 ```
 
-Nosotros, Formación, Comunidad y Eventos se inicializan desde TypeScript después del runtime global. Open Course solo lo controla `src/features/formation/openCourse.ts` y sus estilos viven en `src/styles/sections/formacion.css`.
+Las siete vistas ya no se extraen desde un documento HTML monolítico: cada una vive en su propio `markup.html` y React las ensambla desde `src/App.tsx`.
 
-`src/legacy/snapshot.html` todavía conserva el markup base aprobado mientras se migra gradualmente a JSX, pero no ejecuta lógica ni vuelve a modificar las secciones.
+“Conoce tu carrera” y el calendario de Inicio ya son TypeScript y sus estilos viven en `src/styles/sections/inicio.css`; no se autoejecutan como scripts externos ni inyectan CSS en el `<head>`.
 
 ## Desarrollo local
 
 Primera vez:
+
 ```bash
 npm ci
 npm run dev
 ```
 
 Siguientes veces:
+
 ```bash
 git pull
 npm ci
@@ -80,11 +91,17 @@ En Windows también puedes ejecutar `INICIAR_CCT.bat`.
 npm run build
 ```
 
-Ese único comando ejecuta, en orden:
+Ese comando ejecuta:
 
-1. `check:architecture`: comprueba owners, vistas, rutas de assets, ausencia de copias/versiones y carga segura del runtime.
-2. `tsc --noEmit`: valida TypeScript.
+1. `check:architecture`: owners, markup canónico, runtime, assets y ausencia de dobles.
+2. `tsc --noEmit`: TypeScript.
 3. `vite build`: genera `dist/`.
-4. `check:dist`: valida la salida real, rutas relativas, assets copiados y sintaxis de JavaScript.
+4. `check:dist`: valida la salida publicada, rutas, assets y JavaScript.
 
-La salida se genera en `dist/`. CI y GitHub Pages instalan dependencias con `npm ci` usando `package-lock.json`.
+Para una auditoría estructural adicional:
+
+```bash
+node scripts/deep-audit.mjs
+```
+
+La salida final se genera en `dist/`. CI y GitHub Pages instalan dependencias con `npm ci` usando `package-lock.json`.
