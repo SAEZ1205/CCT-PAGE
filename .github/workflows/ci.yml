@@ -24,15 +24,15 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci --no-audit --no-fund
-      - name: Materialize canonical markup from snapshot
+      - name: Prune retired site.js blocks
         if: github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'deep-rearchitecture-2026-08-23'
         run: |
-          node scripts/split-snapshot.mjs
-          if [ -n "$(git status --porcelain -- src/pages src/layout)" ]; then
+          node scripts/prune-site-core.mjs
+          if [ -n "$(git status --porcelain -- site.js)" ]; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add src/pages src/layout
-            git commit -m "refactor: materialize canonical page markup"
+            git add site.js
+            git commit -m "refactor: prune retired legacy site blocks"
             git push origin HEAD:${{ github.event.pull_request.head.ref }}
           fi
       - name: Deep architecture inventory
