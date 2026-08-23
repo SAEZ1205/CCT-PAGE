@@ -5,7 +5,7 @@ const root = process.cwd();
 const errors = [];
 const ignoredDirs = new Set(['.git', 'node_modules', 'dist']);
 const sourceExtensions = new Set(['.html', '.css', '.js', '.ts', '.tsx']);
-const assetExtensions = '(?:png|jpe?g|webp|svg|mp4)';
+const assetExtensionList = 'png|jpe?g|webp|svg|mp4';
 
 function fail(message) {
   errors.push(message);
@@ -41,6 +41,7 @@ const requiredFiles = [
   'course.html',
   'course.css',
   'course.js',
+  'IMAGE_MAP.md',
   'src/App.tsx',
   'src/main.tsx',
   'src/legacy/runtime.ts',
@@ -174,9 +175,9 @@ const activeSources = allFiles.filter((file) => {
 });
 
 const referencedAssets = new Set();
-const directAssetRegex = new RegExp(`(?:\\.\\.\\/)*assets\\/([A-Za-z0-9_./-]+\\.${assetExtensions.slice(3, -1)})`, 'gi');
-const helperAssetRegex = new RegExp(`\\basset\\(\\s*['"]([^'"]+\\.${assetExtensions.slice(3, -1)})['"]\\s*\\)`, 'gi');
-const literalAssetRegex = new RegExp(`\\b(?:image|photo|src)\\s*:\\s*['"](?!https?:|data:)([^'"]+\\.${assetExtensions.slice(3, -1)})['"]`, 'gi');
+const directAssetRegex = new RegExp(`(?:\\.\\.\\/)*assets\\/([A-Za-z0-9_./-]+\\.(?:${assetExtensionList}))`, 'gi');
+const helperAssetRegex = new RegExp(`\\basset\\(\\s*['"]([^'"]+\\.(?:${assetExtensionList}))['"]\\s*\\)`, 'gi');
+const literalAssetRegex = new RegExp(`\\b(?:image|photo|src)\\s*:\\s*['"](?!https?:|data:)([^'"]+\\.(?:${assetExtensionList}))['"]`, 'gi');
 
 for (const file of activeSources) {
   const content = readFileSync(file, 'utf8');
@@ -186,6 +187,9 @@ for (const file of activeSources) {
     if (!match[1].includes('/') || match[1].startsWith('team/')) referencedAssets.add(match[1]);
   }
 }
+
+const imageMap = readProjectFile('IMAGE_MAP.md');
+for (const match of imageMap.matchAll(directAssetRegex)) referencedAssets.add(match[1]);
 
 for (const asset of referencedAssets) {
   const full = join(root, 'assets', asset);
