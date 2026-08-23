@@ -7,14 +7,16 @@ on:
     branches: [main]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout PR branch
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -22,6 +24,17 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci --no-audit --no-fund
+      - name: Materialize canonical markup from snapshot
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'deep-rearchitecture-2026-08-23'
+        run: |
+          node scripts/split-snapshot.mjs
+          if ! git diff --quiet -- src/pages src/layout; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add src/pages src/layout
+            git commit -m "refactor: materialize canonical page markup"
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          fi
       - name: Deep architecture inventory
         run: node scripts/deep-audit.mjs
       - name: Architecture + TypeScript + Vite + dist smoke test
