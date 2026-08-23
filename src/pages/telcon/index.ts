@@ -1,2 +1,3 @@
-import { extractView } from '../../legacy/extract';
-export const telconMarkup = extractView('telcon');
+import markup from './markup.html?raw';
+
+export const telconMarkup = markup;
