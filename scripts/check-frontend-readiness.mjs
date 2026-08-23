@@ -85,10 +85,10 @@ for (const path of tsSources) {
 }
 
 const sitePath = join(root, 'site.js');
+const site = existsSync(sitePath) ? read('site.js') : '';
 if (existsSync(sitePath)) {
   const size = statSync(sitePath).size;
   if (size > 58650) fail(`site.js creció a ${size} bytes. El núcleo legacy está congelado en 58650 bytes y no debe recibir lógica nueva.`);
-  const site = read('site.js');
   if (/\beval\s*\(|new\s+Function\s*\(|document\.write\s*\(/.test(site)) {
     fail('site.js contiene una API de ejecución dinámica prohibida (eval/new Function/document.write).');
   }
@@ -126,6 +126,28 @@ for (const path of canonicalMarkupPaths) {
 
 const inlineHandlers = markup.match(/\son[a-z]+\s*=/gi)?.length ?? 0;
 if (inlineHandlers > 106) fail(`Aumentaron los handlers HTML inline: ${inlineHandlers} (máximo transicional 106).`);
+
+// Cada enlace/hash interno literal debe apuntar a un ID real del markup canónico.
+// Esto evita botones que visualmente existen pero terminan cayendo al fallback de Inicio.
+const markupIds = new Set([...markup.matchAll(/\bid\s*=\s*["']([^"']+)["']/gi)].map((match) => match[1]));
+const hashTargets = new Set();
+for (const match of markup.matchAll(/\bhref\s*=\s*["']#([^"']+)["']/gi)) hashTargets.add(match[1]);
+const navigationCorpus = `${markup}\n${site}\n${tsSources.map(read).join('\n')}`;
+for (const match of navigationCorpus.matchAll(/\bnavigateTo\s*\(\s*["']#([^"']+)["']\s*\)/g)) hashTargets.add(match[1]);
+for (const target of [...hashTargets].sort()) {
+  if (!markupIds.has(target)) fail(`Navegación interna apunta a #${target}, pero no existe id="${target}" en el markup canónico.`);
+}
+
+const activeTextSources = paths.filter((path) => ['.html', '.ts', '.tsx', '.js'].includes(extname(path)) && !path.startsWith('scripts/'));
+for (const path of activeTextSources) {
+  const content = read(path);
+  if (/javascript\s*:/i.test(content)) fail(`${path} contiene javascript: prohibido.`);
+  for (const match of content.matchAll(/<a\b[^>]*target\s*=\s*["']_blank["'][^>]*>/gi)) {
+    if (!/\brel\s*=\s*["'][^"']*noopener[^"']*["']/i.test(match[0])) {
+      fail(`${path} contiene target="_blank" sin rel="noopener": ${match[0].slice(0, 140)}...`);
+    }
+  }
+}
 
 const imageExt = new Set(['.png', '.jpg', '.jpeg', '.webp', '.svg']);
 for (const path of paths.filter((path) => path.startsWith('assets/'))) {
@@ -172,4 +194,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`[CCT] Frontend readiness OK: 1 límite HTML confiable, Error Boundary activo, ${pages.length} vistas, ${inlineHandlers} handlers congelados y ${importantTotal} !important sin crecimiento.`);
+console.log(`[CCT] Frontend readiness OK: 1 límite HTML confiable, Error Boundary activo, ${pages.length} vistas, ${inlineHandlers} handlers congelados, ${hashTargets.size} destinos internos válidos y ${importantTotal} !important sin crecimiento.`);
