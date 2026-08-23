@@ -32,6 +32,7 @@ function assertRendered(html, route) {
   const failures = [];
 
   if (!html.includes('id="appMain"')) failures.push('falta #appMain');
+  if (/class=["'][^"']*cct-runtime-error/i.test(html)) failures.push('se mostró AppErrorBoundary');
 
   // React reemplaza por completo el contenido inicial de #root. Por eso el
   // criterio correcto no es buscar el texto del error (que también vive dentro
@@ -54,7 +55,17 @@ function assertRendered(html, route) {
   if (failures.length) throw new Error(`${route}: ${failures.join('; ')}`);
 }
 
-function runChrome(chrome, route) {
+function assertCourseRendered(html) {
+  const failures = [];
+  if (!/class=["'][^"']*course-shell/i.test(html)) failures.push('falta .course-shell');
+  if (!html.includes('id="moduleNav"')) failures.push('falta #moduleNav');
+  if (!html.includes('id="lessonContent"')) failures.push('falta #lessonContent');
+  if (!/class=["'][^"']*module-button/i.test(html)) failures.push('course.js no renderizó los módulos');
+  if (!/MÓDULO 01|M&Oacute;DULO 01/i.test(html)) failures.push('course.js no renderizó la primera lección');
+  if (failures.length) throw new Error(`course.html: ${failures.join('; ')}`);
+}
+
+function runChrome(chrome, url, label) {
   return spawnSync(chrome, [
     '--headless=new',
     '--no-sandbox',
@@ -66,7 +77,7 @@ function runChrome(chrome, route) {
     '--no-first-run',
     '--virtual-time-budget=2500',
     '--dump-dom',
-    `${BASE_URL}/#${route}`,
+    url,
   ], {
     encoding: 'utf8',
     maxBuffer: 12 * 1024 * 1024,
@@ -74,19 +85,26 @@ function runChrome(chrome, route) {
   });
 }
 
-async function runChromeWithStartupRetry(chrome, route) {
-  let run = runChrome(chrome, route);
+async function runChromeWithStartupRetry(chrome, url, label) {
+  let run = runChrome(chrome, url, label);
 
   // Los runners hospedados pueden tardar de forma excepcional en arrancar el
   // binario de Chrome. Reintentamos solo ese caso de infraestructura; un fallo
   // real de la página, status != 0 o una aserción DOM nunca se ignora.
   if (run.error?.code === 'ETIMEDOUT') {
-    console.warn(`[CCT] Chrome tardó en arrancar en #${route}; reintentando una vez.`);
+    console.warn(`[CCT] Chrome tardó en arrancar en ${label}; reintentando una vez.`);
     await delay(1000);
-    run = runChrome(chrome, route);
+    run = runChrome(chrome, url, label);
   }
 
   return run;
+}
+
+function ensureChromeSucceeded(run, label) {
+  if (run.error) throw run.error;
+  if (run.status !== 0) {
+    throw new Error(`Chrome falló en ${label} (status ${run.status}): ${(run.stderr || '').slice(-2000)}`);
+  }
 }
 
 const preview = spawn(process.execPath, [
@@ -109,18 +127,24 @@ try {
   const routes = ['inicio', 'nosotros', 'formacion', 'comunidad', 'eventos', 'telcon', 'recursos'];
 
   for (const route of routes) {
-    const run = await runChromeWithStartupRetry(chrome, route);
-
-    if (run.error) throw run.error;
-    if (run.status !== 0) {
-      throw new Error(`Chrome falló en #${route} (status ${run.status}): ${(run.stderr || '').slice(-2000)}`);
-    }
-
+    const label = `#${route}`;
+    const run = await runChromeWithStartupRetry(chrome, `${BASE_URL}/${label}`, label);
+    ensureChromeSucceeded(run, label);
     assertRendered(run.stdout, route);
-    console.log(`[CCT] Browser OK: #${route}`);
+    console.log(`[CCT] Browser OK: ${label}`);
   }
 
-  console.log('[CCT] Browser smoke test OK: React reemplazó el fallback y las 7 rutas activaron su vista.');
+  const unknown = await runChromeWithStartupRetry(chrome, `${BASE_URL}/#ruta-inexistente`, '#ruta-inexistente');
+  ensureChromeSucceeded(unknown, '#ruta-inexistente');
+  assertRendered(unknown.stdout, 'inicio');
+  console.log('[CCT] Browser OK: ruta inexistente vuelve a #inicio');
+
+  const course = await runChromeWithStartupRetry(chrome, `${BASE_URL}/course.html?course=cybersecurity`, 'course.html');
+  ensureChromeSucceeded(course, 'course.html');
+  assertCourseRendered(course.stdout);
+  console.log('[CCT] Browser OK: course.html autónomo');
+
+  console.log('[CCT] Browser smoke test OK: 7 vistas, fallback de ruta y Open Course cargaron en Chrome real.');
 } catch (error) {
   console.error('[CCT] Browser smoke test FALLÓ.');
   console.error(error);
