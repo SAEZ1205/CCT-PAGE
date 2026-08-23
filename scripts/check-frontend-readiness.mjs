@@ -52,7 +52,8 @@ for (const path of [
 const tsSources = paths.filter((path) => path.startsWith('src/') && ['.ts', '.tsx'].includes(extname(path)));
 const dangerousOwners = [];
 for (const path of tsSources) {
-  const count = (read(path).match(/dangerouslySetInnerHTML/g) || []).length;
+  // Cuenta únicamente el atributo JSX real, no menciones en comentarios/documentación.
+  const count = (read(path).match(/\bdangerouslySetInnerHTML\s*=\s*\{/g) || []).length;
   if (count) dangerousOwners.push([path, count]);
 }
 const dangerousTotal = dangerousOwners.reduce((sum, [, count]) => sum + count, 0);
@@ -62,7 +63,7 @@ if (dangerousTotal !== 1 || dangerousOwners[0]?.[0] !== 'src/components/TrustedS
 
 const app = read('src/App.tsx');
 if (!app.includes("./components/TrustedStaticShell")) fail('App.tsx debe montar el markup mediante TrustedStaticShell.');
-if (app.includes('dangerouslySetInnerHTML')) fail('App.tsx no puede usar dangerouslySetInnerHTML directamente.');
+if (/\bdangerouslySetInnerHTML\s*=\s*\{/.test(app)) fail('App.tsx no puede usar dangerouslySetInnerHTML directamente.');
 
 const main = read('src/main.tsx');
 if (!main.includes('AppErrorBoundary')) fail('main.tsx debe proteger la aplicación con AppErrorBoundary.');
