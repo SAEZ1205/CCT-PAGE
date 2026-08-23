@@ -1,8 +1,9 @@
-CCT PAGE — REACT + TYPESCRIPT + VITE
-====================================
+CCT PAGE — FRONTEND REACT + TYPESCRIPT + VITE
+=============================================
 
 ESTA ES LA UNICA CARPETA DEL PROYECTO.
 No vuelvas a ejecutar git clone dentro de CCT-PAGE.
+No crees archivos v2, final, copia, backup, old, etc. dentro del codigo activo.
 
 PARA RETOMAR EL PROYECTO
 ------------------------
@@ -11,56 +12,81 @@ PARA RETOMAR EL PROYECTO
 3. Ejecuta:
 
    git pull
+   npm ci
    npm run dev
 
 4. Abre la direccion Local que muestra Vite (normalmente http://localhost:5173/).
 
-PRIMERA VEZ EN UNA PC NUEVA
----------------------------
-   npm install
-   npm run dev
-
 Tambien puedes hacer doble clic en INICIAR_CCT.bat.
+El proyecto esta estandarizado en Node.js 24.x.
 
 FUENTES ACTIVAS DEL FRONTEND
 ----------------------------
-- src/: React + TypeScript.
-- styles.css: estilo visual base historico.
-- site.js: navegacion y comportamiento global.
-- career.js: Conoce tu carrera de Inicio.
-- calendar.js: calendario general de Inicio.
+- src/App.tsx: composicion principal.
+- src/components/TrustedStaticShell.tsx: UNICO limite permitido para montar el HTML estatico aprobado.
+- src/components/AppErrorBoundary.tsx: evita una pantalla blanca si React falla durante el render.
+- src/pages/<pagina>/markup.html: markup canonico de cada vista.
+- src/layout/: header, footer y modales globales.
+- src/features/home/career.ts: Conoce tu carrera de Inicio.
+- src/features/home/calendar.ts: calendario de Inicio.
 - src/features/nosotros/nosotros.ts: Nosotros.
 - src/features/formation/formation.ts: Formacion + Academias.
-- src/features/formation/openCourse.ts: Open Course.
+- src/features/formation/openCourse.ts: tarjetas Open Course dentro de Formacion.
 - src/features/community/community.ts: Comunidad.
 - src/features/events/events.ts: Eventos.
-- src/styles/sections/: CSS canonico de cada seccion moderna.
-- course.html / course.css / course.js: aula de Open Course.
+- src/features/shared/ui.ts: comportamientos compartidos.
+- src/styles/sections/: CSS canonico por seccion.
+- styles.css: base visual historica CONGELADA; no agregar nuevas features aqui.
+- site.js: nucleo legacy CONGELADO para navegacion/modales existentes; no agregar logica nueva.
+- course.html / course.css / course.js: aula autonoma de Open Course.
 - assets/: imagenes, logos y videos.
 
-YA NO SE USAN
--------------
+YA NO EXISTEN / NO VOLVER A CREAR
+---------------------------------
+- src/legacy/snapshot.html
+- src/legacy/extract.ts
+- career.js
+- calendar.js
 - nosotros.js
 - formation.js
 - community.js
 - events.js
-- compat-fixes.css
-- archivos de imagen .b64
-- archivos v2, v3, v4, v5, v6, final, final2, etc.
+- src/styles/compat-fixes.css
+- archivos .b64
+- implementaciones v2, v3, final, final2, old, backup, copy, etc.
 
-REGLA
------
-Una seccion tiene un solo dueño. Para editar una imagen, texto o animacion se
-modifica la feature TypeScript y/o el CSS de esa seccion; no se crea otro script
-que vuelva a modificar el mismo bloque despues.
+REGLAS PARA CAMBIOS NUEVOS
+--------------------------
+1. Imagen simple:
+   consulta IMAGE_MAP.md y reemplaza el mismo asset conservando nombre y extension cuando sea posible.
 
-El snapshot de src/legacy/snapshot.html permanece temporalmente como markup base
-para conservar el frontend aprobado. No ejecuta logica ni pisa las features.
+2. Cambio visual de una seccion:
+   modifica el markup canonico y/o el CSS canonico de ESA seccion.
 
-VERIFICACION
-------------
-Antes de considerar estable un cambio grande:
+3. Interaccion o componente NUEVO:
+   debe hacerse en React/TypeScript. No agregues nuevos onclick inline, nuevos bloques innerHTML,
+   scripts globales ni codigo a site.js.
 
-   npm run build
+4. Una seccion tiene un solo dueño.
+   Nunca crear otra implementacion para no tocar la anterior.
 
-GitHub Actions ejecuta esta misma comprobacion en los pull requests y en main.
+5. Antes de fusionar cualquier cambio:
+
+   npm run check:all
+
+VERIFICACIONES AUTOMATICAS
+--------------------------
+- check:frontend: impide que crezca el legacy, valida seguridad basica, assets y limite React/HTML.
+- check:architecture: valida owners, vistas, rutas internas y archivos prohibidos.
+- TypeScript strict.
+- Vite build.
+- check:dist: valida exactamente lo que se publicara.
+- check:browser: abre Chrome real, prueba las 7 vistas, una ruta inexistente y Open Course.
+- GitHub Actions ejecuta estas comprobaciones antes de integrar cambios.
+- GitHub Pages no despliega si la prueba de navegador falla.
+
+IMPORTANTE
+----------
+El HTML estatico aprobado se mantiene temporalmente como plantillas por vista para conservar exactamente
+la apariencia actual. React lo monta solamente mediante TrustedStaticShell. La migracion futura a JSX debe
+hacerse por seccion y con pruebas, no mediante una reescritura masiva que arriesgue el diseño.
