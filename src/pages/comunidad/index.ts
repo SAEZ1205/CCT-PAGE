@@ -1,2 +1,3 @@
-import { extractView } from '../../legacy/extract';
-export const comunidadMarkup = extractView('comunidad');
+import markup from './markup.html?raw';
+
+export const comunidadMarkup = markup;
