@@ -82,8 +82,11 @@ for (const path of assetPaths) {
 
 const retired = ['initAcademyEnrollments', 'initAcademyOrbit', 'initCalendar', 'initCareerExplorer', 'initCctV2Experience', 'initEditorialAgenda', 'initEventosBoomerang', 'initRevealMotion', 'initTeleinformaFilters'];
 const site = exists('site.js') ? read('site.js') : '';
-const siteFunctionNames = [...site.matchAll(/\bfunction\s+([A-Za-z_$][\w$]*)\s*\(/g)].map((match) => match[1]);
-const siteUsageCorpus = `${site}\n${markup}`;
+// Solo funciones top-level de site.js: las funciones internas no son candidatos independientes.
+const siteFunctionNames = [...site.matchAll(/^function\s+([A-Za-z_$][\w$]*)\s*\(/gm)].map((match) => match[1]);
+// Incluye todo el código activo para reconocer referencias indirectas por nombre, por ejemplo
+// ALLOWED_SITE_INITIALIZERS en runtime.ts, además de los handlers inline del markup.
+const siteUsageCorpus = `${codePaths.map(read).join('\n')}\n${markup}`;
 const siteFunctionsReferencedOnlyByDefinition = siteFunctionNames
   .filter((name) => tokenCount(siteUsageCorpus, name) === 1)
   .sort();
@@ -152,5 +155,5 @@ if (hardProblems.length) {
 
 console.log(`\n[CCT] Deep audit OK: ${markupPaths.length} fragmentos canónicos, ${handlerAttrs.length} handlers inline, ${report.css.importantTotal} !important, site.js ${report.javascript.siteBytes} bytes.`);
 if (siteFunctionsReferencedOnlyByDefinition.length) {
-  console.log(`[CCT] Candidatos de código muerto en site.js (solo aparece su definición): ${siteFunctionsReferencedOnlyByDefinition.join(', ')}`);
+  console.log(`[CCT] Candidatos reales de código muerto top-level en site.js: ${siteFunctionsReferencedOnlyByDefinition.join(', ')}`);
 }
