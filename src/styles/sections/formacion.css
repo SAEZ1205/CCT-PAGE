@@ -68,7 +68,7 @@
 #view-formacion .cert-v4-head h2 span { color: #b82034; }
 #view-formacion .cert-v4-head p { color: #7b8492; }
 #view-formacion .cert-v4-window { overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
-#view-formacion .cert-v4-track { display: flex; width: max-content; gap: 14px; animation: certMoveV4 28s linear infinite; }
+#view-formacion .cert-v4-track { display: flex; width: max-content; gap: 14px; animation: certMoveV4 18s linear infinite; }
 #view-formacion .cert-v4-window:hover .cert-v4-track { animation-play-state: paused; }
 #view-formacion .cert-v4-card { width: 190px; height: 240px; flex: 0 0 190px; border: 1px solid #e1e5ea; border-radius: 16px; background: #fff; padding: 13px; display: flex; flex-direction: column; position: relative; cursor: pointer; transition: .2s; }
 #view-formacion .cert-v4-card:hover { transform: translateY(-3px); border-color: #b82034; box-shadow: 0 10px 24px rgba(18,26,38,.09); }
@@ -87,9 +87,21 @@
 #view-formacion .cert-v4-btn.closed { background: #edf0f4; color: #707988; }
 #view-formacion .cert-v4-note { font-size: .61rem; color: #969da8; margin: 9px 0 0; }
 
-#view-formacion .academy-v4-modal { position: fixed; inset: 0; z-index: 10090; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(4,7,12,.76); backdrop-filter: blur(7px); }
-#view-formacion .academy-v4-modal.open, .academy-v4-modal.open { display: flex; }
-.academy-v4-box { width: min(500px,100%); background: #fff; color: #101725; border-radius: 20px; padding: 24px; position: relative; }
+/* El modal vive directamente bajo body, así que sus estilos no pueden depender de #view-formacion. */
+.academy-v4-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10090;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(4, 7, 12, .68);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.academy-v4-modal.open { display: flex; }
+.academy-v4-box { width: min(500px, calc(100vw - 40px)); max-height: calc(100dvh - 40px); overflow: auto; background: #fff; color: #101725; border-radius: 20px; padding: 24px; position: relative; box-shadow: 0 28px 80px rgba(0,0,0,.32); animation: academyModalIn .18s ease-out; }
 .academy-v4-close { position: absolute; right: 14px; top: 14px; width: 34px; height: 34px; border: 0; border-radius: 50%; background: #f0f2f5; cursor: pointer; }
 .academy-v4-box small { color: #b82034; font-size: .55rem; font-weight: 900; letter-spacing: .1em; }
 .academy-v4-box h3 { font-size: 1.4rem; margin: 6px 40px 5px 0; }
@@ -124,6 +136,7 @@
 @keyframes earthMoveV4 { from { transform: scale(1.02) translate3d(-.6%,0,0); } to { transform: scale(1.06) translate3d(.8%,-.5%,0); } }
 @keyframes starsV4 { from { transform: translate3d(0,0,0); } to { transform: translate3d(4%,2%,0); } }
 @keyframes certMoveV4 { from { transform: translateX(0); } to { transform: translateX(calc(-50% - 7px)); } }
+@keyframes academyModalIn { from { opacity: 0; transform: translateY(12px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
 @media (max-width: 850px) {
   #view-formacion .open-course-grid { grid-template-columns:1fr 1fr!important; }
@@ -148,4 +161,5 @@
   #view-formacion .formation-earth-v4 > img,
   #view-formacion .formation-earth-v4::after,
   #view-formacion .cert-v4-track { animation: none !important; }
+  .academy-v4-box { animation: none !important; }
 }
