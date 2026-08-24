@@ -1,0 +1,35 @@
+name: Stage clean Nosotros photo
+
+on:
+  push:
+    branches:
+      - stage-nosotros-photo-clean-2026-08-24
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    if: ${{ !contains(github.event.head_commit.message, '[photo-materialized]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Rebuild verified photo
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .cct-photo-stage/part*.b64 | tr -d '\n\r ' | base64 -d > assets/equipo-cct-2026-grupal.webp
+          test "$(stat -c%s assets/equipo-cct-2026-grupal.webp)" = "62746"
+          echo "029364a752747a790cf0be34357c486fb3140b5bda7ba4830502c3f8e62bbb88  assets/equipo-cct-2026-grupal.webp" | sha256sum -c -
+          file assets/equipo-cct-2026-grupal.webp | grep -qi webp
+
+      - name: Commit materialized asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/equipo-cct-2026-grupal.webp
+          git commit -m "[photo-materialized] Replace clean second Nosotros photo"
+          git push
