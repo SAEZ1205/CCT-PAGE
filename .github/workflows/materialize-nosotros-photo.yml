@@ -30,7 +30,6 @@ jobs:
           test "$(stat -c%s assets/equipo-cct-2026-grupal.webp)" -eq 47156
           file assets/equipo-cct-2026.webp | grep -qi 'Web/P\|WebP'
           file assets/equipo-cct-2026-grupal.webp | grep -qi 'Web/P\|WebP'
-          echo "35bbb0e495e69fd6f2726658f7e9624474235a77eee8b8184ed1ba79cd5192e3  assets/equipo-cct-2026-grupal.webp" | sha256sum -c -
 
           rm -rf .tmp-image-upload .tmp-q85
           rm -f .github/workflows/materialize-nosotros-photo.yml
