@@ -1,0 +1,34 @@
+name: TEMP Rebuild Open Course Asset
+
+on:
+  push:
+    branches:
+      - formacion-open-course-reference-2026-08-24
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Rebuild and verify asset
+        run: |
+          cat .tmp-open-course/part-*.b64 | base64 -d > assets/course-support.webp
+          test "$(wc -c < assets/course-support.webp)" -eq 94466
+          echo "70566b6601dd969890c6ec0da36d36a5a359a23345ecc9b6b26e6e144f0096b6  assets/course-support.webp" | sha256sum -c -
+          file assets/course-support.webp
+
+      - name: Remove temporary staging
+        run: rm -rf .tmp-open-course
+
+      - name: Commit clean asset
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/course-support.webp .tmp-open-course
+          git commit -m "Reemplaza imagen principal de Open Course"
+          git push
