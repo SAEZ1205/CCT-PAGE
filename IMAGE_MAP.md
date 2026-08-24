@@ -53,6 +53,8 @@ El build comprueba que los assets referenciados existan y que todos los archivos
 
 Las dos fotos de la Junta Directiva comparten un único cuadro y `src/features/nosotros/nosotros.ts` las alterna cada 6 segundos con un fundido suave. Para cambiar cualquiera de ellas en el futuro basta reemplazar el asset correspondiente.
 
+El CI protege ambas fotos contra compresión accidental y el smoke test de Chrome comprueba que las dos carguen y que la segunda llegue a activarse automáticamente.
+
 ## Formación
 
 | Elemento visible | Asset canónico |
