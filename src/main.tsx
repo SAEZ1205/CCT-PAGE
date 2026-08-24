@@ -4,6 +4,7 @@ import '../styles.css';
 import './styles/tailwind.css';
 import './styles/sections/nosotros.css';
 import './styles/sections/formacion.css';
+import './styles/sections/open-course.css';
 import './styles/sections/comunidad.css';
 import './styles/sections/eventos.css';
 import './styles/sections/inicio.css';
