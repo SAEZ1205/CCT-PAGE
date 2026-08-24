@@ -28,15 +28,19 @@ async function waitForServer() {
   throw new Error(`Vite preview no respondió: ${lastError}`);
 }
 
+function assertNosotrosMounted(html, failures) {
+  const slideCount = html.match(/data-nosotros-photo=/g)?.length ?? 0;
+  if (slideCount !== 2) failures.push(`Nosotros montó ${slideCount} fotos en vez de 2`);
+  if (!html.includes('data-nosotros-slide-count="2"')) failures.push('Nosotros no declara 2 slides');
+  if (!html.includes('data-nosotros-ready="true"')) failures.push('las dos fotos de Nosotros no terminaron de cargar');
+}
+
 function assertRendered(html, route) {
   const failures = [];
 
   if (!html.includes('id="appMain"')) failures.push('falta #appMain');
   if (/class=["'][^"']*cct-runtime-error/i.test(html)) failures.push('se mostró AppErrorBoundary');
 
-  // React reemplaza por completo el contenido inicial de #root. Por eso el
-  // criterio correcto no es buscar el texto del error (que también vive dentro
-  // del script inline), sino comprobar que el fallback real ya no exista.
   if (/id=["']cctBootFallback["']/i.test(html)) {
     failures.push('el fallback inicial sigue montado: React no reemplazó #root');
   }
@@ -51,8 +55,16 @@ function assertRendered(html, route) {
 
   if (!html.includes('data-career-owner="typescript"')) failures.push('Conoce tu carrera no fue inicializado por TypeScript');
   if (!html.includes('data-calendar-owner="typescript"')) failures.push('Calendario de Inicio no fue inicializado por TypeScript');
+  if (route === 'nosotros') assertNosotrosMounted(html, failures);
 
   if (failures.length) throw new Error(`${route}: ${failures.join('; ')}`);
+}
+
+function assertNosotrosRotated(html) {
+  const failures = [];
+  assertNosotrosMounted(html, failures);
+  if (!html.includes('data-nosotros-active="1"')) failures.push('después de más de 6 segundos la segunda foto no quedó activa');
+  if (failures.length) throw new Error(`rotación Nosotros: ${failures.join('; ')}`);
 }
 
 function assertCourseRendered(html) {
@@ -65,7 +77,7 @@ function assertCourseRendered(html) {
   if (failures.length) throw new Error(`course.html: ${failures.join('; ')}`);
 }
 
-function runChrome(chrome, url, label) {
+function runChrome(chrome, url, label, virtualTimeBudget = 2500) {
   return spawnSync(chrome, [
     '--headless=new',
     '--no-sandbox',
@@ -75,26 +87,23 @@ function runChrome(chrome, url, label) {
     '--disable-component-update',
     '--disable-default-apps',
     '--no-first-run',
-    '--virtual-time-budget=2500',
+    `--virtual-time-budget=${virtualTimeBudget}`,
     '--dump-dom',
     url,
   ], {
     encoding: 'utf8',
     maxBuffer: 12 * 1024 * 1024,
-    timeout: 25000,
+    timeout: Math.max(25000, virtualTimeBudget + 18000),
   });
 }
 
-async function runChromeWithStartupRetry(chrome, url, label) {
-  let run = runChrome(chrome, url, label);
+async function runChromeWithStartupRetry(chrome, url, label, virtualTimeBudget = 2500) {
+  let run = runChrome(chrome, url, label, virtualTimeBudget);
 
-  // Los runners hospedados pueden tardar de forma excepcional en arrancar el
-  // binario de Chrome. Reintentamos solo ese caso de infraestructura; un fallo
-  // real de la página, status != 0 o una aserción DOM nunca se ignora.
   if (run.error?.code === 'ETIMEDOUT') {
     console.warn(`[CCT] Chrome tardó en arrancar en ${label}; reintentando una vez.`);
     await delay(1000);
-    run = runChrome(chrome, url, label);
+    run = runChrome(chrome, url, label, virtualTimeBudget);
   }
 
   return run;
@@ -134,6 +143,11 @@ try {
     console.log(`[CCT] Browser OK: ${label}`);
   }
 
+  const nosotrosRotation = await runChromeWithStartupRetry(chrome, `${BASE_URL}/#nosotros`, '#nosotros rotación', 9000);
+  ensureChromeSucceeded(nosotrosRotation, '#nosotros rotación');
+  assertNosotrosRotated(nosotrosRotation.stdout);
+  console.log('[CCT] Browser OK: Nosotros cargó 2 fotos y activó la segunda después de 6 s');
+
   const unknown = await runChromeWithStartupRetry(chrome, `${BASE_URL}/#ruta-inexistente`, '#ruta-inexistente');
   ensureChromeSucceeded(unknown, '#ruta-inexistente');
   assertRendered(unknown.stdout, 'inicio');
@@ -144,7 +158,7 @@ try {
   assertCourseRendered(course.stdout);
   console.log('[CCT] Browser OK: course.html autónomo');
 
-  console.log('[CCT] Browser smoke test OK: 7 vistas, fallback de ruta y Open Course cargaron en Chrome real.');
+  console.log('[CCT] Browser smoke test OK: 7 vistas, crossfade de Nosotros, fallback de ruta y Open Course cargaron en Chrome real.');
 } catch (error) {
   console.error('[CCT] Browser smoke test FALLÓ.');
   console.error(error);
