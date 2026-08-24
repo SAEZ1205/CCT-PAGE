@@ -10,10 +10,10 @@ const images = {
 };
 
 const teleItems = [
-  { img: images.teleAmazon, tag:'TELEINFORMA', title:'Tecnología que cambia cómo nos conectamos', text:'Noticias y contexto para entender mejor el mundo de las telecomunicaciones.' },
-  { img: images.teleCard, tag:'ACTUALIDAD', title:'Lo importante, explicado desde Telecom', text:'Una selección visual de noticias y tendencias para la comunidad CCT.' },
-  { img: images.huawei, tag:'INDUSTRIA · FORMACIÓN', title:'Oportunidades Huawei para estudiantes', text:'Formación, industria y nuevas rutas para seguir creciendo fuera del aula.' },
-];
+  { img: images.teleAmazon, alt: 'Teleinforma: Amazon LEO' },
+  { img: images.teleCard, alt: 'Teleinforma: actualidad en telecomunicaciones' },
+  { img: images.huawei, alt: 'Flyer de cursos Huawei para estudiantes' },
+] as const;
 
 const familyItems = [
   { img:images.community, tag:'COMUNIDAD', title:'Una comunidad que crece junta' },
@@ -28,30 +28,18 @@ let familyTimer = 0;
 function renderTele(view: HTMLElement) {
   const grid = view.querySelector<HTMLElement>('.tele-curated-grid');
   if (!grid) return;
-  const indexes = [0,1,2].map((step) => (teleIndex + step) % teleItems.length);
-  const [main, sideA, sideB] = indexes.map((index) => teleItems[index]);
 
+  const current = teleItems[teleIndex];
   grid.innerHTML = `
-    <div class="tele-controls">
-      <button class="tele-arrow" type="button" data-dir="-1" aria-label="Anterior">←</button>
-      <button class="tele-arrow" type="button" data-dir="1" aria-label="Siguiente">→</button>
-    </div>
-    <article class="tele-main-story tele-story-enter">
-      <img src="${main.img}" alt="${main.title}">
-      <div><span class="feed-tag cyan">${main.tag}</span><h3>${main.title}</h3><p>${main.text}</p><a href="https://www.instagram.com/cct_uni_fiee/" target="_blank" rel="noopener">Ver publicación en Instagram ↗</a></div>
-    </article>
-    <article class="tele-side-story tele-story-enter" data-step="1"><img src="${sideA.img}" alt="${sideA.title}"><div><span>${sideA.tag}</span><h3>${sideA.title}</h3><b>Ver como principal →</b></div></article>
-    <article class="tele-side-story tele-story-enter" data-step="2"><img src="${sideB.img}" alt="${sideB.title}"><div><span>${sideB.tag}</span><h3>${sideB.title}</h3><b>Ver como principal →</b></div></article>`;
+    <button class="tele-arrow tele-arrow-prev" type="button" data-dir="-1" aria-label="Flyer anterior">←</button>
+    <a class="tele-poster tele-story-enter" href="https://www.instagram.com/cct_uni_fiee/" target="_blank" rel="noopener" aria-label="Ver publicación de Teleinforma en Instagram">
+      <img src="${current.img}" alt="${current.alt}" loading="eager" decoding="async">
+    </a>
+    <button class="tele-arrow tele-arrow-next" type="button" data-dir="1" aria-label="Siguiente flyer">→</button>`;
 
   grid.querySelectorAll<HTMLButtonElement>('.tele-arrow').forEach((button) => {
     button.addEventListener('click', () => {
       teleIndex = (teleIndex + Number(button.dataset.dir) + teleItems.length) % teleItems.length;
-      renderTele(view);
-    });
-  });
-  grid.querySelectorAll<HTMLElement>('.tele-side-story').forEach((card) => {
-    card.addEventListener('click', () => {
-      teleIndex = (teleIndex + Number(card.dataset.step)) % teleItems.length;
       renderTele(view);
     });
   });
