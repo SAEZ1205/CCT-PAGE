@@ -7,7 +7,8 @@ const images = {
   feria: new URL('../../../assets/feria-stem-2023.webp', import.meta.url).href,
   visit: new URL('../../../assets/visit-network-operations.webp', import.meta.url).href,
   owl: new URL('../../../assets/owl-guide.webp', import.meta.url).href,
-  owlAcademic: new URL('../../../assets/owl-academic-cct.webp', import.meta.url).href,
+  owlAcademic: 'assets/owl-academic-cct.webp',
+  owlInterviewBase64: 'assets/owl-interview-placeholder-small.b64.txt',
 };
 
 const teleItems = [
@@ -59,6 +60,8 @@ const voiceItems = [
 let teleIndex = 0;
 let familyTimer = 0;
 let voiceIndex = 0;
+let interviewPlaceholderDataUrl = '';
+let interviewPlaceholderLoading: Promise<string> | null = null;
 
 function renderTele(view: HTMLElement) {
   const grid = view.querySelector<HTMLElement>('.tele-curated-grid');
@@ -134,6 +137,26 @@ function initFamily(view: HTMLElement) {
   }, 3900);
 }
 
+async function loadInterviewPlaceholder(section: HTMLElement) {
+  if (interviewPlaceholderDataUrl) return interviewPlaceholderDataUrl;
+  if (!interviewPlaceholderLoading) {
+    interviewPlaceholderLoading = fetch(images.owlInterviewBase64)
+      .then((response) => {
+        if (!response.ok) throw new Error('No se pudo cargar la imagen temporal de Voces CCT');
+        return response.text();
+      })
+      .then((base64) => {
+        interviewPlaceholderDataUrl = `data:image/webp;base64,${base64.trim()}`;
+        section.querySelectorAll<HTMLImageElement>('.voices-v3-preview-image').forEach((img) => {
+          img.src = interviewPlaceholderDataUrl;
+        });
+        return interviewPlaceholderDataUrl;
+      })
+      .catch(() => '');
+  }
+  return interviewPlaceholderLoading;
+}
+
 function initVoices(view: HTMLElement) {
   const section = view.querySelector<HTMLElement>('.voices-cct');
   if (!section) return;
@@ -141,10 +164,10 @@ function initVoices(view: HTMLElement) {
   section.innerHTML = `
     <div class="container voices-v3-shell">
       <div class="voices-v3-visual" aria-label="Búho académico del CCT">
-        <div class="voices-v3-orbit voices-v3-orbit-one"></div>
-        <div class="voices-v3-orbit voices-v3-orbit-two"></div>
         <span class="voices-v3-badge">VOCES CCT</span>
-        <img class="voices-v3-owl" src="${images.owlAcademic}" alt="Búho académico CCT con toga y birrete" loading="lazy" decoding="async">
+        <span class="voices-v3-mini-label">CCT · FIEE UNI</span>
+        <img class="voices-v3-owl" src="${images.owlAcademic}" alt="Búho académico CCT con toga y birrete" loading="eager" decoding="async">
+        <div class="voices-v3-visual-note"><strong>Conecta.</strong><span>Aprende de quienes ya recorren el camino.</span></div>
       </div>
 
       <div class="voices-v3-content">
@@ -167,6 +190,8 @@ function initVoices(view: HTMLElement) {
   const tabs = Array.from(section.querySelectorAll<HTMLButtonElement>('.voices-v3-tab'));
   if (!panel || !tabs.length) return;
 
+  void loadInterviewPlaceholder(section);
+
   const paint = (animate = false) => {
     const item = voiceItems[voiceIndex];
     tabs.forEach((tab, index) => {
@@ -179,9 +204,11 @@ function initVoices(view: HTMLElement) {
     window.setTimeout(() => {
       panel.innerHTML = `
         <div class="voices-v3-preview">
+          <img class="voices-v3-preview-image" src="${interviewPlaceholderDataUrl}" alt="Búho CCT con libro como imagen temporal de entrevista">
+          <div class="voices-v3-preview-shade"></div>
           <div class="voices-v3-preview-top"><span>${item.eyebrow}</span><strong>${item.number}</strong></div>
           <div class="voices-v3-play" aria-hidden="true"><span>▶</span></div>
-          <div class="voices-v3-preview-copy"><b>PRÓXIMAMENTE</b><p>${item.preview}</p></div>
+          <div class="voices-v3-preview-copy"><b>PRÓXIMAMENTE · VIDEO</b><p>${item.preview}</p></div>
         </div>
         <div class="voices-v3-story">
           <span class="voices-v3-story-kicker">${item.eyebrow}</span>
@@ -197,6 +224,7 @@ function initVoices(view: HTMLElement) {
           </div>
         </div>`;
       panel.classList.remove('is-changing');
+      if (!interviewPlaceholderDataUrl) void loadInterviewPlaceholder(section);
 
       panel.querySelectorAll<HTMLButtonElement>('[data-voice-dir]').forEach((button) => {
         button.addEventListener('click', () => {
