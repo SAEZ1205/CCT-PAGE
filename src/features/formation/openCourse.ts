@@ -10,7 +10,7 @@ const COURSES = [
     description: 'Amenazas, endpoints y fundamentos de seguridad.',
     hours: '120 h',
     image: supportImage,
-    focus: 'center 42%',
+    focus: 'center 20%',
   },
   {
     id: 'defense',
