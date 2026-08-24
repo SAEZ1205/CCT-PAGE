@@ -146,6 +146,28 @@ for (const path of activeTextSources) {
   }
 }
 
+const nosotrosPhotoAssets = [
+  ['assets/equipo-cct-2026.webp', 80000],
+  ['assets/equipo-cct-2026-grupal.webp', 40000],
+];
+for (const [path, minBytes] of nosotrosPhotoAssets) {
+  const full = join(root, path);
+  if (!existsSync(full)) {
+    fail(`Falta foto canónica de Nosotros: ${path}.`);
+    continue;
+  }
+  const size = statSync(full).size;
+  if (size < minBytes) fail(`Foto de Nosotros demasiado comprimida: ${path} tiene ${size} bytes; mínimo protegido ${minBytes}.`);
+}
+
+const nosotrosOwner = read('src/features/nosotros/nosotros.ts');
+for (const asset of ['equipo-cct-2026.webp', 'equipo-cct-2026-grupal.webp']) {
+  if (!nosotrosOwner.includes(asset)) fail(`nosotros.ts no referencia la foto canónica ${asset}.`);
+}
+if (!nosotrosOwner.includes('ROTATION_MS = 6000')) fail('Nosotros debe conservar la rotación de fotos cada 6000 ms.');
+if (!nosotrosOwner.includes('nosotrosSlideCount')) fail('Nosotros debe exponer el conteo de slides para el smoke test real.');
+if (!nosotrosOwner.includes('nosotrosReady')) fail('Nosotros debe exponer el estado de carga de las fotos para detectar assets rotos.');
+
 const imageExt = new Set(['.png', '.jpg', '.jpeg', '.webp', '.svg']);
 for (const path of paths.filter((path) => path.startsWith('assets/'))) {
   const full = join(root, path);
@@ -191,4 +213,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`[CCT] Frontend readiness OK: 1 límite HTML confiable, Error Boundary activo, ${pages.length} vistas, ${inlineHandlers} handlers congelados, ${hashTargets.size} destinos internos válidos y ${importantTotal} !important sin crecimiento.`);
+console.log(`[CCT] Frontend readiness OK: 1 límite HTML confiable, Error Boundary activo, ${pages.length} vistas, ${inlineHandlers} handlers congelados, ${hashTargets.size} destinos internos válidos, 2 fotos de Nosotros protegidas y ${importantTotal} !important sin crecimiento.`);
