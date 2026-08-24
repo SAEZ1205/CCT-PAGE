@@ -7,6 +7,7 @@ const images = {
   feria: new URL('../../../assets/feria-stem-2023.webp', import.meta.url).href,
   visit: new URL('../../../assets/visit-network-operations.webp', import.meta.url).href,
   owl: new URL('../../../assets/owl-guide.webp', import.meta.url).href,
+  owlAcademic: new URL('../../../assets/owl-academic-cct.webp', import.meta.url).href,
 };
 
 const teleItems = [
@@ -22,8 +23,42 @@ const familyItems = [
   { img:images.visit, tag:'FAMILIA CCT', title:'Telecomunicaciones también se construye en equipo' },
 ];
 
+const voiceItems = [
+  {
+    key: 'egresados',
+    tab: 'Egresados',
+    eyebrow: 'EGRESADOS CCT',
+    number: '01',
+    title: 'Historias que abren camino.',
+    text: 'Egresados de Telecomunicaciones contarán cómo dieron sus primeros pasos, qué decisiones marcaron su ruta y qué aprendieron al llegar a la industria.',
+    tags: ['Primer empleo', 'Especialización', 'Consejos reales'],
+    preview: 'Trayectorias profesionales, errores, oportunidades y aprendizajes después de la UNI.',
+  },
+  {
+    key: 'estudiantes',
+    tab: 'Estudiantes',
+    eyebrow: 'ESTUDIANTES UNI',
+    number: '02',
+    title: 'La carrera mientras la estás viviendo.',
+    text: 'Experiencias de estudiantes en distintos ciclos: cursos retadores, proyectos, grupos, concursos y decisiones que ayudan a aprovechar mejor la etapa universitaria.',
+    tags: ['Vida UNI', 'Proyectos', 'Oportunidades'],
+    preview: 'Voces cercanas para entender cómo se vive Telecomunicaciones desde dentro.',
+  },
+  {
+    key: 'docentes',
+    tab: 'Docentes UNI',
+    eyebrow: 'DOCENTES UNI',
+    number: '03',
+    title: 'La experiencia que forma generaciones.',
+    text: 'Docentes compartirán perspectivas sobre la carrera, tendencias de telecomunicaciones y recomendaciones para conectar mejor la formación académica con el mundo profesional.',
+    tags: ['Academia', 'Industria', 'Futuro telecom'],
+    preview: 'Ideas, contexto y orientación de quienes acompañan la formación de nuevas generaciones.',
+  },
+] as const;
+
 let teleIndex = 0;
 let familyTimer = 0;
+let voiceIndex = 0;
 
 function renderTele(view: HTMLElement) {
   const grid = view.querySelector<HTMLElement>('.tele-curated-grid');
@@ -100,14 +135,86 @@ function initFamily(view: HTMLElement) {
 }
 
 function initVoices(view: HTMLElement) {
-  const img = view.querySelector<HTMLImageElement>('.voices-owl img');
-  if (img) { img.src = images.owl; img.alt = 'Búho CCT presentando Voces CCT'; }
-  const kicker = view.querySelector<HTMLElement>('.voices-copy .v2-kicker');
-  const title = view.querySelector<HTMLElement>('.voices-copy h2');
-  const text = view.querySelector<HTMLElement>('.voices-copy p');
-  if (kicker) kicker.textContent = 'VOCES CCT · ENTREVISTAS';
-  if (title) title.textContent = 'Personas detrás de la carrera.';
-  if (text) text.textContent = 'Conversaciones breves con egresados, estudiantes y docentes: decisiones reales, aprendizajes y consejos que no siempre aparecen en la malla curricular.';
+  const section = view.querySelector<HTMLElement>('.voices-cct');
+  if (!section) return;
+
+  section.innerHTML = `
+    <div class="container voices-v3-shell">
+      <div class="voices-v3-visual" aria-label="Búho académico del CCT">
+        <div class="voices-v3-orbit voices-v3-orbit-one"></div>
+        <div class="voices-v3-orbit voices-v3-orbit-two"></div>
+        <span class="voices-v3-badge">VOCES CCT</span>
+        <img class="voices-v3-owl" src="${images.owlAcademic}" alt="Búho académico CCT con toga y birrete" loading="lazy" decoding="async">
+      </div>
+
+      <div class="voices-v3-content">
+        <span class="v2-kicker voices-v3-kicker">VOCES CCT · ENTREVISTAS</span>
+        <h2>Personas detrás<br><span>de la carrera.</span></h2>
+        <p class="voices-v3-intro">Conoce las voces que viven Telecomunicaciones desde distintas perspectivas.</p>
+
+        <div class="voices-v3-tabs" role="tablist" aria-label="Tipos de entrevista">
+          ${voiceItems.map((item, index) => `
+            <button class="voices-v3-tab${index === voiceIndex ? ' is-active' : ''}" type="button" role="tab" aria-selected="${index === voiceIndex}" data-voice-index="${index}">
+              <span class="voices-v3-tab-index">0${index + 1}</span>${item.tab}
+            </button>`).join('')}
+        </div>
+
+        <div class="voices-v3-panel" aria-live="polite"></div>
+      </div>
+    </div>`;
+
+  const panel = section.querySelector<HTMLElement>('.voices-v3-panel');
+  const tabs = Array.from(section.querySelectorAll<HTMLButtonElement>('.voices-v3-tab'));
+  if (!panel || !tabs.length) return;
+
+  const paint = (animate = false) => {
+    const item = voiceItems[voiceIndex];
+    tabs.forEach((tab, index) => {
+      const active = index === voiceIndex;
+      tab.classList.toggle('is-active', active);
+      tab.setAttribute('aria-selected', String(active));
+    });
+
+    if (animate) panel.classList.add('is-changing');
+    window.setTimeout(() => {
+      panel.innerHTML = `
+        <div class="voices-v3-preview">
+          <div class="voices-v3-preview-top"><span>${item.eyebrow}</span><strong>${item.number}</strong></div>
+          <div class="voices-v3-play" aria-hidden="true"><span>▶</span></div>
+          <div class="voices-v3-preview-copy"><b>PRÓXIMAMENTE</b><p>${item.preview}</p></div>
+        </div>
+        <div class="voices-v3-story">
+          <span class="voices-v3-story-kicker">${item.eyebrow}</span>
+          <h3>${item.title}</h3>
+          <p>${item.text}</p>
+          <div class="voices-v3-tags">${item.tags.map((tag) => `<span>${tag}</span>`).join('')}</div>
+          <div class="voices-v3-story-footer">
+            <span>Entrevistas en preparación</span>
+            <div class="voices-v3-arrows" aria-label="Cambiar categoría">
+              <button type="button" data-voice-dir="-1" aria-label="Categoría anterior">←</button>
+              <button type="button" data-voice-dir="1" aria-label="Categoría siguiente">→</button>
+            </div>
+          </div>
+        </div>`;
+      panel.classList.remove('is-changing');
+
+      panel.querySelectorAll<HTMLButtonElement>('[data-voice-dir]').forEach((button) => {
+        button.addEventListener('click', () => {
+          voiceIndex = (voiceIndex + Number(button.dataset.voiceDir) + voiceItems.length) % voiceItems.length;
+          paint(true);
+        });
+      });
+    }, animate ? 130 : 0);
+  };
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      voiceIndex = Number(tab.dataset.voiceIndex || 0);
+      paint(true);
+    });
+  });
+
+  paint();
 }
 
 export function initCommunity() {
