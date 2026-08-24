@@ -6,16 +6,19 @@
 #view-comunidad .teleinforma-curated .v2-heading-row h2 span { color:#00aeea !important; }
 #view-comunidad .tele-curated-grid {
   display:grid !important;
-  grid-template-columns:minmax(0,2fr) minmax(250px,1fr) !important;
-  grid-template-rows:auto auto !important;
+  grid-template-columns:44px minmax(0,1.72fr) minmax(260px,.82fr) 44px !important;
+  grid-template-rows:minmax(0,1fr) minmax(0,1fr) !important;
   gap:12px !important;
-  width:100% !important;
+  width:min(100%,1120px) !important;
+  height:520px !important;
   margin:0 auto !important;
   align-items:stretch !important;
 }
 #view-comunidad .tele-poster {
   display:block !important;
   width:100% !important;
+  height:100% !important;
+  min-height:0 !important;
   overflow:hidden !important;
   border:0 !important;
   border-radius:16px !important;
@@ -26,14 +29,18 @@
 }
 #view-comunidad .tele-poster:hover { transform:scale(1.008); opacity:.98; }
 #view-comunidad .tele-poster-main {
-  grid-column:1 !important;
+  grid-column:2 !important;
   grid-row:1 / 3 !important;
   height:100% !important;
 }
 #view-comunidad .tele-poster-side {
-  grid-column:2 !important;
-  aspect-ratio:4 / 5 !important;
+  grid-column:3 !important;
+  height:100% !important;
+  min-height:0 !important;
+  aspect-ratio:auto !important;
 }
+#view-comunidad .tele-poster-side[data-step="1"] { grid-row:1 !important; }
+#view-comunidad .tele-poster-side[data-step="2"] { grid-row:2 !important; }
 #view-comunidad .tele-poster img {
   display:block !important;
   width:100% !important;
@@ -42,7 +49,30 @@
   object-position:center !important;
   background:transparent !important;
 }
+#view-comunidad .tele-arrow {
+  align-self:center !important;
+  justify-self:center !important;
+  width:42px !important;
+  height:42px !important;
+  border-radius:50% !important;
+  border:1px solid #d9dee8 !important;
+  background:#fff !important;
+  color:#0b1020 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  font-size:1.2rem !important;
+  font-weight:900 !important;
+  cursor:pointer !important;
+  box-shadow:0 8px 20px rgba(15,23,42,.08) !important;
+  transition:background .2s ease,color .2s ease,transform .2s ease,border-color .2s ease !important;
+}
+#view-comunidad .tele-arrow-prev { grid-column:1 !important; grid-row:1 / 3 !important; }
+#view-comunidad .tele-arrow-next { grid-column:4 !important; grid-row:1 / 3 !important; }
+#view-comunidad .tele-arrow:hover { background:#0b1020 !important; color:#fff !important; border-color:#0b1020 !important; transform:scale(1.05) !important; }
+#view-comunidad .tele-arrow:focus-visible,
 #view-comunidad .tele-poster:focus-visible { outline:3px solid rgba(0,174,234,.35); outline-offset:4px; }
+#view-comunidad .tele-story-enter { animation:teleEnter .3s ease both; }
 
 #view-comunidad .cct-family { background:#0b0e17 !important; color:#fff !important; padding:72px 0 !important; }
 #view-comunidad .cct-family .v2-kicker { color:#00caff !important; }
@@ -69,35 +99,45 @@
 #view-comunidad .voice-topics span { background:#0b1020 !important; color:#fff !important; border-radius:14px !important; padding:16px !important; font-size:.72rem !important; font-weight:800 !important; }
 #view-comunidad .voices-copy > a { display:inline-flex !important; background:#00caff !important; color:#07101c !important; padding:13px 18px !important; border-radius:999px !important; text-decoration:none !important; font-weight:900 !important; }
 
+@keyframes teleEnter { from { opacity:.18; transform:scale(.985); } to { opacity:1; transform:none; } }
+
 @media (max-width:980px) {
   #view-comunidad .teleinforma-curated > .container { width:min(94%,980px) !important; }
-  #view-comunidad .tele-curated-grid { grid-template-columns:minmax(0,2fr) minmax(210px,1fr) !important; gap:10px !important; }
+  #view-comunidad .tele-curated-grid {
+    grid-template-columns:40px minmax(0,1.65fr) minmax(210px,.82fr) 40px !important;
+    grid-template-rows:minmax(0,1fr) minmax(0,1fr) !important;
+    gap:10px !important;
+    width:min(100%,900px) !important;
+    height:460px !important;
+  }
+  #view-comunidad .tele-arrow { width:38px !important; height:38px !important; }
   #view-comunidad .family-mosaic { grid-template-columns:1fr 1fr !important; grid-template-rows:340px 240px 240px !important; }
   #view-comunidad .family-mosaic .family-wide { grid-column:1 / -1 !important; grid-row:auto !important; }
   #view-comunidad .voices-layout { grid-template-columns:1fr !important; }
   #view-comunidad .voices-owl { height:430px !important; }
 }
 
-@media (max-width:760px) {
+@media (max-width:700px) {
   #view-comunidad .teleinforma-curated { padding:42px 0 48px !important; }
   #view-comunidad .teleinforma-curated .v2-heading-row { margin-bottom:18px !important; }
   #view-comunidad .tele-curated-grid {
-    grid-template-columns:1fr 1fr !important;
-    grid-template-rows:auto auto !important;
+    grid-template-columns:36px minmax(0,1fr) 36px !important;
+    grid-template-rows:320px 180px 180px !important;
     gap:10px !important;
     width:100% !important;
-  }
-  #view-comunidad .tele-poster-main {
-    grid-column:1 / -1 !important;
-    grid-row:1 !important;
-    aspect-ratio:4 / 5 !important;
     height:auto !important;
   }
-  #view-comunidad .tele-poster-side {
-    grid-column:auto !important;
-    grid-row:2 !important;
-    aspect-ratio:4 / 5 !important;
+  #view-comunidad .tele-arrow { width:34px !important; height:34px !important; font-size:1rem !important; }
+  #view-comunidad .tele-arrow-prev { grid-column:1 !important; grid-row:1 !important; }
+  #view-comunidad .tele-arrow-next { grid-column:3 !important; grid-row:1 !important; }
+  #view-comunidad .tele-poster-main {
+    grid-column:2 !important;
+    grid-row:1 !important;
+    height:100% !important;
+    aspect-ratio:auto !important;
   }
+  #view-comunidad .tele-poster-side[data-step="1"] { grid-column:2 !important; grid-row:2 !important; }
+  #view-comunidad .tele-poster-side[data-step="2"] { grid-column:2 !important; grid-row:3 !important; }
   #view-comunidad .tele-poster { border-radius:12px !important; }
   #view-comunidad .family-mosaic { display:flex !important; flex-direction:column !important; }
   #view-comunidad .family-mosaic figure { height:300px !important; }
