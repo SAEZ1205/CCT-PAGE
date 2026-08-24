@@ -1,8 +1,8 @@
 /* Ajuste fino de Teleinforma: una pieza protagonista + dos flyers apilados. */
 #view-comunidad .tele-curated-grid {
-  width:min(100%,1220px) !important;
-  height:610px !important;
-  grid-template-columns:44px minmax(0,1.08fr) minmax(330px,.92fr) 44px !important;
+  width:min(100%,1260px) !important;
+  height:630px !important;
+  grid-template-columns:44px minmax(0,1.08fr) minmax(340px,.92fr) 44px !important;
   gap:10px !important;
 }
 
@@ -35,8 +35,8 @@
 @media (max-width:1100px) {
   #view-comunidad .tele-curated-grid {
     width:100% !important;
-    height:560px !important;
-    grid-template-columns:42px minmax(0,1.04fr) minmax(285px,.9fr) 42px !important;
+    height:575px !important;
+    grid-template-columns:42px minmax(0,1.04fr) minmax(295px,.9fr) 42px !important;
   }
 }
 
