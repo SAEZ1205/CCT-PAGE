@@ -8,6 +8,7 @@ import './styles/sections/open-course.css';
 import './styles/sections/comunidad.css';
 import './styles/sections/comunidad-teleinforma-tuning.css';
 import './styles/sections/comunidad-voices.css';
+import './styles/sections/comunidad-voices-tuning.css';
 import './styles/sections/eventos.css';
 import './styles/sections/inicio.css';
 import { AppErrorBoundary } from './components/AppErrorBoundary';
