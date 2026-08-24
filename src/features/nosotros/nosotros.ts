@@ -1,20 +1,58 @@
-const teamImage = new URL('../../../assets/equipo-cct-2026.webp', import.meta.url).href;
+const teamImages = [
+  {
+    src: new URL('../../../assets/equipo-cct-2026.webp', import.meta.url).href,
+    alt: 'Junta Directiva 2026 del Centro Cultural de Telecomunicaciones CCT UNI',
+  },
+  {
+    src: new URL('../../../assets/equipo-cct-2026-grupal.webp', import.meta.url).href,
+    alt: 'Junta Directiva 2026 del CCT UNI frente a la Facultad de Ingeniería Eléctrica y Electrónica',
+  },
+] as const;
 
-function ensurePhoto(photoWrap: HTMLElement) {
+function ensurePhotoCarousel(photoWrap: HTMLElement) {
   photoWrap.querySelectorAll('.board-slider, .board-collage').forEach((node) => node.remove());
 
-  let image = photoWrap.querySelector<HTMLImageElement>(':scope > img');
-  if (!image) {
-    image = document.createElement('img');
-    photoWrap.prepend(image);
-  }
+  const existingImages = Array.from(photoWrap.querySelectorAll<HTMLImageElement>(':scope > img'));
+  while (existingImages.length > teamImages.length) existingImages.pop()?.remove();
 
-  image.src = teamImage;
-  image.alt = 'Junta Directiva del Centro Cultural de Telecomunicaciones CCT UNI';
-  image.loading = 'eager';
-  image.decoding = 'async';
-  image.removeAttribute('style');
-  photoWrap.classList.add('nosotros-photo-stable');
+  const label = photoWrap.querySelector<HTMLElement>(':scope > span');
+  const slides = teamImages.map((photo, index) => {
+    let image = existingImages[index];
+    if (!image) {
+      image = document.createElement('img');
+      if (label) photoWrap.insertBefore(image, label);
+      else photoWrap.append(image);
+    }
+
+    image.src = photo.src;
+    image.alt = photo.alt;
+    image.loading = index === 0 ? 'eager' : 'lazy';
+    image.decoding = 'async';
+    image.removeAttribute('style');
+    image.className = 'nosotros-photo-slide';
+    image.classList.toggle('is-active', index === 0);
+    return image;
+  });
+
+  photoWrap.classList.add('nosotros-photo-stable', 'nosotros-photo-rotator');
+
+  const startRotationWhenReady = () => {
+    if (photoWrap.dataset.carouselReady === 'true') return;
+    if (!slides.every((image) => image.complete && image.naturalWidth > 0)) return;
+
+    photoWrap.dataset.carouselReady = 'true';
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    let activeIndex = 0;
+    window.setInterval(() => {
+      slides[activeIndex].classList.remove('is-active');
+      activeIndex = (activeIndex + 1) % slides.length;
+      slides[activeIndex].classList.add('is-active');
+    }, 6000);
+  };
+
+  slides.forEach((image) => image.addEventListener('load', startRotationWhenReady, { once: true }));
+  startRotationWhenReady();
 }
 
 export function initNosotros() {
@@ -33,7 +71,7 @@ export function initNosotros() {
   }
 
   const photoWrap = view.querySelector<HTMLElement>('.about-photo-main');
-  if (photoWrap) ensurePhoto(photoWrap);
+  if (photoWrap) ensurePhotoCarousel(photoWrap);
 
   const label = view.querySelector<HTMLElement>('.about-photo-main span');
   if (label) label.textContent = 'Junta Directiva CCT · FIEE UNI';
