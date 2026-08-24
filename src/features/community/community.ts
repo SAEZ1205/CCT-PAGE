@@ -29,17 +29,33 @@ function renderTele(view: HTMLElement) {
   const grid = view.querySelector<HTMLElement>('.tele-curated-grid');
   if (!grid) return;
 
-  const current = teleItems[teleIndex];
+  const indexes = [0, 1, 2].map((step) => (teleIndex + step) % teleItems.length);
+  const [main, sideA, sideB] = indexes.map((index) => teleItems[index]);
+
   grid.innerHTML = `
     <button class="tele-arrow tele-arrow-prev" type="button" data-dir="-1" aria-label="Flyer anterior">←</button>
-    <a class="tele-poster tele-story-enter" href="https://www.instagram.com/cct_uni_fiee/" target="_blank" rel="noopener" aria-label="Ver publicación de Teleinforma en Instagram">
-      <img src="${current.img}" alt="${current.alt}" loading="eager" decoding="async">
+    <a class="tele-poster tele-poster-main tele-story-enter" data-tele-role="main" href="https://www.instagram.com/cct_uni_fiee/" target="_blank" rel="noopener" aria-label="Ver publicación principal de Teleinforma en Instagram">
+      <img src="${main.img}" alt="${main.alt}" loading="eager" decoding="async">
+    </a>
+    <a class="tele-poster tele-poster-side tele-story-enter" data-tele-role="side" data-step="1" href="https://www.instagram.com/cct_uni_fiee/" target="_blank" rel="noopener" aria-label="Ver publicación secundaria de Teleinforma en Instagram">
+      <img src="${sideA.img}" alt="${sideA.alt}" loading="eager" decoding="async">
+    </a>
+    <a class="tele-poster tele-poster-side tele-story-enter" data-tele-role="side" data-step="2" href="https://www.instagram.com/cct_uni_fiee/" target="_blank" rel="noopener" aria-label="Ver publicación secundaria de Teleinforma en Instagram">
+      <img src="${sideB.img}" alt="${sideB.alt}" loading="eager" decoding="async">
     </a>
     <button class="tele-arrow tele-arrow-next" type="button" data-dir="1" aria-label="Siguiente flyer">→</button>`;
 
   grid.querySelectorAll<HTMLButtonElement>('.tele-arrow').forEach((button) => {
     button.addEventListener('click', () => {
       teleIndex = (teleIndex + Number(button.dataset.dir) + teleItems.length) % teleItems.length;
+      renderTele(view);
+    });
+  });
+
+  grid.querySelectorAll<HTMLElement>('.tele-poster-side').forEach((poster) => {
+    poster.addEventListener('click', (event) => {
+      event.preventDefault();
+      teleIndex = (teleIndex + Number(poster.dataset.step)) % teleItems.length;
       renderTele(view);
     });
   });
