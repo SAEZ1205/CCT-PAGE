@@ -35,6 +35,17 @@ function assertNosotrosMounted(html, failures) {
   if (!html.includes('data-nosotros-ready="true"')) failures.push('las dos fotos de Nosotros no terminaron de cargar');
 }
 
+function assertCommunityMounted(html, failures) {
+  const posterCount = html.match(/data-tele-role=/g)?.length ?? 0;
+  const mainCount = html.match(/data-tele-role="main"/g)?.length ?? 0;
+  const sideCount = html.match(/data-tele-role="side"/g)?.length ?? 0;
+  if (posterCount !== 3) failures.push(`Teleinforma montó ${posterCount} flyers en vez de 3`);
+  if (mainCount !== 1) failures.push(`Teleinforma montó ${mainCount} flyer principal en vez de 1`);
+  if (sideCount !== 2) failures.push(`Teleinforma montó ${sideCount} flyers pequeños en vez de 2`);
+  if (/class="[^"]*tele-main-story/.test(html)) failures.push('Teleinforma volvió al artículo principal con texto');
+  if (/class="[^"]*tele-side-story/.test(html)) failures.push('Teleinforma volvió a las tarjetas laterales con texto');
+}
+
 function assertRendered(html, route) {
   const failures = [];
 
@@ -56,6 +67,7 @@ function assertRendered(html, route) {
   if (!html.includes('data-career-owner="typescript"')) failures.push('Conoce tu carrera no fue inicializado por TypeScript');
   if (!html.includes('data-calendar-owner="typescript"')) failures.push('Calendario de Inicio no fue inicializado por TypeScript');
   if (route === 'nosotros') assertNosotrosMounted(html, failures);
+  if (route === 'comunidad') assertCommunityMounted(html, failures);
 
   if (failures.length) throw new Error(`${route}: ${failures.join('; ')}`);
 }
@@ -158,7 +170,7 @@ try {
   assertCourseRendered(course.stdout);
   console.log('[CCT] Browser OK: course.html autónomo');
 
-  console.log('[CCT] Browser smoke test OK: 7 vistas, crossfade de Nosotros, fallback de ruta y Open Course cargaron en Chrome real.');
+  console.log('[CCT] Browser smoke test OK: 7 vistas, Comunidad con 3 flyers, crossfade de Nosotros, fallback de ruta y Open Course cargaron en Chrome real.');
 } catch (error) {
   console.error('[CCT] Browser smoke test FALLÓ.');
   console.error(error);
