@@ -8,7 +8,9 @@ const images = {
   visit: new URL('../../../assets/visit-network-operations.webp', import.meta.url).href,
   owl: new URL('../../../assets/owl-guide.webp', import.meta.url).href,
   owlAcademic: 'assets/owl-academic-cct.webp',
-  owlInterviewBase64: 'assets/owl-interview-placeholder-small.b64.txt',
+  owlGraduate: 'assets/owl-guide.webp',
+  owlStudent: 'assets/owl-book.webp',
+  owlDocente: 'assets/owl-docente-uni.webp',
 };
 
 const teleItems = [
@@ -34,6 +36,8 @@ const voiceItems = [
     text: 'Egresados de Telecomunicaciones contarán cómo dieron sus primeros pasos, qué decisiones marcaron su ruta y qué aprendieron al llegar a la industria.',
     tags: ['Primer empleo', 'Especialización', 'Consejos reales'],
     preview: 'Trayectorias profesionales, errores, oportunidades y aprendizajes después de la UNI.',
+    image: images.owlGraduate,
+    imageAlt: 'Búho egresado CCT con toga y diploma',
   },
   {
     key: 'estudiantes',
@@ -44,6 +48,8 @@ const voiceItems = [
     text: 'Experiencias de estudiantes en distintos ciclos: cursos retadores, proyectos, grupos, concursos y decisiones que ayudan a aprovechar mejor la etapa universitaria.',
     tags: ['Vida UNI', 'Proyectos', 'Oportunidades'],
     preview: 'Voces cercanas para entender cómo se vive Telecomunicaciones desde dentro.',
+    image: images.owlStudent,
+    imageAlt: 'Búho estudiante CCT con libro',
   },
   {
     key: 'docentes',
@@ -54,14 +60,14 @@ const voiceItems = [
     text: 'Docentes compartirán perspectivas sobre la carrera, tendencias de telecomunicaciones y recomendaciones para conectar mejor la formación académica con el mundo profesional.',
     tags: ['Academia', 'Industria', 'Futuro telecom'],
     preview: 'Ideas, contexto y orientación de quienes acompañan la formación de nuevas generaciones.',
+    image: images.owlDocente,
+    imageAlt: 'Búho docente UNI con saco, corbata y libro',
   },
 ] as const;
 
 let teleIndex = 0;
 let familyTimer = 0;
 let voiceIndex = 0;
-let interviewPlaceholderDataUrl = '';
-let interviewPlaceholderLoading: Promise<string> | null = null;
 
 function renderTele(view: HTMLElement) {
   const grid = view.querySelector<HTMLElement>('.tele-curated-grid');
@@ -137,26 +143,6 @@ function initFamily(view: HTMLElement) {
   }, 3900);
 }
 
-async function loadInterviewPlaceholder(section: HTMLElement) {
-  if (interviewPlaceholderDataUrl) return interviewPlaceholderDataUrl;
-  if (!interviewPlaceholderLoading) {
-    interviewPlaceholderLoading = fetch(images.owlInterviewBase64)
-      .then((response) => {
-        if (!response.ok) throw new Error('No se pudo cargar la imagen temporal de Voces CCT');
-        return response.text();
-      })
-      .then((base64) => {
-        interviewPlaceholderDataUrl = `data:image/webp;base64,${base64.trim()}`;
-        section.querySelectorAll<HTMLImageElement>('.voices-v3-preview-image').forEach((img) => {
-          img.src = interviewPlaceholderDataUrl;
-        });
-        return interviewPlaceholderDataUrl;
-      })
-      .catch(() => '');
-  }
-  return interviewPlaceholderLoading;
-}
-
 function initVoices(view: HTMLElement) {
   const section = view.querySelector<HTMLElement>('.voices-cct');
   if (!section) return;
@@ -190,8 +176,6 @@ function initVoices(view: HTMLElement) {
   const tabs = Array.from(section.querySelectorAll<HTMLButtonElement>('.voices-v3-tab'));
   if (!panel || !tabs.length) return;
 
-  void loadInterviewPlaceholder(section);
-
   const paint = (animate = false) => {
     const item = voiceItems[voiceIndex];
     tabs.forEach((tab, index) => {
@@ -204,7 +188,7 @@ function initVoices(view: HTMLElement) {
     window.setTimeout(() => {
       panel.innerHTML = `
         <div class="voices-v3-preview">
-          <img class="voices-v3-preview-image" src="${interviewPlaceholderDataUrl}" alt="Búho CCT con libro como imagen temporal de entrevista">
+          <img class="voices-v3-preview-image" src="${item.image}" alt="${item.imageAlt}">
           <div class="voices-v3-preview-shade"></div>
           <div class="voices-v3-preview-top"><span>${item.eyebrow}</span><strong>${item.number}</strong></div>
           <div class="voices-v3-play" aria-hidden="true"><span>▶</span></div>
@@ -224,7 +208,6 @@ function initVoices(view: HTMLElement) {
           </div>
         </div>`;
       panel.classList.remove('is-changing');
-      if (!interviewPlaceholderDataUrl) void loadInterviewPlaceholder(section);
 
       panel.querySelectorAll<HTMLButtonElement>('[data-voice-dir]').forEach((button) => {
         button.addEventListener('click', () => {
